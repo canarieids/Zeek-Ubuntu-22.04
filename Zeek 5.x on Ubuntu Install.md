@@ -79,23 +79,13 @@ Participants can contact Dell directly for warranty & customer support for hardw
   <a href="https://www.dell.com/support/manuals/ca/en/cabsdt1/poweredge-r440/idrac_3.30.30.30_lc_ug/configuring-raid?guid=guid-a86b35a2-03a6-4838-952f-24992a99998e&lang=en-us">Dell PowerEdge R440 RAID Configuration Guide</a> 
 </div>
 
-> **Phase 1 Server (2017) Configuration:**
+> Recommended configuration:
+> -The SSD drive should be configured as a NON-RAID Disk
+> -Prioritize support for high IOPS is a RAID 10.
+> -Priortize support for high capacity (retention) is a RAID 5.
 
-- 2x2TB HDD + 1x240G SSD.
-
-- Recommended disk configuration is `RAID1+SSD`.
-
-
-> **Phase 2 (2020) Server Configuration:**
-
-- 4x1TB HDD + 1x240G SSD.
-
-- Recommended disk configuration is `RAID10+SSD`.
 
 ### 2.4. Prepare USB Key
-
-- Pilot participants will have to re-install OS, and Zeek, to work with Ubuntu 22.x LTS.
-- Pilot participants will need to migrate accumulated data prior to upgrade.
 
 1. Download the ISO for Ubuntu 22.x LTS
 > Download the latest version of Ubuntu 22.x LTS server
@@ -138,11 +128,7 @@ Participants can contact Dell directly for warranty & customer support for hardw
 
 
 
-### 2.6. Disk Configuration - Phase 1
-
-> ***PLACEHOLDER***
-
-### 2.7. Disk Configuration - Phase 2
+### 2.6. Disk Configuration - Phase 2
 
 1. To start the Lifecycle Controller, press `F10`.
 
@@ -188,7 +174,7 @@ Participants can contact Dell directly for warranty & customer support for hardw
 
 <div style="page-break-after: always; break-after: page;"></div>
 
-# 3. Install and Configure CentOS Stream
+# 3. Install and Configure Ubuntu Server
 
 ## Hardening the Server
 
