@@ -97,9 +97,11 @@ Participants can contact Dell directly for warranty & customer support for hardw
 - Pilot participants will have to re-install OS, and Zeek, to work with Ubuntu 22.x LTS.
 - Pilot participants will need to migrate accumulated data prior to upgrade.
 
-> See `4.1. Upgrade Zeek` for details.
 
-1. [Download]: https://ubuntu.com/download/server	"Download Ubuntu 22.x LTS"
+
+1. Download Ubuntu 22.x LTS
+> Download the latest version of Ubuntu 22.x LTS server
+[Download](https://ubuntu.com/download/server).
 
    
 
