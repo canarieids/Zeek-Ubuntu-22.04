@@ -203,13 +203,17 @@ Participants can contact Dell directly for warranty & customer support for hardw
 
 <img src="/images/image-20200506154801392.png" alt="image-20200506154801392" style="zoom:85%;" />
 
-6. Select `Install CentOS Linux <version>` option and press `Enter`.
+6. Select `Try or Install Ubuntu Server` option and press `Enter`.
 
 <img src="/images/image-20200506154918662.png" alt="image-20200506154918662" style="zoom:85%;" />
 
-7. Select your Language and keyboard layout.
+7. Select your preferred language.
 
 ![image-20200506155052561](/images/image-20200506155052561.png)
+
+8. Select your preferred keyboard layout
+
+![image-20200506155052561](/images/image-keyboardlayout.png)
 
 ## 3.2. Time Zone
 
