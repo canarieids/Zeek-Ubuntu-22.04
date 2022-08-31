@@ -97,29 +97,29 @@ Participants can contact Dell directly for warranty & customer support for hardw
 - Pilot participants will have to re-install OS, and Zeek, to work with Ubuntu 22.x LTS.
 - Pilot participants will need to migrate accumulated data prior to upgrade.
 
-
-
-1. Download Ubuntu 22.x LTS
+1. Download the ISO for Ubuntu 22.x LTS
 > Download the latest version of Ubuntu 22.x LTS server
-[Download](https://ubuntu.com/download/server).
+> Click Here: [Ubuntu Server Download page](https://ubuntu.com/download/server).
 
-   
-
+2.  Download and Install an ISO to USB utility
 > Download, install and run a USB creation tool.  Rufus is tool used in this document.
+> Rufus [Rufus](https://rufus.ie/).
+ 
 
-2.  Download, Install and Start [Rufus](https://rufus.ie/).
+3.  Create bootable USB key
+> Follow these steps with Rufus to build a USB key from the Ubuntu ISO
 
-> Create bootable USB key.
+​		1. Open `Rufus`
 
-​		1. Under `Device` dropdown, choose target USB key.
+​		2. Under `Device` dropdown, choose target USB key.
 
-​		2. `Select` downloaded ISO.
+​		3. `Select` downloaded ISO.
 
-​		3. Navigate for and Choose ISO file.
+​		4. Navigate for and Choose ISO file.
 
-​		4. Select `Open`.
+​		5. Select `Open`.
 
-​		5. Click `START` to begin writing the ISO.
+​		6. Click `START` to begin writing the ISO.
 
 ![image-20200505231623160](/images/image-20200505231623160.png)
 
