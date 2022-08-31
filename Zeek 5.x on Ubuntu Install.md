@@ -94,13 +94,14 @@ Participants can contact Dell directly for warranty & customer support for hardw
 
 ### 2.4. Prepare USB Key
 
-- No officially supported distribution upgrade script from CentOS7.
-- Pilot participants will have to re-install OS, and Zeek, to work with CentOS Stream.
+- Pilot participants will have to re-install OS, and Zeek, to work with Ubuntu 22.x LTS.
 - Pilot participants will need to migrate accumulated data prior to upgrade.
 
 > See `4.1. Upgrade Zeek` for details.
 
-1. [Download CentOS8 Stream](http://isoredirect.centos.org/centos/8-stream/isos/x86_64/)
+1. [Download]: https://ubuntu.com/download/server	"Download Ubuntu 22.x LTS"
+
+   
 
 > Download, install and run a USB creation tool.  Rufus is tool used in this document.
 
