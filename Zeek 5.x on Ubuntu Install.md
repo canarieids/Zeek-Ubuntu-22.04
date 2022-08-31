@@ -215,7 +215,15 @@ Participants can contact Dell directly for warranty & customer support for hardw
 
 ![image-20200506155052561](/images/image-keyboardlayout.png)
 
-## 3.2. Time Zone
+## 3.2. Choose base installation
+> Change the base installation from `Ubuntu Server` to `Ubuntu Server (minimized)`. 
+
+1. Select `Ubuntu Server (minimized)`.
+
+![image-20200506160026472](/images/image-typeofinstall-minimal.png)
+
+
+## 3.3. Time Zone
 
 > UTC is the recommended time zone. Zeek timestamps are in epoch format  (`ts` column of logs) .  Parsers, including `zeek-cut`, are equipped with the ability to convert epoch into other time zones and formats.  Other tools exist such as [this online epochconverter](https://www.epochconverter.com/).
 
@@ -226,18 +234,6 @@ Participants can contact Dell directly for warranty & customer support for hardw
 2. In the `Region` dropdown, select `Etc`.  In the `City` dropdown, select `Greenwich Mean Time`.
 
 ![image-20200506155451720](/images/image-20200506155451720.png)
-
-## 3.3. Software Selection
-
-> Change `Software selection` to `Minimal Install`.  If not changed, `Server with GUI` will be installed with unnecessary packages.
-
-1. Click on `Software Selection`.
-
-<img src="/images/image-20200506155742066.png" alt="image-20200506155742066"  />
-
-2. Select `Minimal Install` and click `Done`.
-
-![image-20200506160026472](/images/image-20200506160026472.png)
 
 ## 3.4. Installation Destination
 
