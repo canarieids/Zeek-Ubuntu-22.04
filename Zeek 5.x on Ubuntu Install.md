@@ -216,6 +216,7 @@ Participants can contact Dell directly for warranty & customer support for hardw
 ![image-keyboardlayout](/images/image-keyboardlayout.png)
 
 ## 3.2. Choose base installation
+
 > Change the base installation from `Ubuntu Server` to `Ubuntu Server (minimized)`. 
 
 1. Select `Ubuntu Server (minimized)`.
