@@ -268,8 +268,18 @@ Participants can contact Dell directly for warranty & customer support for hardw
 ## 3.4. Profile Setup
 
 >Complete your administrator profile set up.
+>
+
 
 ![image-20200506160918064](/images/image-userprofile.png)
+
+## 3.5 Intall OpenSSH
+
+>Install OpenSSH server.  This will allow you to administrate the server via SSH.  
+>Optionally, use certificate based authentication.
+>
+![image-20200506160918064](/images/image-installopenssh.png)
+
 
 ## 3.5. Begin the installation
 
