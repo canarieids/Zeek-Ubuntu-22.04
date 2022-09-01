@@ -213,7 +213,7 @@ Participants can contact Dell directly for warranty & customer support for hardw
 
 8. Select your preferred keyboard layout
 
-![image-keyboardlayout](/images/image-keyboardlayout.png)
+![image-keyboardlayout](/images/image-keyboardlayout.PNG)
 
 ## 3.2. Choose base installation
 
@@ -224,7 +224,45 @@ Participants can contact Dell directly for warranty & customer support for hardw
 ![image-20200506160026472](/images/image-typeofinstall-minimal.png)
 
 
-## 3.3. Time Zone
+## 3.2. Configure initial Networking
+
+> Configure your management interface networking.  One network card will be dedicated to allow administrators to SSH into the system.  This same interface will also allow egress for SYSLOG connections.
+>
+![image-20200506160026472](/images/image-networkwizarsetup.png)
+
+> Configure your proxy (if applicable).  
+> 
+![image-20200506160026472](/images/image-configureproxy.png)
+
+> Configure the Archive Mirror
+> 
+![image-20200506160026472](/images/image-archivemirror.png)
+
+
+
+
+
+## 3.3. Storage Layout
+> The guided storage layout provides us the option to customize where we install Ubuntu.  It is advisable to install Ubuntu on your redundant storage volume (RAID10 or RAID5).  The single SSD drive will be used for swap and working folders.
+
+1. Choose the option 'Custom Storage Layout'`.
+
+![image-20200506160918064](/images/image-storagelayout1.png)
+
+2. Configure Partitions
+
+> Allocate the following capacity to these Partitions:
+
+/home	3.0G		<RAID volume>
+/		 1.8T		   <RAID volume>
+/opt/zeek/spool
+
+> Once completed your layout should look like this:
+
+![image-20200506160918064](/images/image-storagelayout2.png)
+
+
+## 3.4. Time Zone
 
 > UTC is the recommended time zone. Zeek timestamps are in epoch format  (`ts` column of logs) .  Parsers, including `zeek-cut`, are equipped with the ability to convert epoch into other time zones and formats.  Other tools exist such as [this online epochconverter](https://www.epochconverter.com/).
 
@@ -235,47 +273,6 @@ Participants can contact Dell directly for warranty & customer support for hardw
 2. In the `Region` dropdown, select `Etc`.  In the `City` dropdown, select `Greenwich Mean Time`.
 
 ![image-20200506155451720](/images/image-20200506155451720.png)
-
-## 3.4. Installation Destination
-
-1. Click on `Installation Destination`.
-
-![image-20200506160918064](/images/image-20200506160918064.png)
-
-2. Select the RAID array, select `custom` and click `Done`.
-
-> Only select the RAID array. The SSD will be provisioned after Zeek is installed.
-
--  A disk is selected when it's icon has a check mark.
-
-![image-20200506161053366](/images/image-20200506161053366.png)
-
-3. Select `Click here to create them automatically`.
-
-> This will ensure that required partitions are present. It is recommended to reclaim space form the `/home` partition.
-
-![image-20200506161447342](/images/image-20200506161447342.png)
-
-> Autopartitioning allocates a lot of space to `/home`.  In the next steps we will give `/home` 3Gib and re-assign the remainder to the root `/` directory.
-
-<img src="/images/image-20200506161618525.png" alt="image-20200506161618525" style="zoom: 80%;" />
-
-4. Reclaim space from `/home`.  
-
-   1. Select the `/home` partition.
-   2. Change the `Desired Capacity` value to `3GiB`.
-   3. Click on `Update Settings`.
-
-![image-20200506161643412](/images/image-20200506161643412.png)
-
-5. Assign reclaimed space to `/`.  
-   1. Select the `/` partition.
-   2. Change the `Desired Capacity` value to `1.8TiB`.
-
-   > The smallest amout of space remaining as `Available Space` is disired.
-   3. Click on `Update Settings`.
-   4. Click `Done`.
-
 
 
 ## 3.5. Begin the installation
