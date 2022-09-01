@@ -261,19 +261,15 @@ Participants can contact Dell directly for warranty & customer support for hardw
 
 ![image-20200506160918064](/images/image-storagelayout2.png)
 
+> Confirm the storage
+> 
+![image-20200506160918064](/images/image-storagelayout3.png)
 
-## 3.4. Time Zone
+## 3.4. Profile Setup
 
-> UTC is the recommended time zone. Zeek timestamps are in epoch format  (`ts` column of logs) .  Parsers, including `zeek-cut`, are equipped with the ability to convert epoch into other time zones and formats.  Other tools exist such as [this online epochconverter](https://www.epochconverter.com/).
+>Complete your administrator profile set up.
 
-1. Select `Time & Date`.
-
-<img src="/images/image-20200506155405825.png" alt="image-20200506155405825" style="zoom:80%;" />
-
-2. In the `Region` dropdown, select `Etc`.  In the `City` dropdown, select `Greenwich Mean Time`.
-
-![image-20200506155451720](/images/image-20200506155451720.png)
-
+![image-20200506160918064](/images/image-userprofile.png)
 
 ## 3.5. Begin the installation
 
