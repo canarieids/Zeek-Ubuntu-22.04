@@ -304,216 +304,85 @@ Participants can contact Dell directly for warranty & customer support for hardw
 
 ![image-20200506162722251](/images/image-postinstallreboot.png)
 
-## 3.6. Account Creation
+## 3.6. Zeek User and Group
 
 > Participants are encouraged to follow their own account policy.  Later steps will outline the creation of a `zeek` user and group that will have access to `Zeek Application` functions and files.
+> Complete the following steps steps to create Zeek user and group
 
-1. Assign a password to the `root` account.
-2. Click `User Creation` to create user account.
-3. Check `Make this user administrator`.
-4. Check `Require a password to use this account`.
-
-![image-20200506155933116](/images/image-20200506155933116.png)
-
-
-
-## 3.7. Management Interface
-
-> To download updates, packages and install repositories it is recommended to have connectivity to the public internet.
-
-- If the server is provisioned by `dhcp-reservation`, skip this step.
-
-  > Default configuration is DHCP.
-
-- If static configuration is required, continue with this step.
-
-1. Edit network interface script for management interface and apply address information.
-
-`#vi /etc/sysconfig/network-scripts/ifcfg-<your-interface-name>`.
+1. Login with the account created during the OS deployment  (in this example 'csadmin')
+2. Use the following example to create the Zeek User
 
 ```
-BOOTPROTO=static
-IPADDR=<IPv4 address of your server>
-GATEWAY=<IPv4 gateway of your IPADDR network>
-NETMASK=<IPv4 network mask of your network>
-DNS1=<IPv4 address of your primary DNS server>
-DNS2=<IPv4 address of your secondary DNS server>
-ONBOOT=YES
+sudo adduser zeek
+```
+> You will be prompted to choose a 'password' and define the account's Full Name, Room, Work Phone, Home Phone, Other.  These fields are optional.
+> 
+
+3. Create a Zeek Group
+```
+sudo addgroup zeek
 ```
 
-## 3.8. Zeek User & Group
+4. Add the Zeek user to the Zeek group
+```
+usermod -a -G zeek zeek
+```
+## 3.7.  Grant the Zeek group p
 
-1. Create a group and user called `zeek`:  `#groupadd zeek`.
-2. Put the `zeek`user into the `zeek` group: `#useradd zeek -g zeek`.
-3. Create the directory `/opt/zeek`: `#mkdir /opt/zeek`.
-4. Give the `zeek` user and group recursive permissions: `#chown -R zeek:zeek /opt/zeek/`.
-5. Set the password fo the zeek user:  `#passwd zeek` 
-
-> You will be prompted for a `password`.
+```chown
+#chown -R zeek:zeek /opt/zeek
+```
 
 
+## 3.8. Repositories
 
-## 3.9. Repositories & Dependencies
-
-> Add repositories & dependencies.
+>
 
 1. Open the existing repository file for editing:
-
-| OS Version        | Repository File                                      |
-| :---------------- | ---------------------------------------------------- |
-| < Centos 8.3.2011 | `#vi /etc/yum.repos.d/CentOS-PowerTools.repo`        |
-| > CentOS 8.3.2011 | `#vi /etc/yum.repos.d/CentOS-Linux-PowerTools.repo ` |
-| CentOS Stream     | `#vi /etc/yum.repos.d/CentOS-Stream-PowerTools.repo` |
-
-2. Set the `enabled` field to `1`. The Default value is `0`.
-
 ```
-...
-[PowerTools]
-...
-enabled=1
+echo 'deb http://download.opensuse.org/repositories/security:/zeek/xUbuntu_22.04/ /' | sudo tee /etc/apt/sources.list.d/security:zeek.list
+```
+>
+```
+curl -fsSL https://download.opensuse.org/repositories/security:zeek/xUbuntu_22.04/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/security_zeek.gpg > /dev/null
 ```
 
-3. Install dependencies.
-
-```dependancies
-#yum -y install cmake make gcc gcc-c++ flex bison libpcap-devel openssl-devel platform-python-devel swig zlib-devel kernel-devel kernel-headers python36 network-scripts tar wget gdb git python3-pip sendmail sendmail-cf rsync unzip epel-release
+>Confirm the repositories have been added
 ```
+sudo apt update
+```
+>Confirm you do not receive any errors
+>
 
 
-
-## 3.11. Converting from CentOS Linux to CentOS Stream
-
-1. Update repository references:
+##3.9 Install Dependancies
+>Install the required dependancies for Zeek
+>
 
 ```
-#sudo sed -i -e "s|mirrorlist=|#mirrorlist=|g" /etc/yum.repos.d/CentOS-*
-#sudo sed -i -e "s|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g" /etc/yum.repos.d/CentOS-*
+sudo apt-get install cmake make gcc g++ flex bison libpcap-dev libssl-dev python3 python3-dev swig zlib1g-dev
 ```
-
-2. Update the repositories:
-
-`#yum -y update`
-
-1. Update repos to centos-stream:
-
-`# dnf -y swap centos-linux-repos centos-stream-repos`.
-
-```swap
-[root@zeek01 /]# cat /etc/centos-release
-CentOS Linux release 8.3.2011
-[root@zeek01 /]# dnf swap centos-linux-repos centos-stream-repos
-Last metadata expiration check: 3:02:57 ago on Thu 22 Apr 2021 01:39:07 PM EDT.
-Dependencies resolved.
-...
-Installed:
-  centos-stream-repos-8-2.el8.noarch
-Removed:
-  centos-linux-repos-8-2.el8.noarch
-Complete!
-```
-
-
-
-2. Initiate the conversion:
-
-`# dnf -y distro-sync --allowerasing`.
-
-```sync
-[root@zeek01 /]#  dnf distro-sync --allowerasing
-Last metadata expiration check: 0:00:26 ago on Thu 22 Apr 2021 04:44:07 PM EDT.
-Dependencies resolved.
-...
-Complete!
-```
-
-3. Restart the server:
-
-`#shutdown -r now`
-
-4. Verify the upgrade
-
-`#cat /etc/centos-version`
-
-```verify
-[root@zeek01 /]# cat /etc/centos-release
-CentOS Stream release 8
-```
-
-
 
 # 4. Install and Configure Zeek 
 
-## 4.1. Upgrade
-
-> Participants who have compiled Zeek from source, and installed to `/opt/zeek/` can update by backing up customizations, downloading the repository and installing via yum.  Environment variables will still have to be defined or re-defined.
-
-### 4.1.1 Upgrade from previously compiled installation or unofficial Zeek repositories (`security:zeek.repo`)
-
-- Files located in `[prefix]/logs` are not affected during upgrade.
-
-1. Make a back up of any customizations in `[prefix]/share/zeek/site` and `[prefix]/etc`.
-
-2. Stop Zeek if it is started `$zeekctl stop`.
-
-3. Perform Section `4.2. Fresh Install`  to add the repository and install the Zeek-lts via yum.  Return to the following step after completion.
-
-4. Install plugins and recover customizations which have been previously backed up.
-
-   > After upgrading Zeek, participants are encouraged consider the recommendations in `4.3. Zeek Configuration Options`.
-
-1. Deploy Zeek `$zeekctl deploy`.
-
-### 4.1.2 Upgrade from previously installed zeek-lts version such as `3.0.13`
-
-1. Upgrade the package using yum:`#yum -y update zeek-lts`.
-   - ensure that epel-release has been installed `yum -y install epel-release`.
-
-```
-# zeek -v
-zeek version 3.0.13
-# yum update -y zeek-lts
-Dependencies resolved.
-...
-Upgrading:
-...	
-Complete!
-# zeek --version
-zeek version 4.0.5
-```
-
-2. Upon a major upgrade, Zeek replaces `node.cfg` and `zeekctl.cfg` with defaults, which does not contain custom configuration items like cluster configuration, log rotation and log expiry options.  We will restore our previously configured files if necessary:
-
-   1. `$cd /opt/zeek/etc`
-   2. `$mv node.cfg node.cfg.orig && mv node.cfg.rpmsave node.cfg`
-   3. `$mv zeekctl.cfg zeekctl.orig && mv zeekctl.cfg.rpmsave zeekctl.cfg`
-
-   
-
-3. Re-install af-packet and re-set permissions.
-
-> Refer to section **4.3.7**.
 
 ## 4.2. New Install
 
 > Start here if Zeek has never been installed.  Zeek-lts is installed to the prefix `/opt/zeek` When installing from the official repository.
 >
 
-1. Use `wget` to download the Zeek repository into `/etc/yum.repos.d/`.
 
-```download zeek repo
-#cd /etc/yum.repos.d/ && wget https://download.opensuse.org/repositories/security:zeek/CentOS_8_Stream/security:zeek.repo
+
+1. Use `apt-get` to install `zeek-lts`.
+
 ```
+sudo apt install zeek-lts
 
-2. Use `yum` to install `zeek-lts`.
-
-```install zeek
-#yum -y install zeek-lts zeek-lts-devel
-...
-Dependencies resolved.
-...
-Complete!
 ```
+>You will be prompted to optionally configure the Mail Server options.  You can choose to do this now or later. 
+
+
+
 
 3. Give Zeek permission to capture packets.
 
