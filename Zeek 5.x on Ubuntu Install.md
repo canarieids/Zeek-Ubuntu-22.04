@@ -338,7 +338,7 @@ usermod -a -G zeek zeek
 
 >
 
-1. Open the existing repository file for editing:
+1. Execute the following commands to add required respositories:
 ```
 echo 'deb http://download.opensuse.org/repositories/security:/zeek/xUbuntu_22.04/ /' | sudo tee /etc/apt/sources.list.d/security:zeek.list
 ```
