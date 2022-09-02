@@ -273,21 +273,36 @@ Participants can contact Dell directly for warranty & customer support for hardw
 
 ![image-20200506160918064](/images/image-userprofile.png)
 
-## 3.5 Intall OpenSSH
+## 3.5 Install OpenSSH
 
 >Install OpenSSH server.  This will allow you to administrate the server via SSH.  
 >Optionally, use certificate based authentication.
 >
 ![image-20200506160918064](/images/image-installopenssh.png)
 
+## 3.5 Featured Server Snaps
+
+>Do not select any Featured server Snaps
+>
+![image-20200506160918064](/images/image-featuredserversnaps.png)
+
 
 ## 3.5. Begin the installation
 
-1. Click `Begin Installation`.
+
+1.  Confirm the destructive operation warning to start installation
 
    > This is the last chance to modify options before they are written to disk.
 
-![image-20200506162722251](/images/image-20200506162722251.png)
+![image-20200506162722251](/images/image-preconfirminstalllaunch.png)
+
+2. The installation will start
+
+![image-20200506162722251](/images/image-installlaunch.png)
+
+3. Once the installation has completed, Click 'Reboot Now'
+
+![image-20200506162722251](/images/image-postinstallreboot.png)
 
 ## 3.6. Account Creation
 
