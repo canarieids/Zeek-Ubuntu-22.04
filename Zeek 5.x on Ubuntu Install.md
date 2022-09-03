@@ -363,6 +363,12 @@ sudo apt update
 sudo apt-get install cmake make gcc g++ flex bison libpcap-dev libssl-dev python3 python3-dev swig zlib1g-dev
 ```
 
+>Install optional dependancies for Zeek
+>
+```
+sudo apt-get install python3-git python3-semantic-version
+```
+
 # 4. Install and Configure Zeek 
 
 
@@ -387,7 +393,7 @@ sudo apt install zeek-lts
 3. Give Zeek permission to capture packets.
 
 ```
-#setcap cap_net_raw=eip /opt/zeek/bin/zeek && setcap cap_net_raw=eip /opt/zeek/bin/capstats
+setcap cap_net_raw=eip /opt/zeek/bin/zeek && setcap cap_net_raw=eip /opt/zeek/bin/capstats
 ```
 
 4. Add Zeek binary files to path.
@@ -446,70 +452,8 @@ zeek version 4.0.5
 
 ## 4.4. Zeek Configuration Options
 
-### 4.4.1. Assign SSD to `/opt/zeek/spool`
 
-> For faster read/write speed, mount the SSD to `/opt/zeek/spool`.
 
-1. Identify the SSD drive.
-
-```fdisk
-#fdisk -l
-...
-Disk /dev/sda: 223.6 GiB, 240057409536 bytes, 468862128 sectors
-...
-```
-
-2. You may have to format your SSD.
-
-> Use ext4.  Use appropriate disk label (sda, sdb, etc..).
-
-```sudo mkfs.ext4 /dev/sda1 
-#mkfs.ext4 /dev/sda
-```
-
-3. Stop Zeek `$zeekctl stop`.
-
-4. Mount the SSD drive.
-
-```mountssd
-#mount /dev/sda /opt/zeek/spool
-```
-
-5. Edit `/etc/fstab` to persistently mount the SSD.
-
-1. Get the `UUID` of the drive `blkid /dev/sda`.
-
-> Here the `UUID` is `8859XXXX-XXXX-XXXX-XXXX-XXXXf57871b5`.
-
-```uuid
-#blkid /dev/sda
-/dev/sda: UUID="8859XXXX-XXXX-XXXX-XXXX-XXXXf57871b5" TYPE="ext4" PARTLABEL="zeekspool" PARTUUID="04f529d2-a074-4ad5-8a45-48ccd8e8c8b0"
-```
-
-6. Write the `UUID` and partition information into the `/etc/fstab` file.
-
-> After this step, the SSD drive will be mounted upon system startup.
-
-```echo to fstab
-#echo "UUID=8859XXXX-XXXX-XXXX-XXXX-XXXXf57871b5 /opt/zeek/spool ext4 defaults 0 0" >> /etc/fstab
-```
-
-7. Ensure correct permissions to spool directory.
-
-```permissions
-#chown -R zeek:zeek /opt/zeek
-```
-
-8. Reboot the server and verify persistence of the mount  `# shutdown -r now`.
-
-9. Last verification of partition schema after reboot `# df -h`.
-
-```dh -h
-#df -h
-...
-/dev/sda              220G  160M  208G   1% /opt/zeek/spool
-...
-```
 
 ### 4.4.2. `sendmail`(optional)
 
@@ -596,78 +540,34 @@ module(load="imfile"
 */5 * * * * /opt/zeek/bin/zeekctl cron
 ```
 
-### 4.4.6. Install `Zeek Package Manager(zkg)`
-
-> Zeek 4.0LTS has zkg included.  There is only a need to install manually on versions earlier than 4.0LTS.  Skip this step if your current version 4.0 or later.
-
-1. Install using python pip.
-
-```package manager
-$pip3 install --user zeek zkg && zkg autoconfig
-```
-
-2. Ensure correct permissions persisted.
-
-```chown
-#chown -R zeek:zeek /opt/zeek
-```
 
 ### 4.4.7. Install `AF_Packet` plugin
 
-> Ideally, this plugin is installed via the package manager (zkg).  However, the plugin was written to detect `kernel_headers` in a non-CentOS8 default location (`/usr/src/kernels`).  Therefore, we will define the location during a manual installation.
+> Ideally, this plugin is installed via the package manager (zkg).  
 >
-> Additonally, the master repository for this plugin has been updated to support Zeek 4.0LTS which has broken the ability to make and install for Zeek version `3.0.13LTS and under`.  Participants who are running Zeek 4.0LTS can install the plugin using zeek package manager.
 
-1. Zeek versions before 4.0LTS:
-
-   1. Stop Zeek if it is started: `$zeekctl stop`.
-   2. Delete previous versions of `AF_Packet`:
-
-   - `$rm -rf /opt/zeek/lib/zeek/plugins/Zeek_AF_Packet/`
-
-   3. Go to the zeek home directory:
-
-   - `$cd /home/zeek`
-
-   4. Download the plugin for Zeek 3.0.13LTS and below:
-
-   - Navigate from a web browser to the [JSP Portal](https://jspportal.canarie.ca) and Log in.
-   - Download the following file and upload onto the server: [af_packet-for-zeek_3.0.1.3.master.zip](https://jspportal.canarie.ca/wpc_downloader/core/?wpc_action=download&id=189) to the following location `$/home/zeek/`.
-
-​	Unzip the plugin and enter the new directory
-
-``` unzip
-$unzip  af_packet-for-zeek_3.0.1.3.master.zip && cd zeek-af_packet-plugin-master
+1. Execute the command:
+```
+zkg install zeek/j-gras/zeek-af_packet-plugin
 ```
 
-​			4. Install the plugin, defining kernel location.
 
-```af_packet
-$./configure --with-kernel=/usr/src/kernels && make && make install
-```
-
-2. Zeek versions after 4.0LTS:
-
-   1. Stop Zeek if it is started `zeekctl stop`.
-   2. Delete previous versions of `AF_Packet`:
-
-   - `$rm -rf /opt/zeek/lib/zeek/plugins/Zeek_AF_Packet/`
-
-   3. Use Zeek's Package manager to install af_packet
-
-   - `$zkg install zeek/j-gras/zeek-af_packet-plugin`
-
-3. Re-set permissions:
-
+2. Re-Apply permissions for the Zeek user and group
 - `	#chown -R zeek:zeek /opt/zeek ` 
 - `#setcap cap_net_raw=eip /opt/zeek/bin/zeek && setcap cap_net_raw=eip /opt/zeek/bin/capstats`
+
+
+
+<<Need steps to modiify nodes.cfg>>
+
+
+
 
 ### 4.4.8. Install `ADD_INTERFACES` plugin
 
 > Adds cluster node interface to logs. Useful when sniffing multiple interfaces to identify source of log.
 
-1. Stop Zeek if it is started `zeekctl stop`.
-2. Install the plugin.
+1.Execute the command
 
 - `$zkg install j-gras/add-interfaces`
 
@@ -686,7 +586,16 @@ export {
 		}
 ```
 
-### 4.4.9. Setup Sniffing Interfaces
+5. Re-Apply permissions for the Zeek user and group
+- `	#chown -R zeek:zeek /opt/zeek ` 
+- `#setcap cap_net_raw=eip /opt/zeek/bin/zeek && setcap cap_net_raw=eip /opt/zeek/bin/capstats`
+
+6. Re-Deploy Zeek
+```
+zeekctl deploy
+```
+
+### 4.4.9. Optimize Sniffing Interfaces
 
 > Configure on all sniffing interface(s) that will be receiving tapped, spanned or mirrored traffic.  Do not apply this configuration to management interface(s).
 
