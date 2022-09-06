@@ -1,5 +1,4 @@
 
-
 <p style="font-weight:600; font-size:60px ; color:red; text-align:center">Joint Security Project</p>
 
 ----
@@ -379,7 +378,7 @@ sudo apt-get install python3-git python3-semantic-version
 
 
 
-1. Use `apt-get` to install `zeek-lts`.
+1. Use `apt-get` to install `zeek`.
 
 ```
 sudo apt install zeek-lts
@@ -571,9 +570,13 @@ zeekctl deploy
 
 > Configure on all sniffing interface(s) that will be receiving tapped, spanned or mirrored traffic.  Do not apply this configuration to management interface(s).
 
-1. Get interface names using `#ip addr`  or  `#ls /etc/sysconfig/network-scripts/`.
+1. Get interface names using `ip -f link -br address`  .
 
-   > Physical interfaces are listed like `ifcfg-<Interface name>`.
+   > Physical interfaces are listed with the prefix `en`.
+   > 
+
+![image-20200505231623160](/images/image-listinterfaces.png)
+
 
 2. Use `#ethtool -g <interface name>` to get the maximum ring parameter.
 
