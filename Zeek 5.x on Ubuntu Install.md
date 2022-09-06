@@ -1,4 +1,4 @@
-  
+
 
 <p style="font-weight:600; font-size:60px ; color:red; text-align:center">Joint Security Project</p>
 
@@ -94,7 +94,7 @@ Participants can contact Dell directly for warranty & customer support for hardw
 2.  Download and Install an ISO to USB utility
 > Download, install and run a USB creation tool.  Rufus is tool used in this document.
 > Rufus [Rufus](https://rufus.ie/).
- 
+
 
 3.  Create bootable USB key
 > Follow these steps with Rufus to build a USB key from the Ubuntu ISO
@@ -393,7 +393,7 @@ sudo apt install zeek-lts
 3. Give Zeek permission to capture packets.
 
 ```
-setcap cap_net_raw=eip /opt/zeek/bin/zeek && setcap cap_net_raw=eip /opt/zeek/bin/capstats
+setcap cap_net_raw+eip /opt/zeek/bin/zeek && setcap cap_net_raw+eip /opt/zeek/bin/capstats
 ```
 
 4. Add Zeek binary files to path.
@@ -419,34 +419,6 @@ $which zeek
 ```
 
 ## 4.3. Update / Upgrade Zeek-LTS
-
-1. Ensure the most current repository file exists. A `Status code: 404` message when attempting to upgrade is likely solved.
-
-```
-#cd /etc/yum.repos.d/ && rm security:zeek.* && wget https://download.opensuse.org/repositories/security:zeek/CentOS_8_Stream/security:zeek.repo
-```
-
-2. Check current verison:  `# zeek -v`.
-
-```
-[root@zeek01 ~]# zeek -v
-zeek version 4.0.3
-```
-
-3. Upgrade Zeek: `#yum -y update zeek-lts zeek-lts-devel`.
-
-```
-...
-Complete!
-```
-
-4. Deploy `$zeekctl deploy`.
-5. Verify Upgrade `# zeek -v`.
-
-```
-[root@zeek01 ~]# zeek -v
-zeek version 4.0.5
-```
 
 
 
@@ -554,7 +526,7 @@ zkg install zeek/j-gras/zeek-af_packet-plugin
 
 2. Re-Apply permissions for the Zeek user and group
 - `	#chown -R zeek:zeek /opt/zeek ` 
-- `#setcap cap_net_raw=eip /opt/zeek/bin/zeek && setcap cap_net_raw=eip /opt/zeek/bin/capstats`
+- `#setcap cap_net_raw+eip /opt/zeek/bin/zeek && setcap cap_net_raw+eip /opt/zeek/bin/capstats`
 
 
 
@@ -588,7 +560,7 @@ export {
 
 5. Re-Apply permissions for the Zeek user and group
 - `	#chown -R zeek:zeek /opt/zeek ` 
-- `#setcap cap_net_raw=eip /opt/zeek/bin/zeek && setcap cap_net_raw=eip /opt/zeek/bin/capstats`
+- `#setcap cap_net_raw+eip /opt/zeek/bin/zeek && setcap cap_net_raw+eip /opt/zeek/bin/capstats`
 
 6. Re-Deploy Zeek
 ```
@@ -1117,7 +1089,7 @@ $zeekctl deploy
 3. Give the Zeek application permission to capture packets.
 
 ```
-#setcap cap_net_raw=eip /opt/zeek/bin/zeek && setcap cap_net_raw=eip /opt/zeek/bin/capstats
+#setcap cap_net_raw+eip /opt/zeek/bin/zeek && setcap cap_net_raw+eip /opt/zeek/bin/capstats
 ```
 
 4. Add Zeek binaries to path.
@@ -1260,7 +1232,7 @@ e) Re-Propagate Zeek permissions to the Zeek folder and Capture packet functiona
 
 `
 #chown -R zeek:zeek /opt/zeek"
-#setcap cap_net_raw=eip /opt/zeek/bin/zeek && setcap cap_net_raw=eip /opt/zeek/bin/capstats
+#setcap cap_net_raw+eip /opt/zeek/bin/zeek && setcap cap_net_raw+eip /opt/zeek/bin/capstats
 `
 
 f) Deploy the plugin `$zeekctl deploy`.
