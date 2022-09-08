@@ -376,15 +376,16 @@ usermod -a -G zeek zeek
 ```
 #sudo apt-get install python3-git python3-semantic-version
 ```
+
 ##3.10 Configure interfaces for Promiscuous mode
 >
 >Zeek requires the interfaces on which it will sniff traffic be configured into PROMISCUOUS mode.    By configuring your interfaces into this mode, you are allowing the network interface to receive packets that would normally be discarded.
 
 
-1. Create a file called `/etc/systemd/system/promisc.service` and populate it appropriately. Where each sniffing interface is defined under `[Service]`.
-
-
-> In the below example, we have `ens2f1` & `ens2f2` configured to be promiscuous.  Zeek will be able to use these as sniffing interfaces.  Substitute these interface names.
+1. Create a file called `/etc/systemd/system/promisc.service` 
+>
+> Populate the file using the below examles. Where each sniffing interface is defined under `[Service]`.  This will require one line per interface.
+> In the below example, we have `ens2f1` & `ens2f2` configured to be promiscuous.  Zeek will be able to use these as sniffing interfaces.  Substitute these interface names from your environment.
 
 ```multiple
 ...
@@ -408,17 +409,26 @@ ExecStart=/usr/sbin/ip link set dev ens2f2 promisc on
 #systemctl enable network && systemctl restart network
 ```
 
-4. Verify before and after rebooting.
+4. Confirm Pre-Reboot
 
 > You should see that `PROMISC` exists in the options for the sniffing interface(s).
 
 ```ip a show | grep permisc
 $ ip a | grep PROMISC
-3: eno2: <BROADCAST,MULTICAST,PROMISC,UP,LOWER_UP> mtu 1500 qdisc mq state UP group default qlen 1000
+ens2f1: <BROADCAST,MULTICAST,PROMISC,UP,LOWER_UP> mtu 1500 qdisc mq state UP group default qlen 1000
+ens2f2: <BROADCAST,MULTICAST,PROMISC,UP,LOWER_UP> mtu 1500 qdisc mq state UP 
 ```
 
+5. Reboot your server and re-confirm Step 4 to ensure interfaces come up with the 'PROMISC' flag
 
+##3.11 Install CRONTAB
+> Ubuntu 22.04 does not come with CRONTAB installed.  We will need this feature to be installed to schedule some recurring tasks with regards to Zeek and its plugins
 
+Execute the following command to install Crontab
+
+```
+sudo apt-get -y install cron
+```
 
 
 # 4. Install and Configure Zeek 
@@ -429,8 +439,6 @@ $ ip a | grep PROMISC
 > Zeek-lts is installed to the prefix `/opt/zeek` When installing from the official repository.
 >
 
-
-
 1. Use `apt` to install `zeek`.
 
 >This will install Zeek 5.0X
@@ -439,6 +447,8 @@ $ ip a | grep PROMISC
 #sudo apt install zeek
 ```
 >You will be prompted to optionally configure the Mail Server options.  You can choose to do this now or later. 
+>
+
 
 
 
@@ -448,15 +458,18 @@ $ ip a | grep PROMISC
 #echo "export PATH=/opt/zeek/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin" >> /etc/profile.d/zeek.sh
 ```
 
-3. login as `zeek` to update the path.
+3. Login as `zeek` to update the path.
 
 ```su - zeek
 #su - zeek
 ```
 
-4. Confirm path update.
+4. Confirm the path has been applied with the bash script
+
 
 > If the command returns `/opt/zeek/bin/zeek`, your path has been updated.
+1. Execute the command 'which zeek' to query for the path.  You should be pointed to ''/opt/zeek/bin/zeek'
+>
 
 ```
 $which zeek
@@ -470,6 +483,52 @@ $zeekctl
 Welcome to ZeekControl 2.3.0
 Type "help" for help.
 [ZeekControl] >
+```
+
+5. Deploy Zeek
+>You are now ready to complete your first deployment of Zeek.  On each deployment, Zeek re-examines its configuration and scripts and deploys them when starting the services.  In the future, as you modify your Zeek configuration, you will need to complete a deployment each time.
+>
+>Execute the following command to deploy Zeek
+```
+$zeekctl deploy
+```
+>
+>Or within the Zeek Control shell
+>
+```
+Welcome to ZeekControl 2.3.0
+Type "help" for help.
+[ZeekControl] > deploy
+
+```
+
+>If all is working well, you should get this output
+>
+```
+$zeekctl deploy
+checking configurations ...
+installing ...
+removing old policies in /opt/zeek/spool/installed-scripts-do-not-touch/site ...
+removing old policies in /opt/zeek/spool/installed-scripts-do-not-touch/auto ...
+creating policy directories ...
+installing site policies ...
+generating cluster-layout.zeek ...
+generating local-networks.zeek ...
+generating zeekctl-config.zeek ...
+generating zeekctl-config.sh ...
+stopping ...
+stopping workers ...
+stopping proxy ...
+stopping manager ...
+stopping logger ...
+starting ...
+starting logger ...
+starting manager ...
+starting proxy ...
+starting workers ...
+$
+
+
 ```
 
 
@@ -512,7 +571,9 @@ Type "help" for help.
 
 ### 4.4.4. `rsyslog (optional)`
 
-> The 'rocket-fast system for log processing' is installed by default and can send syslog messages to remote systems.
+>It is recommended to have your Zeek logs sent to a more sophisticated analytics platform, such as a SIEM, Elastic Search, Splunk or simliar platforms.  We use RSYSLOG to faciltiate the shipment of logs from Zeek to such a platform.
+>
+> RSYSLOG, the 'rocket-fast system for log processing' is installed by default and can send syslog messages to remote systems.
 
 1. Define and load modules `# vi /etc/rsyslog.conf`.
 
