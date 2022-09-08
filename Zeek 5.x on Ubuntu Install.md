@@ -326,29 +326,38 @@ sudo addgroup zeek
 ```
 usermod -a -G zeek zeek
 ```
-## 3.7.  Grant the Zeek group p
+## 3.7.  Grant the Zeek user and group ownership and permissions
 
+>The following commands re-applies core permissions required by the Zeek service to operate.  Anytime you are going to re-deploy Zeek, you should precede with these two steps.
+>
+>These two steps are very important!, You will need to be repeat these steps throughout this guide.  
+>
+1. Execute the following command to recursively assign ownership to the zeek user and group
 ```chown
 #chown -R zeek:zeek /opt/zeek
 ```
 
+2. Execute the following command to give the zeek process permissions to read raw packet captures
+```
+#setcap cap_net_raw+eip /opt/zeek/bin/zeek && setcap cap_net_raw+eip /opt/zeek/bin/capstats
+```
 
 ## 3.8. Repositories
 
->
+>We need to add the Zeek repositories to your Ubuntu installation in order to receive the latest version and updates.  In the below example, substitute the '22.04' for your version of Ubuntu.
 
 1. Execute the following commands to add required respositories:
 ```
-echo 'deb http://download.opensuse.org/repositories/security:/zeek/xUbuntu_22.04/ /' | sudo tee /etc/apt/sources.list.d/security:zeek.list
+#echo 'deb http://download.opensuse.org/repositories/security:/zeek/xUbuntu_22.04/ /' | sudo tee /etc/apt/sources.list.d/security:zeek.list
 ```
 >
 ```
-curl -fsSL https://download.opensuse.org/repositories/security:zeek/xUbuntu_22.04/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/security_zeek.gpg > /dev/null
+#curl -fsSL https://download.opensuse.org/repositories/security:zeek/xUbuntu_22.04/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/security_zeek.gpg > /dev/null
 ```
 
 >Confirm the repositories have been added
 ```
-sudo apt update
+#sudo apt update
 ```
 >Confirm you do not receive any errors
 >
@@ -359,65 +368,109 @@ sudo apt update
 >
 
 ```
-sudo apt-get install cmake make gcc g++ flex bison libpcap-dev libssl-dev python3 python3-dev swig zlib1g-dev
+#sudo apt-get install cmake make gcc g++ flex bison libpcap-dev libssl-dev python3 python3-dev swig zlib1g-dev
 ```
 
 >Install optional dependancies for Zeek
 >
 ```
-sudo apt-get install python3-git python3-semantic-version
+#sudo apt-get install python3-git python3-semantic-version
 ```
+##3.10 Configure interfaces for Promiscuous mode
+>
+>Zeek requires the interfaces on which it will sniff traffic be configured into PROMISCUOUS mode.    By configuring your interfaces into this mode, you are allowing the network interface to receive packets that would normally be discarded.
+
+
+1. Create a file called `/etc/systemd/system/promisc.service` and populate it appropriately. Where each sniffing interface is defined under `[Service]`.
+
+
+> In the below example, we have `ens2f1` & `ens2f2` configured to be promiscuous.  Zeek will be able to use these as sniffing interfaces.  Substitute these interface names.
+
+```multiple
+...
+[Service]
+...
+ExecStart=/usr/sbin/ip link set dev ens2f1 promisc on
+ExecStart=/usr/sbin/ip link set dev ens2f2 promisc on
+...
+```
+
+2. Make the changes permanent and start on boot.
+
+```promisc
+# chmod u+x /etc/systemd/system/promisc.service
+# systemctl start promisc.service
+# systemctl enable promisc.service
+```
+3. Enable `network` service and restart it.
+
+```enable network service
+#systemctl enable network && systemctl restart network
+```
+
+4. Verify before and after rebooting.
+
+> You should see that `PROMISC` exists in the options for the sniffing interface(s).
+
+```ip a show | grep permisc
+$ ip a | grep PROMISC
+3: eno2: <BROADCAST,MULTICAST,PROMISC,UP,LOWER_UP> mtu 1500 qdisc mq state UP group default qlen 1000
+```
+
+
+
+
 
 # 4. Install and Configure Zeek 
 
 
-## 4.2. New Install
+## 4.0. New Install
 
-> Start here if Zeek has never been installed.  Zeek-lts is installed to the prefix `/opt/zeek` When installing from the official repository.
+> Zeek-lts is installed to the prefix `/opt/zeek` When installing from the official repository.
 >
 
 
 
-1. Use `apt-get` to install `zeek`.
+1. Use `apt` to install `zeek`.
 
+>This will install Zeek 5.0X
+>
 ```
-sudo apt install zeek-lts
-
+#sudo apt install zeek
 ```
 >You will be prompted to optionally configure the Mail Server options.  You can choose to do this now or later. 
 
 
 
-
-3. Give Zeek permission to capture packets.
-
-```
-setcap cap_net_raw+eip /opt/zeek/bin/zeek && setcap cap_net_raw+eip /opt/zeek/bin/capstats
-```
-
-4. Add Zeek binary files to path.
+2. Add Zeek binary files to path for Z.
 
 ```add zeek to path
-#echo "pathmunge /opt/zeek/bin" > /etc/profile.d/zeek.sh
+#echo "export PATH=/opt/zeek/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin" >> /etc/profile.d/zeek.sh
 ```
 
-5. login as `zeek` to update the path.
+3. login as `zeek` to update the path.
 
 ```su - zeek
 #su - zeek
 ```
 
-6. Confirm path update.
+4. Confirm path update.
 
 > If the command returns `/opt/zeek/bin/zeek`, your path has been updated.
-
 
 ```
 $which zeek
 /opt/zeek/bin/zeek
 ```
+>You should also be able to execute 'zeekctl' for any working directory
 
-## 4.3. Update / Upgrade Zeek-LTS
+```
+$zeekctl
+
+Welcome to ZeekControl 2.3.0
+Type "help" for help.
+[ZeekControl] >
+```
 
 
 
@@ -491,14 +544,14 @@ module(load="imfile"
 
 ```rsyslog2
 ### rsyslog config ###
-*.*     @@10.189.XX.XXX:514
+*.*     @@10.XXX.XXX.XXX:514
 ```
 
 ​		2. UDP, port 514:`@`.
 
 ```rsyslog2
 ### rsyslog config ###
-*.*     @10.189.XX.XXX:514
+*.*     @10.XXX.XXX.XXX:514
 ```
 
 ### 4.4.5. `zeekctl cron`
@@ -525,13 +578,12 @@ zkg install zeek/j-gras/zeek-af_packet-plugin
 
 2. Re-Apply permissions for the Zeek user and group
 - `	#chown -R zeek:zeek /opt/zeek ` 
-- `#setcap cap_net_raw+eip /opt/zeek/bin/zeek && setcap cap_net_raw+eip /opt/zeek/bin/capstats`
+- `setcap cap_net_raw=eip /opt/zeek/bin/zeek && setcap cap_net_raw=eip /opt/zeek/bin/capstats
+`
 
 
 
 <<Need steps to modiify nodes.cfg>>
-
-
 
 
 ### 4.4.8. Install `ADD_INTERFACES` plugin
@@ -559,7 +611,7 @@ export {
 
 5. Re-Apply permissions for the Zeek user and group
 - `	#chown -R zeek:zeek /opt/zeek ` 
-- `#setcap cap_net_raw+eip /opt/zeek/bin/zeek && setcap cap_net_raw+eip /opt/zeek/bin/capstats`
+- `#setcap cap_net_raw=eip /opt/zeek/bin/zeek && setcap cap_net_raw=eip /opt/zeek/bin/capstats`
 
 6. Re-Deploy Zeek
 ```
@@ -610,66 +662,7 @@ NM_CONTROLLED=no
 ETHTOOL_OPTS="-G ${DEVICE} rx 2047; -K ${DEVICE} rx off; -K ${DEVICE} tx off; -K ${DEVICE} sg off; -K ${DEVICE} tso off; -K ${DEVICE} ufo off; -K ${DEVICE} gso off; -K ${DEVICE} gro off; -K ${DEVICE} lro off"
 ...
 ```
-4. Set sniffing interfaces into promiscuous mode.
 
-> Create a file called `/etc/systemd/system/promisc.service` and populate it appropriately. Where each sniffing interface is defined under `[Service]`.
-
-​		1. Single Interface.
-
-> Where `eno2` is the sniffing interface.
-
-```sniff
-[Service]
-
-[Unit]
-Description=Bring up an interface in promiscuous mode during boot
-After=network.target
-
-[Service]
-Type=oneshot
-ExecStart=/usr/sbin/ip link set dev eno2 promisc on
-TimeoutStartSec=0
-RemainAfterExit=yes
-
-[Install]
-WantedBy=default.target
-
-```
-
-​		2. Multiple Interfaces.
-
-> Where `eno1` & `eno2` are sniffing interfaces.
-
-```multiple
-...
-[Service]
-...
-ExecStart=/usr/sbin/ip link set dev eno1 promisc on
-ExecStart=/usr/sbin/ip link set dev eno2 promisc on
-...
-```
-
-5. Make the changes permanent and start on boot.
-
-```promisc
-# chmod u+x /etc/systemd/system/promisc.service
-# systemctl start promisc.service
-# systemctl enable promisc.service
-```
-6. Enable `network` service and restart it.
-
-```enable network service
-#systemctl enable network && systemctl restart network
-```
-
-7. Verify before and after rebooting.
-
-> You should see that `PROMISC` exists in the options for the sniffing interface(s).
-
-```ip a show | grep permisc
-$ ip a | grep PROMISC
-3: eno2: <BROADCAST,MULTICAST,PROMISC,UP,LOWER_UP> mtu 1500 qdisc mq state UP group default qlen 1000
-```
 
 ### 4.4.10. Configuration Files
 
@@ -1092,7 +1085,7 @@ $zeekctl deploy
 3. Give the Zeek application permission to capture packets.
 
 ```
-#setcap cap_net_raw+eip /opt/zeek/bin/zeek && setcap cap_net_raw+eip /opt/zeek/bin/capstats
+#setcap cap_net_raw=eip /opt/zeek/bin/zeek && setcap cap_net_raw=eip /opt/zeek/bin/capstats
 ```
 
 4. Add Zeek binaries to path.
