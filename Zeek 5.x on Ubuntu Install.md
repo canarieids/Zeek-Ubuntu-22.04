@@ -655,7 +655,7 @@ sudo ufw enable
 
 ### 4.4.4. `rsyslog (optional)`
 
->It is recommended to have your Zeek logs sent to a more sophisticated analytics platform, such as a SIEM, Elastic Search, Splunk or simliar platforms.  We use RSYSLOG to faciltiate the shipment of logs from Zeek to such a platform.
+>It is recommended to have your Zeek logs sent to a more sophisticated analytics platform, such as a SIEM, Elastic Search, Splunk or simliar platforms.  
 >
 > RSYSLOG, the 'rocket-fast system for log processing' is installed by default and can send syslog messages to remote systems.
 
@@ -680,6 +680,73 @@ module(load="imfile"
       Facility="local6")
 ...
 ```
+
+
+### 4.4.4. `syslog-NG (optional)`
+>Syslog-NG can be used instead of RSYNC
+>
+>
+>
+
+
+>Install syslog-NG
+>
+```
+#sudo apt-get install syslog-ng
+```
+
+>Edit the syslog-NG configuration file
+>
+```
+#
+```
+>Example configuration, insert below @include "scl.conf"
+>TAke note the program-override assigns a tag to each log type.  This will be important when >developing a parser for your analystics/SIEM platform.
+>
+
+```
+ source s_local {
+     system(); internal();
+ };
+
+# source s_bro_file {
+#    file("/opt/zeek/logs/current/dns.log" program-override("bro-dns") flags(no-parse));
+#    file("/opt/zeek/logs/current/conn.log" program-override("bro-conn") flags(no-parse));
+#    file("/opt/zeek/logs/current/ssl.log" program-override("bro-ssl") flags(no-parse));
+#    file("/opt/zeek/logs/current/dhcp.log" program-override("bro-dhcp") flags(no-parse));
+
+ source s_bro_file {
+    file("/opt/zeek/logs/current/dns.log" program-override("zeek-dns") flags(no-parse));
+    file("/opt/zeek/logs/current/conn.log" program-override("zeek-conn") flags(no-parse));
+    file("/opt/zeek/logs/current/ssl.log" program-override("zeek-ssl") flags(no-parse));
+    file("/opt/zeek/logs/current/dhcp.log" program-override("zeek-dhcp") flags(no-parse));
+    file("/opt/zeek/logs/current/http.log" program-override("zeek-http") flags(no-parse));
+    file("/opt/zeek/logs/current/weird.log" program-override("zeek-weird") flags(no-parse));
+    file("/opt/zeek/logs/current/kerberos.log" program-override("zeek-kerberos") flags(no-parse));
+    file("/opt/zeek/logs/current/ntlm.log" program-override("zeek-ntlm") flags(no-parse));
+    file("/opt/zeek/logs/current/files.log" program-override("zeek-files") flags(no-parse));
+    file("/opt/zeek/logs/current/known_hosts.log" program-override("zeek-known_hosts") flags(no-parse));
+    file("/opt/zeek/logs/current/notice.log" program-override("zeek-notice") flags(no-parse));
+    file("/opt/zeek/logs/current/ssh.log" program-override("zeek-ssh") flags(no-parse));
+    file("/opt/zeek/logs/current/intel.log" program-override("zeek-intel") flags(no-parse));
+    file("/opt/zeek/logs/current/log4j.log" program-override("zeek-log4j") flags(no-parse));
+    file("/opt/zeek/logs/current/smb_files.log" program-override("zeek-smbfiles") flags(no-parse));
+
+ };
+ destination d_syslog_fsm {
+     network("10.20.30.40" transport("udp") port(514));
+ };
+ log {
+  source(s_bro_file);
+  destination(d_syslog_fsm);
+ };
+```
+
+
+>Take note of the Zeek log files above.  If you want to reduce your EPS sent to your SIEM, you >can comment out certain logs.  For example, some institutions only want to receive intel.log >and notice.log.
+>
+>
+
 
 2. Configure rsyslog to send logs to a remote IP4 node `# vi /etc/rsyslog.conf`.
 
