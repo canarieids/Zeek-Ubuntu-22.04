@@ -659,10 +659,13 @@ zkg install zeek/j-gras/zeek-af_packet-plugin
 
 >2. Re-Apply permissions for the Zeek user and group
 >
-`	#chown -R zeek:zeek /opt/zeek ` 
+```
+#chown -R zeek:zeek /opt/zeek
+```
 >
-`setcap cap_net_raw=eip /opt/zeek/bin/zeek && setcap cap_net_raw=eip /opt/zeek/bin/capstats
-`
+```
+setcap cap_net_raw=eip /opt/zeek/bin/zeek && setcap cap_net_raw=eip /opt/zeek/bin/capstats
+```
 
 >3. Reconfigure`node.cfg` to use AF_PACKET
 >With AF Packet now installed, we must reconfigure the node.cfg file to use the AF Packet plugin.  The following items will need to be defined in the node.cfg file:
