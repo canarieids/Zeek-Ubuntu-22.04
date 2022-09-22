@@ -422,7 +422,54 @@ ens2f2: <BROADCAST,MULTICAST,PROMISC,UP,LOWER_UP> mtu 1500 qdisc mq state UP
 
 5. Reboot your server and re-confirm Step 4 to ensure interfaces come up with the 'PROMISC' flag
 
-## 3.11 Install CRONTAB
+
+## 3.11. Optimize Sniffing Interfaces
+
+> Configure on all sniffing interface(s) that will be receiving tapped, spanned or mirrored traffic.  Do not apply this configuration to management interface(s).
+
+1. Get interface names using `ip -f link -br address`  .
+
+   > Physical interfaces are listed with the prefix `en`.
+   > 
+
+![image-20200505231623160](/images/image-listinterfaces.png)
+
+
+2. Use `#ethtool -g <interface name>` to get the maximum ring parameter.
+
+> Here, the maximum ring parameter is `2047`.
+
+```sniffing_interfaces
+#ethtool -g eno2
+...
+Pre-set maximums:
+RX:  2047
+...
+```
+
+3. For each each sniffing interface `#vi /etc/sysconfig/network-scripts/ifcfg-<interface name>`.
+   1. Apply the following:
+
+> You will have to add the `ETHTOOL_OPTS` and `NM_CONTROLLED` lines and `ONBOOT=yes`.  Notice that previous recorded value `2047` exists in `ETHTOOL_OPTS` options.  This value should reflect that of the interface(s) you are using for sniffing.
+
+```sniff_config
+...
+DEFROUTE=no
+IPV4_FAILURE_FATAL=no
+IPV6INIT=no
+IPV6_AUTOCONF=no
+IPV6_DEFROUTE=no
+IPV6_FAILURE_FATAL=no
+NAME=eno2
+DEVICE=eno2
+ONBOOT=yes
+NM_CONTROLLED=no
+ETHTOOL_OPTS="-G ${DEVICE} rx 2047; -K ${DEVICE} rx off; -K ${DEVICE} tx off; -K ${DEVICE} sg off; -K ${DEVICE} tso off; -K ${DEVICE} ufo off; -K ${DEVICE} gso off; -K ${DEVICE} gro off; -K ${DEVICE} lro off"
+...
+```
+
+
+## 3.12 Install CRONTAB
 > Ubuntu 22.04 does not come with CRONTAB installed.  We will need this feature to be installed to schedule some recurring tasks with regards to Zeek and its plugins
 
 Execute the following command to install Crontab
@@ -786,50 +833,6 @@ export {
 zeekctl deploy
 ```
 
-### 4.4.9. Optimize Sniffing Interfaces
-
-> Configure on all sniffing interface(s) that will be receiving tapped, spanned or mirrored traffic.  Do not apply this configuration to management interface(s).
-
-1. Get interface names using `ip -f link -br address`  .
-
-   > Physical interfaces are listed with the prefix `en`.
-   > 
-
-![image-20200505231623160](/images/image-listinterfaces.png)
-
-
-2. Use `#ethtool -g <interface name>` to get the maximum ring parameter.
-
-> Here, the maximum ring parameter is `2047`.
-
-```sniffing_interfaces
-#ethtool -g eno2
-...
-Pre-set maximums:
-RX:  2047
-...
-```
-
-3. For each each sniffing interface `#vi /etc/sysconfig/network-scripts/ifcfg-<interface name>`.
-   1. Apply the following:
-
-> You will have to add the `ETHTOOL_OPTS` and `NM_CONTROLLED` lines and `ONBOOT=yes`.  Notice that previous recorded value `2047` exists in `ETHTOOL_OPTS` options.  This value should reflect that of the interface(s) you are using for sniffing.
-
-```sniff_config
-...
-DEFROUTE=no
-IPV4_FAILURE_FATAL=no
-IPV6INIT=no
-IPV6_AUTOCONF=no
-IPV6_DEFROUTE=no
-IPV6_FAILURE_FATAL=no
-NAME=eno2
-DEVICE=eno2
-ONBOOT=yes
-NM_CONTROLLED=no
-ETHTOOL_OPTS="-G ${DEVICE} rx 2047; -K ${DEVICE} rx off; -K ${DEVICE} tx off; -K ${DEVICE} sg off; -K ${DEVICE} tso off; -K ${DEVICE} ufo off; -K ${DEVICE} gso off; -K ${DEVICE} gro off; -K ${DEVICE} lro off"
-...
-```
 
 
 ### 4.4.10. Configuration Files
