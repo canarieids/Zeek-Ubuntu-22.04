@@ -662,7 +662,6 @@ zkg install zeek/j-gras/zeek-af_packet-plugin
 ```
 #chown -R zeek:zeek /opt/zeek
 ```
->
 ```
 setcap cap_net_raw=eip /opt/zeek/bin/zeek && setcap cap_net_raw=eip /opt/zeek/bin/capstats
 ```
@@ -745,7 +744,13 @@ pin_cpus=18,19,20,21,22,23,40,41,44,45,46,47,42,43,44
 af_packet_fanout_id=3
 ```
 
-Write configuration `vi /opt/zeek/etc/node.cfg`.
+>Once you have completed you configuration, save your file.
+>Re-Deploy Zeek
+```
+zeekctl deploy
+```
+
+
 
 
 
