@@ -766,6 +766,21 @@ module(load="imfile"
 service syslog-ng restart
 ```
 
+>Due to a bug in Syslog-NG when log files are rotate, we have a script to reload Syslog NG >every 30 seconds
+>
+>Edit Crontab as Root
+>
+```
+#crontab -e
+```
+>Paste the following example to schedule Syslog NG to reload every 30 seconds
+>
+```
+# Reload Syslog-ng
+*/30 * * * * /usr/sbin/syslog-ng-ctl reload
+```
+
+
 
 
 ### 4.4.5. `zeekctl cron`
