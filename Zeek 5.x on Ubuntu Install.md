@@ -556,19 +556,36 @@ $
 > #Recipient address for all emails sent out by Zeek and ZeekControl.
 > MailTo = security@your-org.ca
 
-2. If required, edit the file `/etc/mail/sendmail.mc`locate the line `dnl define('SMART_HOST', smtp.your.provider')dnl`. 
-   1. Remove the leading `dnl` and define your smtp relay in place of `smtp.your.provider`.
-   2. Re-build the sendmail configuration `#/etc/mail/make`.
-3. Enable and start sendmail `#systemctl start sendmail && systemctl enable sendmail`.
-4. Run `$zeekctl deploy` and if sendmail is working correctly, recipient(s) will receive an email from the system.
+2. 
 
-### 4.4.3. `selinux`
+### 4.4.3. UFW - Uncomplicated Firewall
 
-> selinux is a security module that provides a mechanism for supporting access control policies.  It is set to `enforcing` by default and will block some services if not configured specifically or set to permissive.
+> Install UFW
+> 
+```
+sudo apt install ufw -y
+```
 
-- `sestatus`: Shows settings and paths.
-- `setenforce [Option]`: Toggle selinux.  Use when troubleshooting permissions.  This command is not persistent.
-  - Options: `[ Enforcing | Permissive | 1 | 0 ]`
+>Confirm UFW service running
+>
+```
+sudo ufw status
+```
+
+
+>Allow SSH
+>
+```
+sudo ufw allow 22
+```
+>Enable the UFW service
+>
+```
+sudo ufw enable
+```
+>If you need to disable the UFW service, use the command 'sudo ufw disable'
+>
+
 
 ### 4.4.4. `rsyslog (optional)`
 
@@ -626,6 +643,8 @@ module(load="imfile"
 */5 * * * * /opt/zeek/bin/zeekctl cron
 ```
 
+## Zeek Plugins
+
 
 ### 4.4.7. Install `AF_Packet` plugin
 
@@ -638,14 +657,95 @@ zkg install zeek/j-gras/zeek-af_packet-plugin
 ```
 
 
-2. Re-Apply permissions for the Zeek user and group
-- `	#chown -R zeek:zeek /opt/zeek ` 
+>2. Re-Apply permissions for the Zeek user and group
+>
+>- `	#chown -R zeek:zeek /opt/zeek ` 
+>
 - `setcap cap_net_raw=eip /opt/zeek/bin/zeek && setcap cap_net_raw=eip /opt/zeek/bin/capstats
 `
 
+>3. Reconfigure`node.cfg` to use AF_PACKET
+>With AF Packet now installed, we must reconfigure the node.cfg file to use the AF Packet plugin.  The following items will need to be defined in the node.cfg file:
+>
+>- Define af_packet parameters (interfaces) and dedicate cpu threads to nodes.
+>- Configure assign interfaces and AF_PACKET parameters to workers.
+>- Assign workers to interfaces.
+>- Pin core(s) to cluster elements, such as workers, to ensure dedicated compute resources.  
+>- The general rule is 250MiB throughput per thread.
+>- Well distributed load makes more efficient work.
+
+>4. Fet the `processors` and `core ids`of the server.  Use the distribution of processors to core for similar distribution between workers.
+
+```awksed
+$awk '/core id/ || /processor/' /proc/cpuinfo | sed 'N;s/\n/\t/'
+...
+processor       : 0     core id         : 0
+processor       : 1     core id         : 4
+...
+processor       : 39    core id         : 26
+```
 
 
-<<Need steps to modiify nodes.cfg>>
+
+> Workers: The fastest memory and CPU core speed you can afford is recommended since all of the protocol parsing and most analysis will take place here.
+
+
+
+>Edit node.cfg
+>
+```
+$vi /opt/zeek/etc/node.cfg`.
+```
+> Example for **JSP2 Hardware**: Three workers, each with their own interface:
+
+>- 15 threads per worker
+>- Theoretical throughput: (Megabit) = (#Threads)(250) 
+>- 15*250=3.75Gigabit per worker
+>- Threads reserved for system: 14, 15, 38, 39
+
+```
+[logger]
+type=logger
+host=localhost
+
+[manager]
+type=manager
+host=localhost
+
+[proxy-1]
+type=proxy
+host=localhost
+
+[worker-1]
+type=worker
+host=localhost
+interface=af_packet::eno2
+lb_method=custom
+lb_procs=15
+pin_cpus=0,1,4,5,8,9,10,11,24,25,28,29,32,33,34
+af_packet_fanout_id=1
+
+[worker-2]
+type=worker
+host=localhost
+interface=af_packet::ens1f0np0
+lb_method=custom
+lb_procs=15
+pin_cpus=2,3,6,7,12,13,16,17,26,27,30,31,35,36,37
+af_packet_fanout_id=2
+
+[worker-3]
+type=worker
+host=localhost
+interface=af_packet::ens1f1np1
+lb_method=custom
+lb_procs=15
+pin_cpus=18,19,20,21,22,23,40,41,44,45,46,47,42,43,44
+af_packet_fanout_id=3
+```
+
+Write configuration `vi /opt/zeek/etc/node.cfg`.
+
 
 
 ### 4.4.8. Install `ADD_INTERFACES` plugin
@@ -750,163 +850,6 @@ ETHTOOL_OPTS="-G ${DEVICE} rx 2047; -K ${DEVICE} rx off; -K ${DEVICE} tx off; -K
 192.168.0.0/16      	DMZ
 ```
 
-#### 4.4.10.2. `node.cfg`
-
-> Define af_packet parameters (interfaces) and dedicate cpu threads to nodes.
-
-- Configure assign interfaces and AF_PACKET parameters to workers.
-- Assign workers to interfaces.
-- Pin core(s) to cluster elements, such as workers, to ensure dedicated compute resources.  
-  - The general rule is 250MiB throughput per thread.
-    - Well distributed load makes more efficient work.
-
-1. Fet the `processors` and `core ids`of the server.  Use the distribution of processors to core for similar distribution between workers.
-
-```awksed
-$awk '/core id/ || /processor/' /proc/cpuinfo | sed 'N;s/\n/\t/'
-...
-processor       : 0     core id         : 0
-processor       : 1     core id         : 4
-...
-processor       : 39    core id         : 26
-```
-
-2. Write configuration `vi /opt/zeek/etc/node.cfg`.
-
-> Workers: The fastest memory and CPU core speed you can afford is recommended since all of the protocol parsing and most analysis will take place here.
-
-##### 2a. **JSP2 Hardware**: Two workers sharing one interface:
-
-- 20 threads per worker
-  - Theoretical throughput: (Megabit) = (#Threads)(250) 
-    - 20*250=5Gigabit per worker
-- Threads reserved for system: 14, 15, 18, 19, 38, 39 42, 43
-
-```jsp2
-...
-[logger]
-type=logger
-host=localhost
-
-[manager]
-type=manager
-host=localhost
-
-[proxy-1]
-type=proxy
-host=localhost
-
-[worker-1]
-type=worker
-host=localhost
-interface=af_packet::eno2
-lb_method=custom
-lb_procs=20
-pin_cpus=0,1,2,3,4,5,6,7,8,9,10,11,12,13,16,17,20,21,22,23
-af_packet_fanout_id=2
-
-[worker-2]
-type=worker
-host=localhost
-interface=af_packet::eno2
-lb_method=custom
-lb_procs=20
-pin_cpus=24,25,26,27,28,29,30,31,32,33,34,35,36,37,40,41,44,45,46,47
-af_packet_fanout_id=3
-```
-
-
-
-##### 2b. **JSP2 Hardware**: Three workers, each with their own interface:
-
-- 15 threads per worker
-  - Theoretical throughput: (Megabit) = (#Threads)(250) 
-    - 15*250=3.75Gigabit per worker
-- Threads reserved for system: 14, 15, 38, 39
-
-```jsp2
-...
-[logger]
-type=logger
-host=localhost
-
-[manager]
-type=manager
-host=localhost
-
-[proxy-1]
-type=proxy
-host=localhost
-
-[worker-1]
-type=worker
-host=localhost
-interface=af_packet::eno2
-lb_method=custom
-lb_procs=15
-pin_cpus=0,1,4,5,8,9,10,11,24,25,28,29,32,33,34
-af_packet_fanout_id=2
-
-[worker-2]
-type=worker
-host=localhost
-interface=af_packet::ens1f0np0
-lb_method=custom
-lb_procs=15
-pin_cpus=2,3,6,7,12,13,16,17,26,27,30,31,35,36,37
-af_packet_fanout_id=3
-
-[worker-3]
-type=worker
-host=localhost
-interface=af_packet::ens1f1np1
-lb_method=custom
-lb_procs=15
-pin_cpus=18,19,20,21,22,23,40,41,44,45,46,47,42,43,44
-af_packet_fanout_id=4
-```
-
-
-
-##### 2c. JSP1 Hardware: Two workers sharing one interface:
-
-- 18 threads per worker
-  - Theoretical throughput: (Megabit) = (#Threads)(250) 
-    - 18*250=4.5Gigabit per worker
-- Threads reserved for system: 36, 37, 38, 39
-
-```jsp2
-...
-[logger]
-type=logger
-host=localhost
-
-[manager]
-type=manager
-host=localhost
-
-[proxy-1]
-type=proxy
-host=localhost
-
-[worker-1]
-type=worker
-host=localhost
-interface=af_packet::eno2
-lb_method=custom
-lb_procs=18
-pin_cpus=0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34
-af_packet_fanout_id=2
-
-[worker-2]
-type=worker
-host=localhost
-interface=af_packet::eno2
-lb_method=custom
-lb_procs=18
-pin_cpus=1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35
-af_packet_fanout_id=3
-```
 
 #### 4.4.10.3. `zeekctl.cfg`
 
