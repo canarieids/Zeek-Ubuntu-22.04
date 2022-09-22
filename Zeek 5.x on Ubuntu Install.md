@@ -698,7 +698,7 @@ module(load="imfile"
 >Edit the syslog-NG configuration file
 >
 ```
-#
+#vi /etc/syslog-ng/syslog-ng.conf
 ```
 >Example configuration, insert below @include "scl.conf"
 >TAke note the program-override assigns a tag to each log type.  This will be important when >developing a parser for your analystics/SIEM platform.
@@ -708,12 +708,6 @@ module(load="imfile"
  source s_local {
      system(); internal();
  };
-
-# source s_bro_file {
-#    file("/opt/zeek/logs/current/dns.log" program-override("bro-dns") flags(no-parse));
-#    file("/opt/zeek/logs/current/conn.log" program-override("bro-conn") flags(no-parse));
-#    file("/opt/zeek/logs/current/ssl.log" program-override("bro-ssl") flags(no-parse));
-#    file("/opt/zeek/logs/current/dhcp.log" program-override("bro-dhcp") flags(no-parse));
 
  source s_bro_file {
     file("/opt/zeek/logs/current/dns.log" program-override("zeek-dns") flags(no-parse));
