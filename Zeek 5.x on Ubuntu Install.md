@@ -363,7 +363,8 @@ usermod -a -G zeek zeek
 >
 
 
-##3.9 Install Dependancies
+## 3.9 Install Dependancies
+
 >Install the required dependancies for Zeek
 >
 
@@ -377,7 +378,7 @@ usermod -a -G zeek zeek
 #sudo apt-get install python3-git python3-semantic-version
 ```
 
-##3.10 Configure interfaces for Promiscuous mode
+## 3.10 Configure interfaces for Promiscuous mode
 >
 >Zeek requires the interfaces on which it will sniff traffic be configured into PROMISCUOUS mode.    By configuring your interfaces into this mode, you are allowing the network interface to receive packets that would normally be discarded.
 
@@ -421,7 +422,7 @@ ens2f2: <BROADCAST,MULTICAST,PROMISC,UP,LOWER_UP> mtu 1500 qdisc mq state UP
 
 5. Reboot your server and re-confirm Step 4 to ensure interfaces come up with the 'PROMISC' flag
 
-##3.11 Install CRONTAB
+## 3.11 Install CRONTAB
 > Ubuntu 22.04 does not come with CRONTAB installed.  We will need this feature to be installed to schedule some recurring tasks with regards to Zeek and its plugins
 
 Execute the following command to install Crontab
