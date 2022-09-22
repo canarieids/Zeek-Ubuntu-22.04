@@ -659,9 +659,9 @@ zkg install zeek/j-gras/zeek-af_packet-plugin
 
 >2. Re-Apply permissions for the Zeek user and group
 >
->- `	#chown -R zeek:zeek /opt/zeek ` 
+`	#chown -R zeek:zeek /opt/zeek ` 
 >
-- `setcap cap_net_raw=eip /opt/zeek/bin/zeek && setcap cap_net_raw=eip /opt/zeek/bin/capstats
+`setcap cap_net_raw=eip /opt/zeek/bin/zeek && setcap cap_net_raw=eip /opt/zeek/bin/capstats
 `
 
 >3. Reconfigure`node.cfg` to use AF_PACKET
@@ -688,13 +688,11 @@ processor       : 39    core id         : 26
 
 
 > Workers: The fastest memory and CPU core speed you can afford is recommended since all of the protocol parsing and most analysis will take place here.
-
-
-
+>
 >Edit node.cfg
 >
 ```
-$vi /opt/zeek/etc/node.cfg`.
+$vi /opt/zeek/etc/node.cfg
 ```
 > Example for **JSP2 Hardware**: Three workers, each with their own interface:
 
