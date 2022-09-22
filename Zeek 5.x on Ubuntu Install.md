@@ -681,6 +681,25 @@ module(load="imfile"
 ...
 ```
 
+2. Configure rsyslog to send logs to a remote IP4 node `# vi /etc/rsyslog.conf`.
+
+> Replace '10.189.XX.XXX' with the address of the remote syslog server and designate tcp vs. udp with `@`.
+
+​		1. TCP, port 514: `@@`.
+
+```rsyslog2
+### rsyslog config ###
+*.*     @@10.XXX.XXX.XXX:514
+```
+
+​		2. UDP, port 514:`@`.
+
+```rsyslog2
+### rsyslog config ###
+*.*     @10.XXX.XXX.XXX:514
+```
+
+
 
 ### 4.4.4. `syslog-NG (optional)`
 >Syslog-NG can be used instead of RSYNC
@@ -741,24 +760,13 @@ module(load="imfile"
 >
 >
 
-
-2. Configure rsyslog to send logs to a remote IP4 node `# vi /etc/rsyslog.conf`.
-
-> Replace '10.189.XX.XXX' with the address of the remote syslog server and designate tcp vs. udp with `@`.
-
-​		1. TCP, port 514: `@@`.
-
-```rsyslog2
-### rsyslog config ###
-*.*     @@10.XXX.XXX.XXX:514
+>Restart SyslogNG
+>
+```
+service syslog-ng restart
 ```
 
-​		2. UDP, port 514:`@`.
 
-```rsyslog2
-### rsyslog config ###
-*.*     @10.XXX.XXX.XXX:514
-```
 
 ### 4.4.5. `zeekctl cron`
 
