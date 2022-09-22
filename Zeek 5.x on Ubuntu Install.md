@@ -481,8 +481,6 @@ sudo apt-get -y install cron
 >
 
 
-
-
 2. Add Zeek binary files to path for Z.
 
 ```add zeek to path
@@ -560,6 +558,44 @@ starting workers ...
 $
 
 
+```
+
+## 4.1. Start Zeek with system
+
+> To start Zeek when the operating system starts, create a file and place it into `/etc/systemd/system` .
+
+1. Create a file called `/etc/systemd/system/zeek.service` and populate it as follows:
+
+`# cd /etc/systemd/system && vi zeek.service`
+
+```zeek.service
+[Unit]
+Description=Zeek
+After=network.target
+
+[Service]
+ExecStartPre=/opt/zeek/bin/zeekctl cleanup
+ExecStartPre=/opt/zeek/bin/zeekctl check
+ExecStartPre=/opt/zeek/bin/zeekctl install
+ExecStart=/opt/zeek/bin/zeekctl start
+ExecStop=/opt/zeek/bin/zeekctl stop
+RestartSec=10s
+Type=oneshot
+RemainAfterExit=yes
+TimeoutStopSec=600
+User=zeek
+Group=zeek
+
+[Install]
+WantedBy=multi-user.target
+```
+
+>2. Make the file executable, `start` the service and `enable` it.
+
+```zeek.service
+#chmod u+x /etc/systemd/system/zeek.service
+#systemctl start zeek.service
+#systemctl enable zeek.service
 ```
 
 
@@ -905,7 +941,7 @@ The key's randomart image is:
 ```
 
 3. Copy the contents of  your new public key:  `$cat ~/.ssh/id_rsa.pub`.
-4. Contact Mouatez Karbab via email `elmouatez.karbab@concordia.ca` or via the JSP Slack channel (jsp-tech) for registration and access to remote server. 
+4. Contact Anis via email `anis.lounis@mail.concordia.ca` or via the JSP Slack channel (#jsp-tech) for registration and access to remote server. 
    - Include your ssh public key of your zeek server.
    - Include the public IP of your server.
    - Include the public IP address(s) of workstations that will be accessing the portal (GUI).
@@ -940,7 +976,7 @@ username@feedserver:~$
 > Included in section **`3.9 Repositories & Dependencies`.**  This step is only necessary if the application is not already installed.
 
 ```install rsync
-#yum -y install rsync
+#sudo apt install rsync
 ...
 Complete!
 ```
@@ -1017,43 +1053,6 @@ $ crontab –e
 ...
 ```
 
-### 4.4.14. Start Zeek with system
-
-> To start Zeek when the operating system starts, create a file and place it into `/etc/systemd/system` .
-
-1. Create a file called `/etc/systemd/system/zeek.service` and populate it as follows:
-
-`# cd /etc/systemd/system && vi zeek.service`
-
-```zeek.service
-[Unit]
-Description=Zeek
-After=network.target
-
-[Service]
-ExecStartPre=/opt/zeek/bin/zeekctl cleanup
-ExecStartPre=/opt/zeek/bin/zeekctl check
-ExecStartPre=/opt/zeek/bin/zeekctl install
-ExecStart=/opt/zeek/bin/zeekctl start
-ExecStop=/opt/zeek/bin/zeekctl stop
-RestartSec=10s
-Type=oneshot
-RemainAfterExit=yes
-TimeoutStopSec=600
-User=zeek
-Group=zeek
-
-[Install]
-WantedBy=multi-user.target
-```
-
-2. Make the file executable, `start` the service and `enable` it.
-
-```zeek.service
-#chmod u+x /etc/systemd/system/zeek.service
-#systemctl start zeek.service
-#systemctl enable zeek.service
-```
 
 <div style="page-break-after: always; break-after: page;"></div>
 
