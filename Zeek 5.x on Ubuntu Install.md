@@ -427,47 +427,30 @@ ens2f2: <BROADCAST,MULTICAST,PROMISC,UP,LOWER_UP> mtu 1500 qdisc mq state UP
 
 > Configure on all sniffing interface(s) that will be receiving tapped, spanned or mirrored traffic.  Do not apply this configuration to management interface(s).
 
-1. Get interface names using `ip -f link -br address`  .
-
-   > Physical interfaces are listed with the prefix `en`.
-   > 
-
-![image-20200505231623160](/images/image-listinterfaces.png)
-
-
-2. Use `#ethtool -g <interface name>` to get the maximum ring parameter.
-
-> Here, the maximum ring parameter is `2047`.
-
-```sniffing_interfaces
-#ethtool -g eno2
-...
-Pre-set maximums:
-RX:  2047
-...
+>1. Get interface names 
+>
+```
+ip -f link -br address
 ```
 
-3. For each each sniffing interface `#vi /etc/sysconfig/network-scripts/ifcfg-<interface name>`.
-   1. Apply the following:
-
-> You will have to add the `ETHTOOL_OPTS` and `NM_CONTROLLED` lines and `ONBOOT=yes`.  Notice that previous recorded value `2047` exists in `ETHTOOL_OPTS` options.  This value should reflect that of the interface(s) you are using for sniffing.
-
-```sniff_config
+> Physical interfaces are listed with the prefix `en`.
+> 
+>Example output:
+```
 ...
-DEFROUTE=no
-IPV4_FAILURE_FATAL=no
-IPV6INIT=no
-IPV6_AUTOCONF=no
-IPV6_DEFROUTE=no
-IPV6_FAILURE_FATAL=no
-NAME=eno2
-DEVICE=eno2
-ONBOOT=yes
-NM_CONTROLLED=no
-ETHTOOL_OPTS="-G ${DEVICE} rx 2047; -K ${DEVICE} rx off; -K ${DEVICE} tx off; -K ${DEVICE} sg off; -K ${DEVICE} tso off; -K ${DEVICE} ufo off; -K ${DEVICE} gso off; -K ${DEVICE} gro off; -K ${DEVICE} lro off"
+lo               UNKNOWN        00:00:00:00:00:00 <LOOPBACK,UP,LOWER_UP>
+eno1             UP             4c:d9:8f:ab:25:00 <BROADCAST,MULTICAST,UP,LOWER_UP>
+enp59s0f0np0     DOWN           b0:26:28:cc:d8:a0 <NO-CARRIER,BROADCAST,MULTICAST,PROMISC,UP>
+eno2             UP             4c:d9:8f:ab:25:01 <BROADCAST,MULTICAST,PROMISC,UP,LOWER_UP>
+enp59s0f1np1     DOWN           b0:26:28:cc:d8:a1 <NO-CARRIER,BROADCAST,MULTICAST,PROMISC,UP>
+enp94s0f0np0     UP             4c:d9:8f:9e:c6:96 <BROADCAST,MULTICAST,PROMISC,UP,LOWER_UP>
+enp94s0f1np1     DOWN           4c:d9:8f:9e:c6:97 <NO-CARRIER,BROADCAST,MULTICAST,PROMISC,UP>
 ...
 ```
-
+>2.
+>3.
+>4.
+>
 
 ## 3.12 Install CRONTAB
 > Ubuntu 22.04 does not come with CRONTAB installed.  We will need this feature to be installed to schedule some recurring tasks with regards to Zeek and its plugins
