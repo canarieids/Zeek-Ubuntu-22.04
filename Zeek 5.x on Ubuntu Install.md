@@ -564,10 +564,14 @@ $
 
 > To start Zeek when the operating system starts, create a file and place it into `/etc/systemd/system` .
 
-1. Create a file called `/etc/systemd/system/zeek.service` and populate it as follows:
+>1. Create a file called `/etc/systemd/system/zeek.service`
+>
 
-`# cd /etc/systemd/system && vi zeek.service`
-
+```
+# vi /etc/systemd/system/zeek.service
+```
+>2. Populate the file as follows:
+>
 ```zeek.service
 [Unit]
 Description=Zeek
@@ -590,7 +594,7 @@ Group=zeek
 WantedBy=multi-user.target
 ```
 
->2. Make the file executable, `start` the service and `enable` it.
+>3. Make the file executable, `start` the service and `enable` it.
 
 ```zeek.service
 #chmod u+x /etc/systemd/system/zeek.service
