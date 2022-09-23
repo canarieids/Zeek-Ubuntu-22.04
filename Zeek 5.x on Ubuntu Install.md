@@ -339,7 +339,7 @@ usermod -a -G zeek zeek
 
 2. Execute the following command to give the zeek process permissions to read raw packet captures
 ```
-#setcap cap_net_raw+eip /opt/zeek/bin/zeek && setcap cap_net_raw+eip /opt/zeek/bin/capstats
+#setcap cap_net_raw=eip /opt/zeek/bin/zeek && setcap cap_net_raw=eip /opt/zeek/bin/capstats
 ```
 
 ## 3.8. Repositories
@@ -384,17 +384,29 @@ usermod -a -G zeek zeek
 
 
 1. Create a file called `/etc/systemd/system/promisc.service` 
->
-> Populate the file using the below examles. Where each sniffing interface is defined under `[Service]`.  This will require one line per interface.
+>Populate the file using the below examles. Where each sniffing interface is defined under `[Service]`.  This will require one line per interface.
 > In the below example, we have `ens2f1` & `ens2f2` configured to be promiscuous.  Zeek will be able to use these as sniffing interfaces.  Substitute these interface names from your environment.
 
 ```multiple
-...
 [Service]
-...
-ExecStart=/usr/sbin/ip link set dev ens2f1 promisc on
-ExecStart=/usr/sbin/ip link set dev ens2f2 promisc on
-...
+
+[Unit]
+Description=Bring up an interface in promiscuous mode during boot
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/ip link set dev enp94s0f0np0 promisc on
+ExecStart=/usr/sbin/ip link set dev enp94s0f1np1 promisc on
+ExecStart=/usr/sbin/ip link set dev enp59s0f0np0 promisc on
+ExecStart=/usr/sbin/ip link set dev enp59s0f1np1 promisc on
+
+TimeoutStartSec=0
+RemainAfterExit=yes
+
+[Install]
+WantedBy=default.target
+
 ```
 
 2. Make the changes permanent and start on boot.
@@ -1352,7 +1364,7 @@ e) Re-Propagate Zeek permissions to the Zeek folder and Capture packet functiona
 
 ```
 #chown -R zeek:zeek /opt/zeek
-#setcap cap_net_raw+eip /opt/zeek/bin/zeek && setcap cap_net_raw+eip /opt/zeek/bin/capstats
+#setcap cap_net_raw=eip /opt/zeek/bin/zeek && setcap cap_net_raw=eip /opt/zeek/bin/capstats
 ```
 
 f) Deploy the plugin 
