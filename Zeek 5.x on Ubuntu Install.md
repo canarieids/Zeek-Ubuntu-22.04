@@ -1175,7 +1175,7 @@ $zeekctl deploy
 4. Add Zeek binaries to path.
 
 ```add zeek to path
-#echo "pathmunge /opt/zeek/bin" > /etc/profile.d/zeek.sh
+#echo "export PATH=/opt/zeek/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin" >> /etc/profile.d/zeek.sh
 ```
 
 5. Confirm path update with `which` command.
