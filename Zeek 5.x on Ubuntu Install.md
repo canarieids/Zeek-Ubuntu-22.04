@@ -1280,13 +1280,25 @@ Loaded "zeek/corelight/cve-2021-44228"
 - Several sources for IOC's to be used with the Zeek intel framework.
 - New log file called `intel.log`.
 
-1. Clone from GitHub `$git clone https://github.com/CriticalPathSecurity/Zeek-Intelligence-Feeds.git /opt/zeek/share/zeek/site/Zeek-Intelligence-Feeds`.
-2. Enable loading of plugin `echo "@load Zeek-Intelligence-Feeds" >> /opt/zeek/share/zeek/site/local.zeek `.
+1. Clone from GitHub
+```
+$git clone https://github.com/CriticalPathSecurity/Zeek-Intelligence-Feeds.git /opt/zeek/share/zeek/site/Zeek-Intelligence-Feeds
+```
+
+2. Enable loading of plugin 
+```
+$echo "@load Zeek-Intelligence-Feeds" >> /opt/zeek/share/zeek/site/local.zeek
+```
+
 3. Keep the IOC's updated
 
 > This process will automate the updating of the various threat feeds.
 
-a)  `$vi /home/zeek/zeek_update_intel-feeds.sh`.
+```
+$vi /home/zeek/zeek_update_intel-feeds.sh
+```
+
+Paste the contents
 
 ```
 #!/bin/sh
@@ -1299,9 +1311,16 @@ git clean -df
 sed -i 's+/usr/local/+/opt/+g' /opt/zeek/share/zeek/site/Zeek-Intelligence-Feeds/main.zeek
 ```
 
-b) Make the new script executable: `$chmod +x /home/zeek/zeek_update_intel-feeds.sh`.
+b) Make the new script executable: 
+```
+$chmod +x /home/zeek/zeek_update_intel-feeds.sh
+```
 
-c) Include or exclude feeds `$vi /opt/zeek/share/zeek/site/Zeek-Intelligence-Feeds/main.zeek`
+c) Include or exclude feeds 
+```
+$vi /opt/zeek/share/zeek/site/Zeek-Intelligence-Feeds/main.zeek
+```
+
 
 > Critical path security has many intelligence feeds.  Participants may choose to enable or disable feeds depending on requirements or IDS placement.  Feeds can be excluded by commenting them out with `#`.
 
@@ -1312,27 +1331,35 @@ c) Include or exclude feeds `$vi /opt/zeek/share/zeek/site/Zeek-Intelligence-Fee
 @load policy/frameworks/intel/do_notice
 redef Intel::read_files += {
 ...
-#        "/opt/zeek/share/zeek/site/Zeek-Intelligence-Feeds/cps_cobaltstrike_domain.intel",
-        "/opt/zeek/share/zeek/site/Zeek-Intelligence-Feeds/log4j_ip.intel",
+#       "/opt/zeek/share/zeek/site/Zeek-Intelligence-Feeds/cps_cobaltstrike_domain.intel",
+    "/opt/zeek/share/zeek/site/Zeek-Intelligence-Feeds/log4j_ip.intel",
 #       "/opt/zeek/share/zeek/site/Zeek-Intelligence-Feeds/predict_intel.intel",
 ...
 };
 ```
 
-d) Add the script to crontab for execution every 5 minutes: `$crontab -e`.
-
+d) Add the script to crontab for execution every hour at minute 0: 
 ```
-5 * * * * sh /home/zeek/zeek_update_intel-feeds.sh >/dev/null 2>&1
+$crontab -e
+```
+
+Paste the following
+```
+0 * * * * sh /home/zeek/zeek_update_intel-feeds.sh >/dev/null 2>&1
 ```
 
 e) Re-Propagate Zeek permissions to the Zeek folder and Capture packet functionality (as Root)
 
-`
-#chown -R zeek:zeek /opt/zeek"
+```
+#chown -R zeek:zeek /opt/zeek
 #setcap cap_net_raw+eip /opt/zeek/bin/zeek && setcap cap_net_raw+eip /opt/zeek/bin/capstats
-`
+```
 
-f) Deploy the plugin `$zeekctl deploy`.
+f) Deploy the plugin 
+
+```
+$zeekctl deploy
+```
 
 
 
