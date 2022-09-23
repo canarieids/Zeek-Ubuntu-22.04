@@ -705,7 +705,7 @@ module(load="imfile"
 
 
 
-### 4.4.4. `syslog-NG (optional)`
+### 4.4.5. `syslog-NG (optional)`
 >Syslog-NG can be used instead of RSYNC
 >
 >
@@ -1073,8 +1073,11 @@ Complete!
 
 > Create an `rsync` script and add it to the crontab of the zeek user.
 
-a) Create a script and populate it:`$vi rsync.sh`.
+a) Create a script and populate it:
 
+```
+$vi /home/zeek/rsync.sh
+```
 > The `rsync` command in this script can be tuned to the institution's preference in terms of what files are uploaded.  This script does not upload files that may contain  personally identifiable information (PII).
 
 ``` rsync.bat
@@ -1091,15 +1094,18 @@ done
 ```
 
 b) make the script executable:
-`$chmod +x rsync.sh`
+```
+$chmod +x rsync.sh
+```
 
 c) Automate transfer of files with crontab: 
-
+```
 `$ crontab -e`
+```
 
 ```rsync_crontab_b
 # Sync Zeek logs every hour.
-0 * * * * /usr/bin/sh /path_to_file/rsync.sh
+0 * * * * /usr/bin/sh /home/zeek/rsync.sh
 ```
 
 
@@ -1178,6 +1184,8 @@ $zeekctl deploy
 #echo "export PATH=/opt/zeek/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin" >> /etc/profile.d/zeek.sh
 ```
 
+>Logout and login again as Zeek
+
 5. Confirm path update with `which` command.
 
 > If the command returns `/opt/zeek/bin/zeek`, your path has been updated.
@@ -1192,16 +1200,25 @@ $which zeek
 
 # 6. Use Cases
 
-a) Ensure that zkg packages are being loaded `vi /opt/zeek/share/zeek/site/local.zeek`
-
+a) Ensure that zkg packages are being loaded 
 ```
+$vi /opt/zeek/share/zeek/site/local.zeek
+```
+
 # Uncomment this to source zkg's package state
-@load packages
+
+'@load packages'
+
+
+b) Refresh zeek package manager repository
+```
+$ zkg refresh`
 ```
 
-b) Refresh zeek package manager repository`$ zkg refresh`
-
-c) Keep packages updated `$ zkg upgrade`
+c) Keep packages updated 
+```
+$ zkg upgrade
+```
 
 ### 6.1 Detect log4j: CVE-2021-44228
 
