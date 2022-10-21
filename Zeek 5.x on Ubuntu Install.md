@@ -608,7 +608,7 @@ WantedBy=multi-user.target
 
 >3. Make the file executable, `start` the service and `enable` it.
 
-```zeek.service
+```
 #chmod u+x /etc/systemd/system/zeek.service
 #systemctl start zeek.service
 #systemctl enable zeek.service
@@ -616,9 +616,8 @@ WantedBy=multi-user.target
 
 
 
+
 ## 4.4. Zeek Configuration Options
-
-
 
 
 ### 4.4.2. `sendmail`(optional)
