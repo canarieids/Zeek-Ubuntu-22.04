@@ -256,8 +256,8 @@ Participants can contact Dell directly for warranty & customer support for hardw
 /home					3.0G
 /					1.813T
 /boot					1.0G
-/boot/efi					1.0G
-/opt/zeek/spool					local disk (SSD)
+/boot/efi				1.0G
+/opt/zeek/spool				local disk (SSD)
 ```
 
 > Once completed your layout should look like this:
