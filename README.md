@@ -441,32 +441,7 @@ ens2f2: <BROADCAST,MULTICAST,PROMISC,UP,LOWER_UP> mtu 1500 qdisc mq state UP
 
 ## 3.11. Optimize Sniffing Interfaces
 
-> Configure on all sniffing interface(s) that will be receiving tapped, spanned or mirrored traffic.  Do not apply this configuration to management interface(s).
-
->1. Get interface names 
->
-```
-ip -f link -br address
-```
-
-> Physical interfaces are listed with the prefix `en`.
-> 
->Example output:
-```
-...
-lo               UNKNOWN        00:00:00:00:00:00 <LOOPBACK,UP,LOWER_UP>
-eno1             UP             4c:d9:8f:ab:25:00 <BROADCAST,MULTICAST,UP,LOWER_UP>
-enp59s0f0np0     DOWN           b0:26:28:cc:d8:a0 <NO-CARRIER,BROADCAST,MULTICAST,PROMISC,UP>
-eno2             UP             4c:d9:8f:ab:25:01 <BROADCAST,MULTICAST,PROMISC,UP,LOWER_UP>
-enp59s0f1np1     DOWN           b0:26:28:cc:d8:a1 <NO-CARRIER,BROADCAST,MULTICAST,PROMISC,UP>
-enp94s0f0np0     UP             4c:d9:8f:9e:c6:96 <BROADCAST,MULTICAST,PROMISC,UP,LOWER_UP>
-enp94s0f1np1     DOWN           4c:d9:8f:9e:c6:97 <NO-CARRIER,BROADCAST,MULTICAST,PROMISC,UP>
-...
-```
->2.
->3.
->4.
->
+> Coming soon
 
 ## 3.12 Install CRONTAB
 > Ubuntu 22.04 does not come with CRONTAB installed.  We will need this feature to be installed to schedule some recurring tasks with regards to Zeek and its plugins
@@ -497,23 +472,29 @@ sudo apt-get -y install cron
 >
 
 
-2. Add Zeek binary files to path for Z.
+2. Add Zeek binary files to path for Zeek.  
 
 ```add zeek to path
 #echo "export PATH=/opt/zeek/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin" >> /etc/profile.d/zeek.sh
 ```
 
-3. Login as `zeek` to update the path.
+3.  Re-apply permissions to the Zeek user/group:
+```Re-apply ownership of /opt/zeek to zeek:zeek
+#chown -R zeek:zeek /opt/zeek
+```
+
+
+4. Login as `zeek` to update the path.
 
 ```su - zeek
 #su - zeek
 ```
 
-4. Confirm the path has been applied with the bash script
+5. Confirm the path has been applied with the bash script
 
 
 > If the command returns `/opt/zeek/bin/zeek`, your path has been updated.
-1. Execute the command 'which zeek' to query for the path.  You should be pointed to ''/opt/zeek/bin/zeek'
+> Execute the command 'which zeek' to query for the path.  You should receive the results: ''/opt/zeek/bin/zeek'
 >
 
 ```
@@ -521,7 +502,6 @@ $which zeek
 /opt/zeek/bin/zeek
 ```
 >You should also be able to execute 'zeekctl' for any working directory
-
 ```
 $zeekctl
 
