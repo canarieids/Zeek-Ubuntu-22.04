@@ -330,21 +330,6 @@ sudo addgroup zeek
 ```
 usermod -a -G zeek zeek
 ```
-## 3.7.  Grant the Zeek user and group ownership and permissions
-
->The following commands re-applies core permissions required by the Zeek service to operate.  Anytime you are going to re-deploy Zeek, you should precede with these two steps.
->
->These two steps are very important!, You will need to be repeat these steps throughout this guide.  
->
-1. Execute the following command to recursively assign ownership to the zeek user and group
-```chown
-#chown -R zeek:zeek /opt/zeek
-```
-
-2. Execute the following command to give the zeek process permissions to read raw packet captures
-```
-#setcap cap_net_raw=eip /opt/zeek/bin/zeek && setcap cap_net_raw=eip /opt/zeek/bin/capstats
-```
 
 ## 3.8. Repositories
 
@@ -478,9 +463,23 @@ sudo apt-get -y install cron
 #echo "export PATH=/opt/zeek/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin" >> /etc/profile.d/zeek.sh
 ```
 
-3.  Re-apply permissions to the Zeek user/group:
-```Re-apply ownership of /opt/zeek to zeek:zeek
+3.  Grant the Zeek user and group ownership and permissions
+
+
+Execute the following command to recursively assign ownership to the zeek user and group
+
+**(!) Bookmark this command for use in any troubleshooting**
+
+```chown
 #chown -R zeek:zeek /opt/zeek
+```
+
+Execute the following command to give the zeek process permissions to read raw packet captures
+
+**(!) Bookmark this command for use in any troubleshooting**
+
+```
+#setcap cap_net_raw=eip /opt/zeek/bin/zeek && setcap cap_net_raw=eip /opt/zeek/bin/capstats
 ```
 
 
@@ -621,7 +620,36 @@ This option enables Zeek to send email.  Defining recipients is covered in secti
 > #Recipient address for all emails sent out by Zeek and ZeekControl.
 > MailTo = security@your-org.ca
 
-2. 
+
+
+2. Install Sendmail
+
+```
+sudo apt-get install sendmail
+```
+3. Configure Sendmail
+```
+vi /etc/mail/sendmail.mc
+```
+If you need to configure a smart host to relay:
+
+```
+define(`RELAY_MAILER_ARGS',`TCP $h 587')dnl
+define(`SMART_HOST','smtp.smarthost.com')dnl
+```
+
+4. Make Sendmail configuration
+```
+sudo sendmailconfig
+```
+
+5. Test Sendmail configure
+```
+echo "test message" | sendmail -v your@email.ca
+```
+
+
+
 
 ### 4.4.3. UFW - Uncomplicated Firewall
 
