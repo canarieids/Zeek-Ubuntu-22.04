@@ -434,14 +434,14 @@ ens2f2: <BROADCAST,MULTICAST,PROMISC,UP,LOWER_UP> mtu 1500 qdisc mq state UP
 Execute the following command to install Crontab
 
 ```
-sudo apt-get -y install cron
+#sudo apt-get -y install cron
 ```
 
 
-# 4. Install and Configure Zeek 
+# 4.0 Install and Configure Zeek 
 
 
-## 4.0. New Install
+## New Install
 
 > Zeek-lts is installed to the prefix `/opt/zeek` When installing from the official repository.
 >
@@ -470,7 +470,7 @@ Execute the following command to recursively assign ownership to the zeek user a
 
 **(!) Bookmark this command for use in any troubleshooting**
 
-```chown
+```
 #chown -R zeek:zeek /opt/zeek
 ```
 
@@ -508,6 +508,7 @@ Welcome to ZeekControl 2.3.0
 Type "help" for help.
 [ZeekControl] >
 ```
+
 
 5. Deploy Zeek
 >You are now ready to complete your first deployment of Zeek.  On each deployment, Zeek re-examines its configuration and scripts and deploys them when starting the services.  In the future, as you modify your Zeek configuration, you will need to complete a deployment each time.
@@ -555,7 +556,7 @@ $
 
 ```
 
-## 4.1. Start Zeek with system
+## 4.1 Start Zeek with system
 
 > To start Zeek when the operating system starts, create a file and place it into `/etc/systemd/system` .
 
@@ -599,13 +600,56 @@ WantedBy=multi-user.target
 
 
 
+## 4.2 Node Crash Recovery`zeekctl cron`
 
-## 4.4. Zeek Configuration Options
+> To ensure reliable and resilient collection of your network traffic, it is recommended to add Zeekctl Cron to Crontab.  This will allow Zeek to recover a node from a crashed state.  Add to `zeekctl cron` to crontab for automatic recovery of crashed nodes.
+
+1. `$crontab -e`
+
+```crontab1
+*/5 * * * * /opt/zeek/bin/zeekctl cron
+```
 
 
-### 4.4.2. `sendmail`(optional)
+## 4.3 Zeek Configuration Options
 
-This option enables Zeek to send email.  Defining recipients is covered in section `4.4.10.3. zeekctl.cfg'
+
+
+#### 4.3.1. Local and Public networks`networks.cfg`
+
+> Defining your networks to Zeek allows for you to differentiate between local and remote traffic.  Add all your netwoks and public networks referencing the example below.
+>
+
+1. `$vi /opt/zeek/etc/networks.cfg`
+
+```networks.cfg
+# List of local networks in CIDR notation, optionally followed by a
+# descriptive tag.
+# For example, "10.0.0.0/8" or "fe80::/64" are valid prefixes.
+
+10.0.0.0/8      		User Workstations
+172.16.0.0/12       	Server Farm A
+172.16.10.0/24			Management Network
+10.0.100.0/22			Campus A
+10.0.101.0/21			Campus B
+205.198.10.20/24		Public Network
+```
+
+
+
+
+### 4.3.2 Email, Log Retention and Collection `zeekctl.cfg`
+
+
+Edit Zeekctl.cfg (Default location: /opt/zeek/etc/zeekctl.cfg)
+
+```
+$vi /opt/zeek/etc/zeekctl.cfg`
+```
+
+#### Email
+
+This option enables Zeek to send email.  
 
 - If not configured, you will get notified when running `zeekctl start` or `zeekctl deploy`.
 - Not a dependency and Zeek will start without it.
@@ -615,10 +659,105 @@ This option enables Zeek to send email.  Defining recipients is covered in secti
 - Can be extended to send mail on events.
 - Not installed by default but is included in the dependency section. participants can configure per environment.
 
-1. Configure email recipients by editing the `zeekctl.cfg` file.  `#vi /opt/zeek/etc/zeekctl.cfg`:
+1. Locate the MailTo line and define an email address
 
 > #Recipient address for all emails sent out by Zeek and ZeekControl.
 > MailTo = security@your-org.ca
+
+
+#### Log Retention and Collection
+
+- Zeek automatically rotates and archives runtime logs from `current`into `/opt/zeek/logs/yyyy-mm-dd/`.  
+- Rotate logs from`/opt/zeek/logs`. 
+- Avoid rotating logs from `/opt/zeek/spool` .
+
+
+> `LogRotationInterval` is measured in seconds.  The default value `3600`, or one hour.
+>
+> `LogExpireInterval` is measured in days.  `30` days is the recommended value.
+
+1. Locate the LogRotationInterval, LogexpireInterval lines and modify to your requirements.
+```
+...
+LogRotationInterval = 3600
+...
+LogExpireInterval = 30
+...
+```
+
+### 4.3.3 Zeek Cluster Mode `node.cfg`
+
+>To provide a scalable solution, it is recommended to configure Zeek to run int Cluster mode. 
+
+1. Edit node.cfg
+```
+$vi /opt/zeek/etc/node.cfg
+```
+
+2. **Comment out** the standalone configuration portion at the top.
+```
+#[zeek]
+#type=standalone
+#host=localhost
+#interface=eno1
+```
+
+3. Define your work node configuration. 
+
+A worker node is a type of thread that can be assigned to one or more interfaces.  For ease of administration, we recommend creating a worker node for each interface you will be using for traffic analsys on your IDS.  For example you will have 4 interfaces you would create 4 workers (Example below).
+
+Please note, you do not have to create a worker for each interface.  If you only intend to use two interfaces, you only would need to create two workers (one for each interface).
+
+Example:
+```
+[logger]
+type=logger
+host=localhost
+
+[manager]
+type=manager
+host=localhost
+
+[proxy-1]
+type=proxy
+host=localhost
+
+[worker-1]
+type=worker
+host=localhost
+interface=ens2f1
+
+[worker-2]
+type=worker
+host=localhost
+interface=ens2f2
+
+[worker-3]
+type=worker
+host=localhost
+interface=ens2f3
+
+[worker-3]
+type=worker
+host=localhost
+interface=ens2f4
+
+```
+
+
+### 4.4.4. Apply the Configuration Files
+
+> With the completion of the previous steps, its now time to re-deploy Zeek.  Anytime you make changes similar to the above, you will need to re-deploy. 
+
+
+When configuration files are modified, execute
+
+```
+$zeekctl deploy
+```
+
+
+## 5.0 `sendmail`(optional)
 
 
 
@@ -651,7 +790,7 @@ echo "test message" | sendmail -v your@email.ca
 
 
 
-### 4.4.3. UFW - Uncomplicated Firewall
+## 6.0. UFW - Uncomplicated Firewall (Optional)
 
 > Install UFW
 > 
@@ -680,7 +819,10 @@ sudo ufw enable
 >
 
 
-### 4.4.4. `rsyslog (optional)`
+## 7.0 Syslog
+
+
+### 7.1 RSYSLOG
 
 >It is recommended to have your Zeek logs sent to a more sophisticated analytics platform, such as a SIEM, Elastic Search, Splunk or simliar platforms.  
 >
@@ -728,11 +870,11 @@ module(load="imfile"
 
 
 
-### 4.4.5. `syslog-NG (optional)`
+### 7.2. SYSLOG-NG
+
 >Syslog-NG can be used instead of RSYNC
 >
->
->
+
 
 
 >Install syslog-NG
@@ -809,21 +951,10 @@ service syslog-ng restart
 
 
 
-
-### 4.4.5. `zeekctl cron`
-
-> Add to `zeekctl cron` to crontab for automatic recovery of crashed nodes.
-
-1. `$crontab -e`
-
-```crontab1
-*/5 * * * * /opt/zeek/bin/zeekctl cron
-```
-
-## Zeek Plugins
+## 8.0 Zeek Plugins
 
 
-### 4.4.7. Install `AF_Packet` plugin
+### 8.1 Install `AF_Packet` plugin
 
 > Ideally, this plugin is installed via the package manager (zkg).  
 >
@@ -931,7 +1062,7 @@ zeekctl deploy
 
 
 
-### 4.4.8. Install `ADD_INTERFACES` plugin
+### 8.3 Install `ADD_INTERFACES` plugin
 
 > Adds cluster node interface to logs. Useful when sniffing multiple interfaces to identify source of log.
 
@@ -964,63 +1095,7 @@ zeekctl deploy
 ```
 
 
-
-### 4.4.10. Configuration Files
-
-> Environment specific information is defined in configuration files.  Zeek reads these files upon `zeekctl start` and  `zeekctl deploy`.  
-
-- When configuration files are modified, run `$zeekctl deploy`.
-
-#### 4.4.10.1. `networks.cfg`
-
-> Add known, or local, networks.  Edit these files as the `zeek` user.
->
-> Include your organization's public networks.
-
-1. `$vi /opt/zeek/etc/networks.cfg`
-
-```networks.cfg
-# List of local networks in CIDR notation, optionally followed by a
-# descriptive tag.
-# For example, "10.0.0.0/8" or "fe80::/64" are valid prefixes.
-
-10.0.0.0/8      		User Workstations
-172.16.0.0/12       	Server Farm
-192.168.0.0/16      	DMZ
-```
-
-
-#### 4.4.10.3. `zeekctl.cfg`
-
-> Define `mail` and `logging` parameters
-
-- Adjust per environment.
-
-1. Edit `MailTo` parameter for use by sendmail in sending reports.
-
-```
-$vi /opt/zeek/etc/zeekctl.cfg
-...
-# Mail Options
-# Recipient address for all emails sent out by Zeek and ZeekControl.
-MailTo = security@your-org.ca
-...
-```
-
-#### 4.4.10.4.  Enable `unknown_protocols.log` (optional)
-
-> Log packet protocols that aren't supported by Zeek.  Will result in a file called `unknown_protocols.log`.
-
-- `$echo "@load misc/unknown-protocols" >> /opt/zeek/share/zeek/site/local.zeek`
-
-#### 4.4.10.4.  Enable common plugins (optional)
-
-- `$ zkg install zeek/salesforce/ja3`
-  - JA3 creates 32 character SSL client fingerprints and logs them as a field in ssl.log
-- `$zkg install zeek/salesforce/hassh`
-  - HASSH is used to identify specific Client and Server SSH implementations.
-
-### 4.4.11.1 File Transfer
+## 9.0 Aggregrate Portal File Transfer - CANIDS
 
 - Participants should be prepared to provide the public address that will access the remote (concordia) server.
 
@@ -1069,7 +1144,7 @@ username@feedserver:~$
 
 
 
-#### 4.4.11.2. `rsync`
+#### 9.1. Install RSYNC 
 
 > Synchronizes files between two systems and only copies what is different.
 
@@ -1084,9 +1159,7 @@ username@feedserver:~$
 
 1. Install `rsync`.
 
-> Included in section **`3.9 Repositories & Dependencies`.**  This step is only necessary if the application is not already installed.
-
-```install rsync
+```
 #sudo apt install rsync
 ...
 Complete!
@@ -1103,7 +1176,7 @@ $vi /home/zeek/rsync.sh
 ```
 > The `rsync` command in this script can be tuned to the institution's preference in terms of what files are uploaded.  This script does not upload files that may contain  personally identifiable information (PII).
 
-``` rsync.bat
+```
 rootDir="/opt/zeek/logs/"
 for day in 0 1 2 3 4 5 6 7
 do
@@ -1127,53 +1200,12 @@ c) Automate transfer of files with crontab:
 ```
 
 ```rsync_crontab_b
-# Sync Zeek logs every hour.
+# Sync Zeek logs every hour to CANIDS.
 0 * * * * /usr/bin/sh /home/zeek/rsync.sh
 ```
 
 
-### 4.4.12. Log Retention and Collection
-
-- Zeek automatically rotates and archives runtime logs from `current`into `/opt/zeek/logs/yyyy-mm-dd/`.  
-- Rotate logs from`/opt/zeek/logs`. 
-- Avoid rotating logs from `/opt/zeek/spool` .
-
-1. Modify defaults by editing `/opt/zeek/etc/zeekctl.cfg`. 
-
-> `LogRotationInterval` is measured in seconds.  The default value `3600`, or one hour.
->
-> `LogExpireInterval` is measured in days.  `30` days is the recommended value.
-
-```node.cfg
-$vi /opt/zeek/etc/zeekctl.cfg
-...
-LogRotationInterval = 3600
-...
-LogExpireInterval = 30
-...
-```
-
-### 4.4.13. Archive Logs to Remote System
-
-> Some participants may have an archive policy which may require more space than is available on the server or could simply require off-site backups.  In this example, we will archive logs greater than 90 days old.
-
-> Please note that file transfer methods described in section `4.3.11.2 rsync` may also suffice for this use case.
-
-- The value of `LogExpireInterval` in `zeekctl.cfg` should be smaller than the `mtime` value in the script.   Else, there is a risk of data loss.
-- Participants can replace `<NFS_SHARE>` with an appropriate reference to a remote system.
-
-```archive
-$ crontab –e
-...
-#Archive Zeek logs
-@daily  find /opt/zeek/logs/20* -type d -mtime +90 -print0 | xargs -r0 mv -rf -t <NFS_SHARE>
-...
-```
-
-
-<div style="page-break-after: always; break-after: page;"></div>
-
-# 5. Deploy and Troubleshoot
+# 10 Deploy and Troubleshoot
 
 > A list of commands that need to be re-applied when modifications to the system have been applied and the system doesn't operate as expected.
 >
@@ -1191,7 +1223,7 @@ $zeekctl deploy
 
 > New applications and system modifications can result in a change of permissions.  The `zeek` user and group should maintain control of `/opt/zeek`.
 
-```chown -R zeek:zeek /opt/zeek
+```
 #chown -R zeek:zeek /opt/zeek
 ```
 
@@ -1221,14 +1253,14 @@ $which zeek
 
 
 
-# 6. Use Cases
+## Use Cases
 
 a) Ensure that zkg packages are being loaded 
 ```
 $vi /opt/zeek/share/zeek/site/local.zeek
 ```
 
-# Uncomment this to source zkg's package state
+Uncomment this to source zkg's package state
 
 '@load packages'
 
@@ -1243,9 +1275,9 @@ c) Keep packages updated
 $ zkg upgrade
 ```
 
-### 6.1 Detect log4j: CVE-2021-44228
+### Detect log4j: CVE-2021-44228
 
-#### 6.1.1 Manual detection
+####  Manual detection
 
 - Useful for detection before plugins and IOC's were available.  
 - Can occur on raw log files from analytics platforms or zeek CLI.
@@ -1266,7 +1298,7 @@ $cat intel.log | grep "\${"
 
 
 
-#### 6.1.2 Corelight Plugin: CVE-2021-44228
+#### Corelight Plugin: CVE-2021-44228
 
 > A Zeek package which raises notices, tags HTTP connections and generates (CVE-2021-44228) attempts.
 
@@ -1295,7 +1327,7 @@ Loaded "zeek/corelight/cve-2021-44228"
 3. Deploy the plugin `$zeekctl deploy`.
 4. Keep the package updated `$zkg upgrade cve-2021-44228`
 
-### 6.2 Threat Feeds
+### Threat Feeds
 
 > This is a public feed based on Public Threat Feeds and 'critical path security' gathered data.  Zeek compares connections with elements defined in the feed(s) and writes matches to intel.log.
 
@@ -1386,7 +1418,7 @@ $zeekctl deploy
 
 
 
-### 6.3 Write logs to TSV & JSON
+### Write logs to TSV & JSON
 
 - Simultaneously write log files in both TSV and JSON formats
 
@@ -1527,46 +1559,3 @@ zeek -r mypackets.trace frameworks/files/extract-all-files
 ```
 
 - Verify log files and start digging!
-
-
-
-# 7. IDS Analytics Platforms
-
-> Instructions and contacts for access and support to analytics platforms.
-
-### 7.1. Concordia University
-
-- Technical Contact: Mouatez Karbab
-  - Email: elmouatez.karbab@concordia.ca
-
-1. Email `elmouatez.karbab@concordia.ca` 
-   - Include your ssh public key of your zeek server (Section `4.3.11.1 File Transfer `).
-   - Include the public IP of your server (`$curl ifconfig.me` from zeek server).
-   - Include the public IP ranges that will be accessing the portal.
-
-2. An email will be returned with credentials for portal access. 
-
-3. Navigate to `https://jointsecurity.ca/` to log into the portal
-
-### 7.2. McMaster University
-
-- Technical Contact: Badawy, Ghada
-  - Email: badawyg@mcmaster.ca
-
-1. Navigate to `jspportal.canarie.ca` and log in.
-2. Scroll to section`2. McMaster JSP Application`.
-
->  Here you will find the canids `application files` and `Platform Deployment Manuals`.
-
-### 7.3. Waterloo University
-
-- Technical Contact: Hauton Psang
-  - Email: [hauton.tsang@uwaterloo.ca](mailto:hauton.tsang@uwaterloo.ca)
-
-1. Email list of IP ranges that will access the platform to ujsp@uwaterloo.ca.
-2. An email will be returned with credentials for portal access. 
-3. Navigate to `https://cloud.jsp.cs.uwaterloo.ca/` to log into the portal.
-
-
-
-#### -- End -- 
