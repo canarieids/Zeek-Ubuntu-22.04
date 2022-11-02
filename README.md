@@ -368,13 +368,13 @@ usermod -a -G zeek zeek
 ```
 
 ## 3.10 Configure interfaces for Promiscuous mode
->
->Zeek requires the interfaces on which it will sniff traffic be configured into PROMISCUOUS mode.    By configuring your interfaces into this mode, you are allowing the network interface to receive packets that would normally be discarded.
+
+Zeek requires the interfaces on which it will sniff traffic be configured into PROMISCUOUS mode.    By configuring your interfaces into this mode, you are allowing the network interface to receive packets that would normally be discarded.
 
 
 1. Create a file called `/etc/systemd/system/promisc.service` 
->Populate the file using the below examles. Where each sniffing interface is defined under `[Service]`.  This will require one line per interface.
-> In the below example, we have `ens2f1` & `ens2f2` configured to be promiscuous.  Zeek will be able to use these as sniffing interfaces.  Substitute these interface names from your environment.
+Populate the file using the below examles. Where each sniffing interface is defined under `[Service]`.  This will require one line per interface.
+ In the below example, we have `ens2f1` & `ens2f2` configured to be promiscuous.  Zeek will be able to use these as sniffing interfaces.  Substitute these interface names from your environment.
 
 ```multiple
 [Service]
