@@ -509,8 +509,26 @@ Type "help" for help.
 [ZeekControl] >
 ```
 
+6. Configure node.cfg
 
-5. Deploy Zeek
+Zeek is initially configure to run in Standalone mode, which means it will only listen on **one interface**.  That single interface is defined in /opt/zeek/etc/node.cfg in the top section.
+
+```
+...
+[zeek]
+type=standalone
+host=localhost
+interface=eno1
+...
+```
+You will need to modify the ***interface=*** and provide at least one valid interface for Zeek to bind.  You can get a list of your interfaces by running 'ip a' at the CLI.
+
+If you wish to configure Zeek to listen to multiple interfaces simultaneously (highly recommended), you must configure Zeek to run in cluster mode.  For now, you can specify one interface, or jump to step 4.3.3 to configure node.cfg for cluster mode with multiple interfaces.  
+
+Once you have completed configuration of Standalone or Cluster mode, proceed to the next step.
+
+
+7. Deploy Zeek
 >You are now ready to complete your first deployment of Zeek.  On each deployment, Zeek re-examines its configuration and scripts and deploys them when starting the services.  In the future, as you modify your Zeek configuration, you will need to complete a deployment each time.
 >
 >Execute the following command to deploy Zeek
