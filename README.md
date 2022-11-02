@@ -723,7 +723,7 @@ $vi /opt/zeek/etc/node.cfg
 
 3. Define your work node configuration. 
 
-A worker node is a type of thread that can be assigned to one or more interfaces.  For ease of administration, we recommend creating a worker node for each interface you will be using for traffic analsys on your IDS.  For example you will have 4 interfaces you would create 4 workers (Example below).
+A worker node is a type of thread that can be assigned to one or more interfaces.  For ease of administration, we recommend creating a worker node for each interface you will be using for traffic monitoring and analsys on your IDS.  For example you will have 4 interfaces you would create 4 workers (Example below).
 
 Please note, you do not have to create a worker for each interface.  If you only intend to use two interfaces, you only would need to create two workers (one for each interface).
 
@@ -762,7 +762,7 @@ host=localhost
 interface=ens2f4
 
 ```
-
+Please note that you will need to update 'interface=' for each worker node to reflect a unique and valid interface.  To get a list of interfaces available, execute 'ip a' from the CLI.
 
 ### 4.4.4. Apply the Configuration Files
 
