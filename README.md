@@ -706,7 +706,7 @@ LogExpireInterval = 30
 
 ### 4.3.3 Zeek Cluster Mode `node.cfg`
 
->To provide a scalable solution, it is recommended to configure Zeek to run int Cluster mode. 
+>Zeek by default is configured to run in Standalone mode.  This means that only one interface can be configured to monitor traffic.  To use more than one port and provide a scalable solution, it is **HIGHLY**  recommended to configure Zeek to run int Cluster mode. 
 
 1. Edit node.cfg
 ```
