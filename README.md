@@ -756,7 +756,7 @@ type=worker
 host=localhost
 interface=ens2f3
 
-[worker-3]
+[worker-4]
 type=worker
 host=localhost
 interface=ens2f4
