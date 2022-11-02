@@ -762,7 +762,7 @@ host=localhost
 interface=ens2f4
 
 ```
-Please note that you will need to update 'interface=' for each worker node to reflect a unique and valid interface.  To get a list of interfaces available, execute 'ip a' from the CLI.
+Please note that you will need to update ***interface=*** for each worker node to reflect a unique and valid interface.  To get a list of interfaces available, execute ***ip a*** from the CLI.
 
 ### 4.4.4. Apply the Configuration Files
 
