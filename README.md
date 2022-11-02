@@ -529,8 +529,9 @@ Once you have completed configuration of Standalone or Cluster mode, proceed to 
 
 
 7. Deploy Zeek
->You are now ready to complete your first deployment of Zeek.  On each deployment, Zeek re-examines its configuration and scripts and deploys them when starting the services.  In the future, as you modify your Zeek configuration, you will need to complete a deployment each time.
->
+You are now ready to complete your first deployment of Zeek.  On each deployment, Zeek re-examines its configuration and scripts and deploys them when starting the services.  In the future, as you modify your Zeek configuration, you will need to complete a deployment each time.
+
+
 >Execute the following command to deploy Zeek
 ```
 $zeekctl deploy
