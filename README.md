@@ -843,50 +843,71 @@ sudo ufw enable
 
 ### 7.1 RSYSLOG
 
+**RSYSLOG portion under development**
+
 >It is recommended to have your Zeek logs sent to a more sophisticated analytics platform, such as a SIEM, Elastic Search, Splunk or simliar platforms.  
 >
 > RSYSLOG, the 'rocket-fast system for log processing' is installed by default and can send syslog messages to remote systems.
 
-1. Define and load modules `# vi /etc/rsyslog.conf`.
+1. Define and load modules `# vi /etc/rsyslog.d/rsyslog-zeek00.conf`.
 
-```rsyslog1
+```
 ...
+#### ZEEK IDS configuration file ####
+# If you experience problems, see http://www.rsyslog.com/doc/troubleshoot.html
+# If selinux is enabled run semanage port -a -t syslogd_port_t -p tcp 15514
+
 #### MODULES ####
-module(load="imfile"
-       PollingInterval="5")
+module(load="imfile" PollingInterval="1")
 
- input(type="imfile"
-       File="/opt/zeek/logs/current/conn.log"
-      Tag="zeek_conn"
-      Severity="debug"
-      Facility="local6")
+#### Templates ####
+template (name="ZEEK_Logs" type="string"
+          string="<%PRI%>%PROTOCOL-VERSION% %TIMESTAMP:::date-rfc3339% %HOSTNAME% %APP-NAME% %PROCID% %MSGID% %STRUCTURED-DATA% %$!msg%\n"
+         )
 
- input(type="imfile"
-      File="/opt/zeek/logs/current/dns.log"
-      Tag="zeek_dns"
-      Severity="debug"
-      Facility="local6")
+#### RULES for where to send Log Files ####
+# Send messages over TCP using the ZEEK_Logs template
+ruleset(name="sendZEEKLogs") {
+    if $msg startswith not "#" then {
+        set $!msg = replace($msg, "|", "%7C"); # Handle existing pipe char
+        set $!msg = replace($!msg, "\t", "|");
+
+        action (
+            type="omfwd"
+            protocol="tcp"
+            target="XXX.XXX.XXX.XXX"
+            port="514"
+            template="ZEEK_Logs"
+        )
+    }
+}
+
+#### Inputs ####
+# Comment out sections to not send specifc logs
+input (
+    type="imfile"
+    File="/opt/zeek/logs/current/conn.log"
+    Tag="zeek-conn:"
+    Facility="local7"
+    Severity="debug"
+#    RuleSet="sendZEEKLogs"
+
+)
+
+
+input (
+    type="imfile"
+    File="/opt/zeek/logs/current/ssl.log"
+    Tag="zeek-ssl:"
+    Facility="local7"
+    Severity="debug"
+#    RuleSet="sendZEEKLogs"
+
+)
+
+*.* @@XXX.XXX.XXX.XXX:514
 ...
 ```
-
-2. Configure rsyslog to send logs to a remote IP4 node `# vi /etc/rsyslog.conf`.
-
-> Replace '10.189.XX.XXX' with the address of the remote syslog server and designate tcp vs. udp with `@`.
-
-​		1. TCP, port 514: `@@`.
-
-```rsyslog2
-### rsyslog config ###
-*.*     @@10.XXX.XXX.XXX:514
-```
-
-​		2. UDP, port 514:`@`.
-
-```rsyslog2
-### rsyslog config ###
-*.*     @10.XXX.XXX.XXX:514
-```
-
 
 
 ### 7.2. SYSLOG-NG
