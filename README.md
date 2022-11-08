@@ -848,9 +848,13 @@ sudo ufw enable
 >It is recommended to have your Zeek logs sent to a more sophisticated analytics platform, such as a SIEM, Elastic Search, Splunk or simliar platforms.  
 >
 > RSYSLOG, the 'rocket-fast system for log processing' is installed by default and can send syslog messages to remote systems.
+> Below is an example configuration you can use to adapt to your target analytics platform.  Please replace 'XXX.XXX.XXX.XXX' with your platform's IP address.
 
-1. Define and load modules `# vi /etc/rsyslog.d/rsyslog-zeek00.conf`.
+1. Define and load modules 
 
+```
+vi /etc/rsyslog.d/rsyslog-zeek00.conf
+```
 ```
 ...
 #### ZEEK IDS configuration file ####
