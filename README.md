@@ -856,45 +856,48 @@ sudo ufw enable
 vi /etc/rsyslog.d/rsyslog-zeek00.conf
 ```
 ```
-...
 #### ZEEK IDS configuration file ####
+
 # If you experience problems, see http://www.rsyslog.com/doc/troubleshoot.html
 # If selinux is enabled run semanage port -a -t syslogd_port_t -p tcp 15514
 
 #### MODULES ####
-module(load="imfile" PollingInterval="1")
-
-#### Templates ####
-template (name="ZEEK_Logs" type="string"
-          string="<%PRI%>%PROTOCOL-VERSION% %TIMESTAMP:::date-rfc3339% %HOSTNAME% %APP-NAME% %PROCID% %MSGID% %STRUCTURED-DATA% %$!msg%\n"
-         )
+module(load="imfile")
 
 #### RULES for where to send Log Files ####
 # Send messages over TCP using the ZEEK_Logs template
-ruleset(name="sendZEEKLogs") {
-    if $msg startswith not "#" then {
-        set $!msg = replace($msg, "|", "%7C"); # Handle existing pipe char
-        set $!msg = replace($!msg, "\t", "|");
 
+ruleset(name="sendZEEKLogs") {
         action (
-            type="omfwd"
-            protocol="tcp"
-            target="XXX.XXX.XXX.XXX"
-            port="514"
-            template="ZEEK_Logs"
-        )
-    }
+        type="omfwd"
+        protocol="udp"
+        target="xxx.xxx.xxx.xxx"
+        port="514"
+      )
+
 }
 
 #### Inputs ####
 # Comment out sections to not send specifc logs
+
+
+input (
+    type="imfile"
+    File="/opt/zeek/logs/current/dns.log"
+    Tag="zeek-dns:"
+    Facility="local7"
+    Severity="debug"
+    RuleSet="sendZEEKLogs"
+
+)
+
 input (
     type="imfile"
     File="/opt/zeek/logs/current/conn.log"
     Tag="zeek-conn:"
     Facility="local7"
     Severity="debug"
-#    RuleSet="sendZEEKLogs"
+    RuleSet="sendZEEKLogs"
 
 )
 
@@ -905,12 +908,132 @@ input (
     Tag="zeek-ssl:"
     Facility="local7"
     Severity="debug"
-#    RuleSet="sendZEEKLogs"
+    RuleSet="sendZEEKLogs"
 
 )
 
-*.* @@XXX.XXX.XXX.XXX:514
-...
+
+input (
+    type="imfile"
+    File="/opt/zeek/logs/current/dhcp.log"
+    Tag="zeek-dhcp:"
+    Facility="local7"
+    Severity="debug"
+    RuleSet="sendZEEKLogs"
+
+)
+
+input (
+    type="imfile"
+    File="/opt/zeek/logs/current/http.log"
+    Tag="zeek-http:"
+    Facility="local7"
+    Severity="debug"
+    RuleSet="sendZEEKLogs"
+
+)
+
+input (
+    type="imfile"
+    File="/opt/zeek/logs/current/weird.log"
+    Tag="zeek-weird:"
+    Facility="local7"
+    Severity="debug"
+    RuleSet="sendZEEKLogs"
+
+)
+
+input (
+    type="imfile"
+    File="/opt/zeek/logs/current/zeek-kerberos.log"
+    Tag="zeek-kerberos:"
+    Facility="local7"
+    Severity="debug"
+    RuleSet="sendZEEKLogs"
+
+)
+
+input (
+    type="imfile"
+    File="/opt/zeek/logs/current/ntlm.log"
+    Tag="zeek-ntlm:"
+    Facility="local7"
+    Severity="debug"
+    RuleSet="sendZEEKLogs"
+
+)
+
+input (
+    type="imfile"
+    File="/opt/zeek/logs/current/files.log"
+    Tag="zeek-files:"
+    Facility="local7"
+    Severity="debug"
+    RuleSet="sendZEEKLogs"
+
+)
+
+
+input (
+    type="imfile"
+    File="/opt/zeek/logs/current/known_hosts.log"
+    Tag="zeek-known_hosts:"
+    Facility="local7"
+    Severity="debug"
+    RuleSet="sendZEEKLogs"
+
+)
+
+
+input (
+    type="imfile"
+    File="/opt/zeek/logs/current/notice.log"
+    Tag="zeek-notice:"
+    Facility="local7"
+    Severity="debug"
+    RuleSet="sendZEEKLogs"
+
+)
+
+input (
+    type="imfile"
+    File="/opt/zeek/logs/current/ssh.log"
+    Tag="zeek-ssh:"
+    Facility="local7"
+    Severity="debug"
+    RuleSet="sendZEEKLogs"
+
+)
+
+input (
+    type="imfile"
+    File="/opt/zeek/logs/current/intel.log"
+    Tag="zeek-intel:"
+    Facility="local7"
+    Severity="debug"
+    RuleSet="sendZEEKLogs"
+
+)
+
+input (
+    type="imfile"
+    File="/opt/zeek/logs/current/log4j.log"
+    Tag="zeek-log4j:"
+    Facility="local7"
+    Severity="debug"
+    RuleSet="sendZEEKLogs"
+
+)
+
+input (
+    type="imfile"
+    File="/opt/zeek/logs/current/smbfiles.log"
+    Tag="zeek-smbfiles:"
+    Facility="local7"
+    Severity="debug"
+    RuleSet="sendZEEKLogs"
+
+)
 ```
 
 
