@@ -577,16 +577,16 @@ $
 
 ## 4.1 Start Zeek with system
 
-> To start Zeek when the operating system starts, create a file and place it into `/etc/systemd/system` .
+To start Zeek when the operating system starts, create a file and place it into `/etc/systemd/system` .
 
->1. Create a file called `/etc/systemd/system/zeek.service`
->
+1. Create a file called `/etc/systemd/system/zeek.service`
+
 
 ```
 # vi /etc/systemd/system/zeek.service
 ```
->2. Populate the file as follows:
->
+2. Populate the file as follows:
+
 ```zeek.service
 [Unit]
 Description=Zeek
@@ -609,7 +609,7 @@ Group=zeek
 WantedBy=multi-user.target
 ```
 
->3. Make the file executable, `start` the service and `enable` it.
+3. Make the file executable, `start` the service and `enable` it.
 
 ```
 #chmod u+x /etc/systemd/system/zeek.service
@@ -621,7 +621,7 @@ WantedBy=multi-user.target
 
 ## 4.2 Node Crash Recovery`zeekctl cron`
 
-> To ensure reliable and resilient collection of your network traffic, it is recommended to add Zeekctl Cron to Crontab.  This will allow Zeek to recover a node from a crashed state.  Add to `zeekctl cron` to crontab for automatic recovery of crashed nodes.
+To ensure reliable and resilient collection of your network traffic, it is recommended to add Zeekctl Cron to Crontab.  This will allow Zeek to recover a node from a crashed state.  Add to `zeekctl cron` to crontab for automatic recovery of crashed nodes.
 
 1. `$crontab -e`
 
@@ -636,8 +636,8 @@ WantedBy=multi-user.target
 
 #### 4.3.1. Local and Public networks`networks.cfg`
 
-> Defining your networks to Zeek allows for you to differentiate between local and remote traffic.  Add all your netwoks and public networks referencing the example below.
->
+Defining your networks to Zeek allows for you to differentiate between local and remote traffic.  Add all your netwoks and public networks referencing the example below.
+
 
 1. `$vi /opt/zeek/etc/networks.cfg`
 
@@ -706,7 +706,7 @@ LogExpireInterval = 30
 
 ### 4.3.3 Zeek Cluster Mode `node.cfg`
 
->Zeek by default is configured to run in Standalone mode.  This means that only one interface can be configured to monitor traffic.  To use more than one port and provide a scalable solution, it is **HIGHLY**  recommended to configure Zeek to run int Cluster mode. 
+Zeek by default is configured to run in Standalone mode.  This means that only one interface can be configured to monitor traffic.  To use more than one port and provide a scalable solution, it is **HIGHLY**  recommended to configure Zeek to run int Cluster mode. 
 
 1. Edit node.cfg
 ```
@@ -766,7 +766,7 @@ Please note that you will need to update ***interface=*** for each worker node t
 
 ### 4.4.4. Apply the Configuration Files
 
-> With the completion of the previous steps, its now time to re-deploy Zeek.  Anytime you make changes similar to the above, you will need to re-deploy. 
+With the completion of the previous steps, its now time to re-deploy Zeek.  Anytime you make changes similar to the above, you will need to re-deploy. 
 
 
 When configuration files are modified, execute
@@ -811,31 +811,31 @@ echo "test message" | sendmail -v your@email.ca
 
 ## 6.0. UFW - Uncomplicated Firewall (Optional)
 
-> Install UFW
-> 
+Install UFW
+
 ```
 sudo apt install ufw -y
 ```
 
->Confirm UFW service running
->
+Confirm UFW service running
+
 ```
 sudo ufw status
 ```
 
 
->Allow SSH
->
+Allow SSH
+
 ```
 sudo ufw allow 22
 ```
->Enable the UFW service
->
+Enable the UFW service
+
 ```
 sudo ufw enable
 ```
->If you need to disable the UFW service, use the command 'sudo ufw disable'
->
+If you need to disable the UFW service, use the command 'sudo ufw disable'
+
 
 
 ## 7.0 Syslog
@@ -845,10 +845,11 @@ sudo ufw enable
 
 **RSYSLOG portion under development**
 
->It is recommended to have your Zeek logs sent to a more sophisticated analytics platform, such as a SIEM, Elastic Search, Splunk or simliar platforms.  
->
-> RSYSLOG, the 'rocket-fast system for log processing' is installed by default and can send syslog messages to remote systems.
-> Below is an example configuration you can use to adapt to your target analytics platform.  Please replace 'XXX.XXX.XXX.XXX' with your platform's IP address.
+It is recommended to have your Zeek logs sent to a more sophisticated analytics platform, such as a SIEM, Elastic Search, Splunk or simliar platforms.  
+
+RSYSLOG, the 'rocket-fast system for log processing' is installed by default and can send syslog messages to remote systems.
+
+Below is an example configuration you can use to adapt to your target analytics platform.  Please replace 'XXX.XXX.XXX.XXX' with your platform's IP address.
 
 1. Define and load modules 
 
@@ -1039,25 +1040,25 @@ input (
 
 ### 7.2. SYSLOG-NG
 
->Syslog-NG can be used instead of RSYNC
->
+Syslog-NG can be used instead of RSYNC
 
 
 
->Install syslog-NG
->
+
+Install syslog-NG
+
 ```
 #sudo apt-get install syslog-ng
 ```
 
->Edit the syslog-NG configuration file
->
+Edit the syslog-NG configuration file
+
 ```
 #vi /etc/syslog-ng/syslog-ng.conf
 ```
->Example configuration, insert below @include "scl.conf"
->TAke note the program-override assigns a tag to each log type.  This will be important when >developing a parser for your analystics/SIEM platform.
->
+Example configuration, insert below @include "scl.conf"
+Take note the program-override assigns a tag to each log type.  This will be important when developing a parser for your analystics/SIEM platform.
+
 
 ```
  source s_local {
@@ -1092,25 +1093,25 @@ input (
 ```
 
 
->Take note of the Zeek log files above.  If you want to reduce your EPS sent to your SIEM, you >can comment out certain logs.  For example, some institutions only want to receive intel.log >and notice.log.
->
->
+Take note of the Zeek log files above.  If you want to reduce your EPS sent to your SIEM, you can comment out certain logs.  For example, some institutions only want to receive intel.log and notice.log.
 
->Restart SyslogNG
->
+
+
+Restart SyslogNG
+
 ```
 service syslog-ng restart
 ```
 
->Due to a bug in Syslog-NG when log files are rotate, we have a script to reload Syslog NG >every 30 seconds
->
->Edit Crontab as Root
->
+Due to a bug in Syslog-NG when log files are rotate, we have a script to reload Syslog NG every 30 seconds
+
+Edit Crontab as Root
+
 ```
 #crontab -e
 ```
->Paste the following example to schedule Syslog NG to reload every 30 seconds
->
+Paste the following example to schedule Syslog NG to reload every 30 seconds
+
 ```
 # Reload Syslog-ng
 */30 * * * * /usr/sbin/syslog-ng-ctl reload
@@ -1123,8 +1124,8 @@ service syslog-ng restart
 
 ### 8.1 Install `AF_Packet` plugin
 
-> Ideally, this plugin is installed via the package manager (zkg).  
->
+Ideally, this plugin is installed via the package manager (zkg).  
+
 
 1. Execute the command:
 ```
@@ -1132,8 +1133,8 @@ zkg install zeek/j-gras/zeek-af_packet-plugin
 ```
 
 
->2. Re-Apply permissions for the Zeek user and group
->
+2. Re-Apply permissions for the Zeek user and group
+
 ```
 #chown -R zeek:zeek /opt/zeek
 ```
@@ -1141,17 +1142,17 @@ zkg install zeek/j-gras/zeek-af_packet-plugin
 setcap cap_net_raw=eip /opt/zeek/bin/zeek && setcap cap_net_raw=eip /opt/zeek/bin/capstats
 ```
 
->3. Reconfigure`node.cfg` to use AF_PACKET
->With AF Packet now installed, we must reconfigure the node.cfg file to use the AF Packet plugin.  The following items will need to be defined in the node.cfg file:
->
->- Define af_packet parameters (interfaces) and dedicate cpu threads to nodes.
->- Configure assign interfaces and AF_PACKET parameters to workers.
->- Assign workers to interfaces.
->- Pin core(s) to cluster elements, such as workers, to ensure dedicated compute resources.  
->- The general rule is 250MiB throughput per thread.
->- Well distributed load makes more efficient work.
+3. Reconfigure`node.cfg` to use AF_PACKET
+With AF Packet now installed, we must reconfigure the node.cfg file to use the AF Packet plugin.  The following items will need to be defined in the node.cfg file:
 
->4. Fet the `processors` and `core ids`of the server.  Use the distribution of processors to core for similar distribution between workers.
+- Define af_packet parameters (interfaces) and dedicate cpu threads to nodes.
+- Configure assign interfaces and AF_PACKET parameters to workers.
+- Assign workers to interfaces.
+- Pin core(s) to cluster elements, such as workers, to ensure dedicated compute resources.  
+- The general rule is 250MiB throughput per thread.
+- Well distributed load makes more efficient work.
+
+4. Fet the `processors` and `core ids`of the server.  Use the distribution of processors to core for similar distribution between workers.
 
 ```awksed
 $awk '/core id/ || /processor/' /proc/cpuinfo | sed 'N;s/\n/\t/'
@@ -1164,19 +1165,19 @@ processor       : 39    core id         : 26
 
 
 
-> Workers: The fastest memory and CPU core speed you can afford is recommended since all of the protocol parsing and most analysis will take place here.
->
->Edit node.cfg
->
+ Workers: The fastest memory and CPU core speed you can afford is recommended since all of the protocol parsing and most analysis will take place here.
+
+Edit node.cfg
+
 ```
 $vi /opt/zeek/etc/node.cfg
 ```
-> Example for **JSP2 Hardware**: Three workers, each with their own interface:
+ Example for **JSP2 Hardware**: Three workers, each with their own interface:
 
->- 15 threads per worker
->- Theoretical throughput: (Megabit) = (#Threads)(250) 
->- 15*250=3.75Gigabit per worker
->- Threads reserved for system: 14, 15, 38, 39
+- 15 threads per worker
+- Theoretical throughput: (Megabit) = (#Threads)(250) 
+- 15*250=3.75Gigabit per worker
+- Threads reserved for system: 14, 15, 38, 39
 
 ```
 [logger]
@@ -1219,8 +1220,8 @@ pin_cpus=18,19,20,21,22,23,40,41,44,45,46,47,42,43,44
 af_packet_fanout_id=3
 ```
 
->Once you have completed you configuration, save your file.
->Re-Deploy Zeek
+Once you have completed you configuration, save your file.
+Re-Deploy Zeek
 ```
 zeekctl deploy
 ```
@@ -1231,7 +1232,7 @@ zeekctl deploy
 
 ### 8.3 Install `ADD_INTERFACES` plugin
 
-> Adds cluster node interface to logs. Useful when sniffing multiple interfaces to identify source of log.
+ Adds cluster node interface to logs. Useful when sniffing multiple interfaces to identify source of log.
 
 1.Execute the command
 
