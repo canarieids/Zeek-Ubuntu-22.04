@@ -633,7 +633,7 @@ To ensure reliable and resilient collection of your network traffic, it is recom
 ## 4.3 Zeek Configuration Options
 
 
-### 4.3.1 Mac address logging `local.zeek`
+### 4.3.1 MAC address logging `local.zeek`
 
 When you enable Link-Layer (MAC) address logging, Zeek will add two fields to the conn.log: 'orig_l2_addr' and 'resp_l2_addr'. This is especially useful when using asset tracking.  
 
