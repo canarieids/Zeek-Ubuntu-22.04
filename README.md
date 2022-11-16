@@ -1174,7 +1174,7 @@ Ideally, this plugin is installed via the package manager (zkg).
 
 1. Execute the command:
 ```
-zkg install zeek/j-gras/zeek-af_packet-plugin
+zkg install zeek/zeek-af_packet-plugin
 ```
 
 
