@@ -36,7 +36,7 @@ This document is a step-by-step guide for the configuration of the Zeek platform
 
 > We have composed a frequently asked questions file, which is located in the JSP portal.  Both pilot and phase 2 participants will find this file useful.
 
-- [Zeek / JSP - FAQ](https://jspportal.canarie.ca/wpc_downloader/core/?wpc_action=view&id=84) 
+- [Zeek / JSP - FAQ](https://idsportal.canarie.ca/wpc_downloader/core/?wpc_action=view&id=215) 
 
 ### 1.3 Warranty and Contacts
 
@@ -179,8 +179,7 @@ Participants can contact Dell directly for warranty & customer support for hardw
 
 > Apply security controls relevant to your organization's policy.  The following guidelines are posted on the on JSP Portal in the technical resources section:
 
-- [CIS Benchmark - CentOS Linux 7 - EN](https://jspportal.canarie.ca/wpc_downloader/core/?wpc_action=view&id=33)
-- [CIS Benchmark - CentOS Linux 8 - EN](https://jspportal.canarie.ca/wpc_downloader/core/?wpc_action=view&id=34)
+Coming Soon
 
 ## 3.1. OS Deployment
 
