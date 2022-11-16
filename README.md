@@ -633,8 +633,46 @@ To ensure reliable and resilient collection of your network traffic, it is recom
 ## 4.3 Zeek Configuration Options
 
 
+### 4.3.1 Mac address logging `local.zeek`
 
-#### 4.3.1. Local and Public networks`networks.cfg`
+When you enable Link-Layer (MAC) address logging, Zeek will add two fields to the conn.log: 'orig_l2_addr' and 'resp_l2_addr'. This is especially useful when using asset tracking.  
+
+1. Edit the local.zeek configuraiton file in the site folder (Manager)
+```
+vi /opt/zeek/share/zeek/site/local.zeek
+```
+
+2. Locate the section to enable Mac logging. Uncomment '@load policy/protocols/conn/mac-logging'
+
+
+```
+...
+# Uncomment the following line to enable logging of link-layer addresses. Enabling
+# this adds the link-layer address for each connection endpoint to the conn.log file.
+@load policy/protocols/conn/mac-logging
+...
+```
+
+### 4.3.2 VLAN ID logging `local.zeek`
+
+When you enable VLAN logging, Zeek will add two additional fields to the conn.log: 'vlan' and 'inner_vlan'.  
+
+1. Edit the local.zeek configuraiton file in the site folder (Manager)
+```
+vi /opt/zeek/share/zeek/site/local.zeek
+```
+
+2. Locate the section to enable VLAN logging. Uncomment '@load policy/protocols/conn/vlan-logging'
+```
+...
+# Uncomment the following line to enable logging of connection VLANs. Enabling
+# this adds two VLAN fields to the conn.log file.
+@load policy/protocols/conn/vlan-logging
+...
+```
+
+
+### 4.3.3. Local and Public networks`networks.cfg`
 
 Defining your networks to Zeek allows for you to differentiate between local and remote traffic.  Add all your netwoks and public networks referencing the example below.
 
@@ -657,16 +695,14 @@ Defining your networks to Zeek allows for you to differentiate between local and
 
 
 
-### 4.3.2 Email, Log Retention and Collection `zeekctl.cfg`
+### 4.3.4 Email `zeekctl.cfg`
 
 
-Edit Zeekctl.cfg (Default location: /opt/zeek/etc/zeekctl.cfg)
+1. Edit Zeekctl.cfg (Default location: /opt/zeek/etc/zeekctl.cfg)
 
 ```
 $vi /opt/zeek/etc/zeekctl.cfg`
 ```
-
-#### Email
 
 This option enables Zeek to send email.  
 
@@ -678,24 +714,27 @@ This option enables Zeek to send email.
 - Can be extended to send mail on events.
 - Not installed by default but is included in the dependency section. participants can configure per environment.
 
-1. Locate the MailTo line and define an email address
+2. Locate the MailTo line and define an email address
 
 > #Recipient address for all emails sent out by Zeek and ZeekControl.
 > MailTo = security@your-org.ca
 
 
-#### Log Retention and Collection
-
-- Zeek automatically rotates and archives runtime logs from `current`into `/opt/zeek/logs/yyyy-mm-dd/`.  
-- Rotate logs from`/opt/zeek/logs`. 
-- Avoid rotating logs from `/opt/zeek/spool` .
+### 4.3.5 Log Retention and Collection `zeekctl.cfg`
 
 
+Zeek automatically rotates and archives runtime logs from `/opt/zeek/logs/current`into `/opt/zeek/logs/yyyy-mm-dd/` on a configurable interval.
+
+1. Edit Zeekctl.cfg (Default location: /opt/zeek/etc/zeekctl.cfg)
+
+```
+$vi /opt/zeek/etc/zeekctl.cfg`
+```
+
+2. Locate the LogRotationInterval, LogexpireInterval lines and modify to your requirements.
 > `LogRotationInterval` is measured in seconds.  The default value `3600`, or one hour.
->
 > `LogExpireInterval` is measured in days.  `30` days is the recommended value.
 
-1. Locate the LogRotationInterval, LogexpireInterval lines and modify to your requirements.
 ```
 ...
 LogRotationInterval = 3600
@@ -704,7 +743,7 @@ LogExpireInterval = 30
 ...
 ```
 
-### 4.3.3 Zeek Cluster Mode `node.cfg`
+### 4.3.6 Zeek Cluster Mode `node.cfg`
 
 Zeek by default is configured to run in Standalone mode.  This means that only one interface can be configured to monitor traffic.  To use more than one port and provide a scalable solution, it is **HIGHLY**  recommended to configure Zeek to run int Cluster mode. 
 
@@ -764,12 +803,12 @@ interface=ens2f4
 ```
 Please note that you will need to update ***interface=*** for each worker node to reflect a unique and valid interface.  To get a list of interfaces available, execute ***ip a*** from the CLI.
 
-### 4.4.4. Apply the Configuration Files
+### 4.3.7. Apply the Configuration Files
 
 With the completion of the previous steps, its now time to re-deploy Zeek.  Anytime you make changes similar to the above, you will need to re-deploy. 
 
 
-When configuration files are modified, execute
+When configuration files are modified, execute:
 
 ```
 $zeekctl deploy
@@ -851,7 +890,9 @@ RSYSLOG, the 'rocket-fast system for log processing' is installed by default and
 
 Below is an example configuration you can use to adapt to your target analytics platform.  Please replace 'XXX.XXX.XXX.XXX' with your platform's IP address.
 
-1. Define and load modules 
+1. Create/Edit an RSYSLOG  configuration file:
+>RSYSLOG by default is configured to load any and all .conf files located in /etc/rsyslog.d/
+>
 
 ```
 vi /etc/rsyslog.d/rsyslog-zeek00.conf
@@ -859,27 +900,31 @@ vi /etc/rsyslog.d/rsyslog-zeek00.conf
 ```
 #### ZEEK IDS configuration file ####
 
-# If you experience problems, see http://www.rsyslog.com/doc/troubleshoot.html
-# If selinux is enabled run semanage port -a -t syslogd_port_t -p tcp 15514
-
 #### MODULES ####
 module(load="imfile")
 
+#### Templates ####
+#template (name="ZEEK_Logs" type="string"
+#          string="<%PRI%>%PROTOCOL-VERSION% %TIMESTAMP:::date-rfc3339% %HOSTNAME% %APP-NAME% %PROCID% %MSGID% %STRUCTURED-DATA% %$!msg%\n"
+#         )
+
 #### RULES for where to send Log Files ####
 # Send messages over TCP using the ZEEK_Logs template
-
 ruleset(name="sendZEEKLogs") {
+#
+#if $msg startswith not "#" then {
+#        set $!msg = replace($msg, "|", "%7C"); # Handle existing pipe char
+#        set $!msg = replace($!msg, "\t", "|");
+
         action (
         type="omfwd"
         protocol="udp"
-        target="xxx.xxx.xxx.xxx"
+        target="10.189.34.211"
         port="514"
+#       template="ZEEK_Logs"
       )
-
+#    }
 }
-
-#### Inputs ####
-# Comment out sections to not send specifc logs
 
 
 input (
@@ -1040,18 +1085,18 @@ input (
 
 ### 7.2. SYSLOG-NG
 
-Syslog-NG can be used instead of RSYNC
+Syslog-NG can be used instead of RSYNC. 
 
 
 
 
-Install syslog-NG
+1. Install syslog-NG
 
 ```
 #sudo apt-get install syslog-ng
 ```
 
-Edit the syslog-NG configuration file
+2. Edit the syslog-NG configuration file
 
 ```
 #vi /etc/syslog-ng/syslog-ng.conf
@@ -1097,7 +1142,7 @@ Take note of the Zeek log files above.  If you want to reduce your EPS sent to y
 
 
 
-Restart SyslogNG
+3. Restart SyslogNG
 
 ```
 service syslog-ng restart
@@ -1105,7 +1150,7 @@ service syslog-ng restart
 
 Due to a bug in Syslog-NG when log files are rotate, we have a script to reload Syslog NG every 30 seconds
 
-Edit Crontab as Root
+4. Edit Crontab as Root
 
 ```
 #crontab -e
@@ -1197,27 +1242,45 @@ type=worker
 host=localhost
 interface=af_packet::eno2
 lb_method=custom
-lb_procs=15
-pin_cpus=0,1,4,5,8,9,10,11,24,25,28,29,32,33,34
+lb_procs=8
+pin_cpus=0,1,2,3,4,5,6,7
 af_packet_fanout_id=1
 
 [worker-2]
 type=worker
 host=localhost
-interface=af_packet::ens1f0np0
+interface=af_packet::enp59s0f0np0
 lb_method=custom
-lb_procs=15
-pin_cpus=2,3,6,7,12,13,16,17,26,27,30,31,35,36,37
+lb_procs=8
+pin_cpus=8,9,10,11,12,13,14,15
 af_packet_fanout_id=2
 
 [worker-3]
 type=worker
 host=localhost
-interface=af_packet::ens1f1np1
+interface=af_packet::enp59s0f1np1
 lb_method=custom
-lb_procs=15
-pin_cpus=18,19,20,21,22,23,40,41,44,45,46,47,42,43,44
+lb_procs=8
+pin_cpus=16,17,18,19,20,21,22,23
 af_packet_fanout_id=3
+
+[worker-4]
+type=worker
+host=localhost
+interface=af_packet::enp94s0f0np0
+lb_method=custom
+lb_procs=8
+pin_cpus=24,25,26,27,28,29,30,31
+af_packet_fanout_id=4
+
+[worker-5]
+type=worker
+host=localhost
+interface=af_packet::enp94s0f1np1
+lb_method=custom
+lb_procs=8
+pin_cpus=32,33,34,35,36,37,38,39
+af_packet_fanout_id=5
 ```
 
 Once you have completed you configuration, save your file.
@@ -1226,11 +1289,7 @@ Re-Deploy Zeek
 zeekctl deploy
 ```
 
-
-
-
-
-### 8.3 Install `ADD_INTERFACES` plugin
+### 8.2 Install `ADD_INTERFACES` plugin
 
  Adds cluster node interface to logs. Useful when sniffing multiple interfaces to identify source of log.
 
@@ -1335,14 +1394,14 @@ Complete!
 
 2. Transfer files.
 
-> Create an `rsync` script and add it to the crontab of the zeek user.
+Create an `rsync` script and add it to the crontab of the zeek user.
 
 a) Create a script and populate it:
 
 ```
 $vi /home/zeek/rsync.sh
 ```
-> The `rsync` command in this script can be tuned to the institution's preference in terms of what files are uploaded.  This script does not upload files that may contain  personally identifiable information (PII).
+The `rsync` command in this script can be tuned to the institution's preference in terms of what files are uploaded.  This script does not upload files that may contain  personally identifiable information (PII).
 
 ```
 rootDir="/opt/zeek/logs/"
