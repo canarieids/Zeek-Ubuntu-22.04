@@ -1295,7 +1295,7 @@ zeekctl deploy
 
 1.Execute the command
 
-- `$zkg install j-gras/add-interfaces`
+- `$zkg install zeek/zeek-af_packet-plugin`
 
 3. Edit config file and modify two lines `$vi /opt/zeek/share/zeek/site/packages/add-interfaces/add-interfaces.zeek`.
 
