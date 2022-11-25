@@ -311,8 +311,8 @@ Coming Soon
 > Participants are encouraged to follow their own account policy.  Later steps will outline the creation of a `zeek` user and group that will have access to `Zeek Application` functions and files.
 > Complete the following steps steps to create Zeek user and group
 
-1. Login with the account created during the OS deployment  (in this example 'csadmin')
-2. Use the following example to create the Zeek User
+1. Login with the account created during the OS deployment, in this example 'csadmin', which will be represented with "(Root)" in this guide. 
+2. (Root)  Use the following example to create the Zeek User
 
 ```
 sudo adduser zeek
@@ -320,12 +320,12 @@ sudo adduser zeek
 > You will be prompted to choose a 'password' and define the account's Full Name, Room, Work Phone, Home Phone, Other.  These fields are optional.
 > 
 
-3. Create a Zeek Group
+3. (Root) Create a Zeek Group
 ```
 sudo addgroup zeek
 ```
 
-4. Add the Zeek user to the Zeek group
+4. (Root) Add the Zeek user to the Zeek group
 ```
 usermod -a -G zeek zeek
 ```
@@ -343,7 +343,7 @@ echo 'deb http://download.opensuse.org/repositories/security:/zeek/xUbuntu_22.04
 curl -fsSL https://download.opensuse.org/repositories/security:zeek/xUbuntu_22.04/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/security_zeek.gpg > /dev/null
 ```
 
->Confirm the repositories have been added
+>(Root)  Confirm the repositories have been added
 ```
 sudo apt update
 ```
@@ -371,7 +371,7 @@ sudo apt-get install python3-git python3-semantic-version
 Zeek requires the interfaces on which it will sniff traffic be configured into PROMISCUOUS mode.    By configuring your interfaces into this mode, you are allowing the network interface to receive packets that would normally be discarded.  Execute these commands as (Root)
 
 
-1. Create a file called `/etc/systemd/system/promisc.service` 
+1. (Root) Create a file called `/etc/systemd/system/promisc.service` 
 Populate the file using the below examles. Where each sniffing interface is defined under `[Service]`.  This will require one line per interface.
  In the below example, we have `ens2f1` & `ens2f2` configured to be promiscuous.  Zeek will be able to use these as sniffing interfaces.  Substitute these interface names from your environment.
 
@@ -397,14 +397,14 @@ WantedBy=default.target
 
 ```
 
-2. Make the changes permanent and start on boot.
+2. (Root) Make the changes permanent and start on boot.
 
 ```promisc
  chmod u+x /etc/systemd/system/promisc.service
  systemctl start promisc.service
  systemctl enable promisc.service
 ```
-3. Enable `network` service and restart it.
+3. (Root) Enable `network` service and restart it.
 
 ```enable network service
 systemctl enable network && systemctl restart network
