@@ -625,7 +625,7 @@ systemctl enable zeek.service
 
 To ensure reliable and resilient collection of your network traffic, it is recommended to add Zeekctl Cron to Crontab.  This will allow Zeek to recover a node from a crashed state.  Add to `zeekctl cron` to crontab for automatic recovery of crashed nodes.
 
-1. (Root) Open the Crontab Editor
+1. (Zeek) Open the Crontab Editor
 
 ```
 `$crontab -e`
