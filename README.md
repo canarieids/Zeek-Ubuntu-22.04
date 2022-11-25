@@ -496,12 +496,12 @@ su - zeek
 >
 
 ```
-$which zeek
+which zeek
 /opt/zeek/bin/zeek
 ```
 >(Zeek) You should also be able to execute 'zeekctl' for any working directory
 ```
-$zeekctl
+zeekctl
 
 Welcome to ZeekControl 2.3.0
 Type "help" for help.
@@ -527,18 +527,21 @@ If you wish to configure Zeek to listen to multiple interfaces simultaneously (h
 Once you have completed configuration of Standalone or Cluster mode, proceed to the next step.
 
 
-7. Deploy Zeek
+7. (Zeek) Deploy Zeek
 You are now ready to complete your first deployment of Zeek.  On each deployment, Zeek re-examines its configuration and scripts and deploys them when starting the services.  In the future, as you modify your Zeek configuration, you will need to complete a deployment each time.
 
 
->Execute the following command to deploy Zeek
+>(Zeek) Execute the following command to deploy Zeek
 ```
-$zeekctl deploy
+zeekctl deploy
 ```
 >
 >Or within the Zeek Control shell
 >
 ```
+zeekctl
+
+
 Welcome to ZeekControl 2.3.0
 Type "help" for help.
 [ZeekControl] > deploy
@@ -569,7 +572,7 @@ starting logger ...
 starting manager ...
 starting proxy ...
 starting workers ...
-$
+
 
 
 ```
@@ -578,11 +581,11 @@ $
 
 To start Zeek when the operating system starts, create a file and place it into `/etc/systemd/system` .
 
-1. Create a file called `/etc/systemd/system/zeek.service`
+1. (Root) Create a file called `/etc/systemd/system/zeek.service`
 
 
 ```
-# vi /etc/systemd/system/zeek.service
+vi /etc/systemd/system/zeek.service
 ```
 2. Populate the file as follows:
 
@@ -608,12 +611,12 @@ Group=zeek
 WantedBy=multi-user.target
 ```
 
-3. Make the file executable, `start` the service and `enable` it.
+3. (Root) Make the file executable, `start` the service and `enable` it.
 
 ```
-#chmod u+x /etc/systemd/system/zeek.service
-#systemctl start zeek.service
-#systemctl enable zeek.service
+chmod u+x /etc/systemd/system/zeek.service
+systemctl start zeek.service
+systemctl enable zeek.service
 ```
 
 
@@ -622,7 +625,12 @@ WantedBy=multi-user.target
 
 To ensure reliable and resilient collection of your network traffic, it is recommended to add Zeekctl Cron to Crontab.  This will allow Zeek to recover a node from a crashed state.  Add to `zeekctl cron` to crontab for automatic recovery of crashed nodes.
 
-1. `$crontab -e`
+1. (Root) Open the Crontab Editor
+
+```
+`$crontab -e`
+```
+2. Add the following entry
 
 ```crontab1
 */5 * * * * /opt/zeek/bin/zeekctl cron
@@ -636,7 +644,7 @@ To ensure reliable and resilient collection of your network traffic, it is recom
 
 When you enable Link-Layer (MAC) address logging, Zeek will add two fields to the conn.log: 'orig_l2_addr' and 'resp_l2_addr'. This is especially useful when using asset tracking.  
 
-1. Edit the local.zeek configuraiton file in the site folder (Manager)
+1. (Zeek) Edit the local.zeek configuraiton file in the site folder (Manager)
 ```
 vi /opt/zeek/share/zeek/site/local.zeek
 ```
@@ -744,11 +752,11 @@ LogExpireInterval = 30
 
 ### 4.3.6 Zeek Cluster Mode `node.cfg`
 
-Zeek by default is configured to run in Standalone mode.  This means that only one interface can be configured to monitor traffic.  To use more than one port and provide a scalable solution, it is **HIGHLY**  recommended to configure Zeek to run int Cluster mode. 
+Zeek by default is configured to run in Standalone mode.  This means that only one interface can be configured to monitor traffic.  To use more than one port and provide a scalable solution, it is **HIGHLY**  recommended to configure Zeek to run in Cluster mode. 
 
-1. Edit node.cfg
+1. (Zeek) Edit node.cfg
 ```
-$vi /opt/zeek/etc/node.cfg
+vi /opt/zeek/etc/node.cfg
 ```
 
 2. **Comment out** the standalone configuration portion at the top.
@@ -1168,25 +1176,29 @@ Paste the following example to schedule Syslog NG to reload every 30 seconds
 
 ### 8.1 Install `AF_Packet` plugin
 
+AF Packet allows you to control how processor cores are assigned to specific interfaces.  This allows you to have granular controller on CPU allocation.  In some environments, certain interfaces could require more CPU resouces.  Optimizing core allocation can allow you to finely tune your Zeek IDS.
+
 Ideally, this plugin is installed via the package manager (zkg).  
 
 
-1. Execute the command:
+1. (Zeek) Execute the command:
+
 ```
 zkg install zeek/zeek-af_packet-plugin
 ```
 
 
-2. Re-Apply permissions for the Zeek user and group
+2. (Root) Re-Apply permissions for the Zeek user and group
 
 ```
-#chown -R zeek:zeek /opt/zeek
+chown -R zeek:zeek /opt/zeek
 ```
 ```
 setcap cap_net_raw=eip /opt/zeek/bin/zeek && setcap cap_net_raw=eip /opt/zeek/bin/capstats
 ```
 
 3. Reconfigure`node.cfg` to use AF_PACKET
+
 With AF Packet now installed, we must reconfigure the node.cfg file to use the AF Packet plugin.  The following items will need to be defined in the node.cfg file:
 
 - Define af_packet parameters (interfaces) and dedicate cpu threads to nodes.
@@ -1211,17 +1223,20 @@ processor       : 39    core id         : 26
 
  Workers: The fastest memory and CPU core speed you can afford is recommended since all of the protocol parsing and most analysis will take place here.
 
-Edit node.cfg
+5. (Zeek) Edit node.cfg
 
 ```
-$vi /opt/zeek/etc/node.cfg
+vi /opt/zeek/etc/node.cfg
 ```
- Example for **JSP2 Hardware**: Three workers, each with their own interface:
 
-- 15 threads per worker
+The below sample is an example only.  If you are only using 2 interfaces, you can allocate more processors to these interfaces.  You do not have to specify every interface in node.cfg.  If you are not using a physical interface, you can omit it altogether here.
+
+ Example for **JSP3 Hardware**: Five workers, each with their own interface:
+
+- 8  threads per worker
 - Theoretical throughput: (Megabit) = (#Threads)(250) 
-- 15*250=3.75Gigabit per worker
-- Threads reserved for system: 14, 15, 38, 39
+- 8 * 250=2Gb/sec per worker
+- Remaining processors researved for system
 
 ```
 [logger]
@@ -1282,7 +1297,7 @@ pin_cpus=32,33,34,35,36,37,38,39
 af_packet_fanout_id=5
 ```
 
-Once you have completed you configuration, save your file.
+(Zeek) Once you have completed you configuration, save your file.
 Re-Deploy Zeek
 ```
 zeekctl deploy
@@ -1292,15 +1307,27 @@ zeekctl deploy
 
  Adds cluster node interface to logs. Useful when sniffing multiple interfaces to identify source of log.
 
-1.Execute the command
+1.(Zeek) Execute the command
+```
+zkg install zeek/zeek-af_packet-plugin
+```
 
-- `$zkg install zeek/zeek-af_packet-plugin`
+3. (Zeek) Edit config file and modify two lines 
+```
+vi /opt/zeek/share/zeek/site/packages/add-interfaces/add-interfaces.zeek
+```
 
-3. Edit config file and modify two lines `$vi /opt/zeek/share/zeek/site/packages/add-interfaces/add-interfaces.zeek`.
+4.  
 
-4. Change the `...enable_all_logs = F...` to `...enable_all_logs = T... ` & Remove text inside the curly brackets in `...include_logs: set[Log::ID] = { }...` .
+a)  Change the `...enable_all_logs = F...` to `...enable_all_logs = T...
 
-```add int
+b)  Remove text inside the curly brackets in 
+
+`...include_logs: set[Log::ID] = { }...` .
+
+
+Example when updated:
+```
 export {
         ## Enables interfaces for all active streams
         const enable_all_logs = T &redef;
@@ -1311,11 +1338,16 @@ export {
 		}
 ```
 
-5. Re-Apply permissions for the Zeek user and group
-- `	#chown -R zeek:zeek /opt/zeek ` 
-- `#setcap cap_net_raw=eip /opt/zeek/bin/zeek && setcap cap_net_raw=eip /opt/zeek/bin/capstats`
+5. (Root) Re-Apply permissions for the Zeek user and group
+```
+chown -R zeek:zeek /opt/zeek
+```
 
-6. Re-Deploy Zeek
+```
+setcap cap_net_raw=eip /opt/zeek/bin/zeek && setcap cap_net_raw=eip /opt/zeek/bin/capstats
+```
+6. (Zeek) Re-Deploy Zeek
+
 ```
 zeekctl deploy
 ```
@@ -1325,19 +1357,26 @@ zeekctl deploy
 
 - Participants should be prepared to provide the public address that will access the remote (concordia) server.
 
-1. From the server run `$curl ifconfig.me`.
+1. (Zeek) From the server run `$curl ifconfig.me`.
 
-```ifcfg.me
-$curl ifconfig.me
+```
+curl ifconfig.me
+
+```
+Example output
+```
 205.XXX.XXX.XXX
 ```
-
-2. Generate ssh-keys: `$ssh-keygen -t rsa -b 4096`.
+2. (Zeek) Generate ssh-keys: `$ssh-keygen -t rsa -b 4096`.
 
 > - Passwordless authentication requires key exchange.  This is necessary for automation.
 
-```generate keys
+```
 $ssh-keygen -t rsa -b 4096
+```
+
+Example interaction:
+```
 Generating public/private rsa key pair.
 Enter file in which to save the key (/home/zeek/.ssh/id_rsa):
 Enter passphrase (empty for no passphrase):
@@ -1352,22 +1391,31 @@ The key's randomart image is:
 [zeek@zeek01 .ssh]$
 ```
 
-3. Copy the contents of  your new public key:  `$cat ~/.ssh/id_rsa.pub`.
+3. (Zeek) Copy the contents of  your new public key:  
+
+```
+cat ~/.ssh/id_rsa.pub`.
+```
+
 4. Contact Anis via email `anis.lounis@mail.concordia.ca` or via the JSP Slack channel (#jsp-tech) for registration and access to remote server. 
-   - Include your ssh public key of your zeek server.
-   - Include the public IP of your server.
+   - Include the public IP of your server (Step 1)
+   - Include your ssh public key of your zeek server (Step 3)
    - Include the public IP address(s) of workstations that will be accessing the portal (GUI).
-   - Concordia will reply with the participant's username for access to the server and credentials for accessing the web interface "https://jointsecurity.ca/".
+
+
+Concordia will reply with the participant's username for access to the server and credentials for accessing the web interface "https://jointsecurity.ca/".  Once you receive these credentials, proceed to the next step to test the connection.
+
+
 5. Test connectivity `$ssh -p 56320 username@push.jointsecurity.ca`.
    - Connectivity to the remote server should be established:
 
-```test ssh
+```
 $ ssh -p 56320 username@push.jointsecurity.ca
 Welcome
 ...
 username@feedserver:~$
 ```
-
+Now that we have confirmed your account is set up and authentication is working, Proceed to installing RSYNC to set up the secure file transfer.
 
 
 #### 9.1. Install RSYNC 
@@ -1383,22 +1431,22 @@ username@feedserver:~$
 > - *Local*:  JSP Server where logs reside in `/opt/zeek/logs/`.
 > - *Remote*: system which will receive logs.
 
-1. Install `rsync`.
+1. (Root) Install `rsync`.
 
 ```
-#sudo apt install rsync
+sudo apt install rsync
 ...
 Complete!
 ```
 
-2. Transfer files.
+2. (Zeek) Transfer files.
 
 Create an `rsync` script and add it to the crontab of the zeek user.
 
 a) Create a script and populate it:
 
 ```
-$vi /home/zeek/rsync.sh
+vi /home/zeek/rsync.sh
 ```
 The `rsync` command in this script can be tuned to the institution's preference in terms of what files are uploaded.  This script does not upload files that may contain  personally identifiable information (PII).
 
@@ -1415,15 +1463,17 @@ rsync -av --progress -e "ssh -p 56320" --exclude={"http.*.log.gz","ftp.*.log.gz"
 done
 ```
 
-b) make the script executable:
+b) (Zeek) make the script executable:
 ```
-$chmod +x rsync.sh
+chmod +x rsync.sh
 ```
 
-c) Automate transfer of files with crontab: 
+c) (Zeek) Automate transfer of files with crontab: 
 ```
 `$ crontab -e`
 ```
+
+Example script:
 
 ```rsync_crontab_b
 # Sync Zeek logs every hour to CANIDS.
