@@ -334,18 +334,18 @@ usermod -a -G zeek zeek
 
 >We need to add the Zeek repositories to your Ubuntu installation in order to receive the latest version and updates.  In the below example, substitute the '22.04' for your version of Ubuntu.
 
-1. Execute the following commands to add required respositories:
+1. (Root) Execute the following commands to add required respositories:
 ```
-#echo 'deb http://download.opensuse.org/repositories/security:/zeek/xUbuntu_22.04/ /' | sudo tee /etc/apt/sources.list.d/security:zeek.list
+echo 'deb http://download.opensuse.org/repositories/security:/zeek/xUbuntu_22.04/ /' | sudo tee /etc/apt/sources.list.d/security:zeek.list
 ```
 >
 ```
-#curl -fsSL https://download.opensuse.org/repositories/security:zeek/xUbuntu_22.04/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/security_zeek.gpg > /dev/null
+curl -fsSL https://download.opensuse.org/repositories/security:zeek/xUbuntu_22.04/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/security_zeek.gpg > /dev/null
 ```
 
 >Confirm the repositories have been added
 ```
-#sudo apt update
+sudo apt update
 ```
 >Confirm you do not receive any errors
 >
@@ -353,22 +353,22 @@ usermod -a -G zeek zeek
 
 ## 3.9 Install Dependancies
 
->Install the required dependancies for Zeek
+>(Root) Install the required dependancies for Zeek
 >
 
 ```
-#sudo apt-get install cmake make gcc g++ flex bison libpcap-dev libssl-dev python3 python3-dev swig zlib1g-dev
+sudo apt-get install cmake make gcc g++ flex bison libpcap-dev libssl-dev python3 python3-dev swig zlib1g-dev
 ```
 
->Install optional dependancies for Zeek
+>(Root) Install optional dependancies for Zeek
 >
 ```
-#sudo apt-get install python3-git python3-semantic-version
+sudo apt-get install python3-git python3-semantic-version
 ```
 
 ## 3.10 Configure interfaces for Promiscuous mode
 
-Zeek requires the interfaces on which it will sniff traffic be configured into PROMISCUOUS mode.    By configuring your interfaces into this mode, you are allowing the network interface to receive packets that would normally be discarded.
+Zeek requires the interfaces on which it will sniff traffic be configured into PROMISCUOUS mode.    By configuring your interfaces into this mode, you are allowing the network interface to receive packets that would normally be discarded.  Execute these commands as (Root)
 
 
 1. Create a file called `/etc/systemd/system/promisc.service` 
@@ -400,14 +400,14 @@ WantedBy=default.target
 2. Make the changes permanent and start on boot.
 
 ```promisc
-# chmod u+x /etc/systemd/system/promisc.service
-# systemctl start promisc.service
-# systemctl enable promisc.service
+ chmod u+x /etc/systemd/system/promisc.service
+ systemctl start promisc.service
+ systemctl enable promisc.service
 ```
 3. Enable `network` service and restart it.
 
 ```enable network service
-#systemctl enable network && systemctl restart network
+systemctl enable network && systemctl restart network
 ```
 
 4. Confirm Pre-Reboot
@@ -415,7 +415,7 @@ WantedBy=default.target
 > You should see that `PROMISC` exists in the options for the sniffing interface(s).
 
 ```ip a show | grep permisc
-$ ip a | grep PROMISC
+ip a | grep PROMISC
 ens2f1: <BROADCAST,MULTICAST,PROMISC,UP,LOWER_UP> mtu 1500 qdisc mq state UP group default qlen 1000
 ens2f2: <BROADCAST,MULTICAST,PROMISC,UP,LOWER_UP> mtu 1500 qdisc mq state UP 
 ```
@@ -430,10 +430,10 @@ ens2f2: <BROADCAST,MULTICAST,PROMISC,UP,LOWER_UP> mtu 1500 qdisc mq state UP
 ## 3.12 Install CRONTAB
 > Ubuntu 22.04 does not come with CRONTAB installed.  We will need this feature to be installed to schedule some recurring tasks with regards to Zeek and its plugins
 
-Execute the following command to install Crontab
+(Root) Execute the following command to install Crontab
 
 ```
-#sudo apt-get -y install cron
+sudo apt-get -y install cron
 ```
 
 
@@ -447,7 +447,7 @@ Execute the following command to install Crontab
 
 1. Use `apt` to install `zeek`.
 
->This will install Zeek 5.0X
+>(Root) This will install Zeek 5.0X
 >
 ```
 #sudo apt install zeek
@@ -456,10 +456,10 @@ Execute the following command to install Crontab
 >
 
 
-2. Add Zeek binary files to path for Zeek.  
+2. (Root) Add Zeek binary files to path for Zeek.  
 
 ```add zeek to path
-#echo "export PATH=/opt/zeek/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin" >> /etc/profile.d/zeek.sh
+echo "export PATH=/opt/zeek/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin" >> /etc/profile.d/zeek.sh
 ```
 
 3.  Grant the Zeek user and group ownership and permissions
@@ -467,28 +467,28 @@ Execute the following command to install Crontab
 
 Execute the following command to recursively assign ownership to the zeek user and group
 
-**(!) Bookmark this command for use in any troubleshooting**
+**(!) (Root) Bookmark this command for use in any troubleshooting**
 
 ```
-#chown -R zeek:zeek /opt/zeek
+chown -R zeek:zeek /opt/zeek
 ```
 
 Execute the following command to give the zeek process permissions to read raw packet captures
 
-**(!) Bookmark this command for use in any troubleshooting**
+**(!) (Root) Bookmark this command for use in any troubleshooting**
 
 ```
-#setcap cap_net_raw=eip /opt/zeek/bin/zeek && setcap cap_net_raw=eip /opt/zeek/bin/capstats
+setcap cap_net_raw=eip /opt/zeek/bin/zeek && setcap cap_net_raw=eip /opt/zeek/bin/capstats
 ```
 
 
-4. Login as `zeek` to update the path.
+4. Login as `zeek` to confirm the path entry is working.
 
 ```su - zeek
-#su - zeek
+su - zeek
 ```
 
-5. Confirm the path has been applied with the bash script
+5. (Zeek) Confirm the path has been applied with the bash script
 
 
 > If the command returns `/opt/zeek/bin/zeek`, your path has been updated.
@@ -499,7 +499,7 @@ Execute the following command to give the zeek process permissions to read raw p
 $which zeek
 /opt/zeek/bin/zeek
 ```
->You should also be able to execute 'zeekctl' for any working directory
+>(Zeek) You should also be able to execute 'zeekctl' for any working directory
 ```
 $zeekctl
 
