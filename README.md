@@ -1097,16 +1097,16 @@ Syslog-NG can be used instead of RSYNC.
 
 
 
-1. Install syslog-NG
+1. (Root) Install syslog-NG
 
 ```
-#sudo apt-get install syslog-ng
+sudo apt-get install syslog-ng
 ```
 
-2. Edit the syslog-NG configuration file
+2. (Root) Edit the syslog-NG configuration file
 
 ```
-#vi /etc/syslog-ng/syslog-ng.conf
+vi /etc/syslog-ng/syslog-ng.conf
 ```
 Example configuration, insert below @include "scl.conf"
 Take note the program-override assigns a tag to each log type.  This will be important when developing a parser for your analystics/SIEM platform.
@@ -1149,18 +1149,18 @@ Take note of the Zeek log files above.  If you want to reduce your EPS sent to y
 
 
 
-3. Restart SyslogNG
+3. (Root) Restart SyslogNG
 
 ```
 service syslog-ng restart
 ```
 
-Due to a bug in Syslog-NG when log files are rotate, we have a script to reload Syslog NG every 30 seconds
+Due to a bug in Syslog-NG when log files are rotate, we have a script to reload Syslog NG every 30 seconds.  The reload of Syslog-NG needs to be done as the Root user.
 
-4. Edit Crontab as Root
+4. (Root) Edit Crontab
 
 ```
-#crontab -e
+crontab -e
 ```
 Paste the following example to schedule Syslog NG to reload every 30 seconds
 
