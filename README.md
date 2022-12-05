@@ -1574,148 +1574,6 @@ c) Keep packages updated
 $ zkg upgrade
 ```
 
-### Detect log4j: CVE-2021-44228
-
-####  Manual detection
-
-- Useful for detection before plugins and IOC's were available.  
-- Can occur on raw log files from analytics platforms or zeek CLI.
-- Useful for detecting past events.
-- Search `http.log` for `${`.
-
-1. Past events :
-
-```
-$zcat -r /opt/zeek/logs/*/http*.log.gz | grep "\${"
-```
-
-2. Real time:
-
-```
-$cat intel.log | grep "\${"
-```
-
-
-
-#### Corelight Plugin: CVE-2021-44228
-
-> A Zeek package which raises notices, tags HTTP connections and generates (CVE-2021-44228) attempts.
-
-- https://github.com/corelight/cve-2021-44228
-- Writes 3 distinct notices to `notice.log`:
-  1. `LOG4J_ATTEMPT_HEADER`
-  2. `LOG4J_LDAP_JAVA`
-  3. `LOG4J_JAVA_CLASS_DOWNLOAD`
-
-- New log file called `log4j.log`.
-
-1. Refresh zeek package manager repository`$zkg refresh`
-2. Install the package `$zkg install cve-2021-44228`
-
-```
-[zeek@zeek02 ~]$ zkg install cve-2021-44228
-The following packages will be INSTALLED:
-  zeek/corelight/cve-2021-44228 (v0.5.1)
-
-Proceed? [Y/n] Y
-Installing "zeek/corelight/cve-2021-44228".
-Installed "zeek/corelight/cve-2021-44228" (v0.5.1)
-Loaded "zeek/corelight/cve-2021-44228"
-```
-
-3. Deploy the plugin `$zeekctl deploy`.
-4. Keep the package updated `$zkg upgrade cve-2021-44228`
-
-### Threat Feeds
-
-> This is a public feed based on Public Threat Feeds and 'critical path security' gathered data.  Zeek compares connections with elements defined in the feed(s) and writes matches to intel.log.
-
-- https://github.com/CriticalPathSecurity/Zeek-Intelligence-Feeds.
-- Several sources for IOC's to be used with the Zeek intel framework.
-- New log file called `intel.log`.
-
-1. Clone from GitHub
-```
-$git clone https://github.com/CriticalPathSecurity/Zeek-Intelligence-Feeds.git /opt/zeek/share/zeek/site/Zeek-Intelligence-Feeds
-```
-
-2. Enable loading of plugin 
-```
-$echo "@load Zeek-Intelligence-Feeds" >> /opt/zeek/share/zeek/site/local.zeek
-```
-
-3. Keep the IOC's updated
-
-> This process will automate the updating of the various threat feeds.
-
-```
-$vi /home/zeek/zeek_update_intel-feeds.sh
-```
-
-Paste the contents
-
-```
-#!/bin/sh
-
-cd /opt/zeek/share/zeek/site/Zeek-Intelligence-Feeds && git fetch origin master
-git reset --hard FETCH_HEAD
-git clean -df
-
-#fix references for IDS participants
-sed -i 's+/usr/local/+/opt/+g' /opt/zeek/share/zeek/site/Zeek-Intelligence-Feeds/main.zeek
-```
-
-b) Make the new script executable: 
-```
-$chmod +x /home/zeek/zeek_update_intel-feeds.sh
-```
-
-c) Include or exclude feeds 
-```
-$vi /opt/zeek/share/zeek/site/Zeek-Intelligence-Feeds/main.zeek
-```
-
-
-> Critical path security has many intelligence feeds.  Participants may choose to enable or disable feeds depending on requirements or IDS placement.  Feeds can be excluded by commenting them out with `#`.
-
-```
-##! Load Intel Framework
-@load policy/integration/collective-intel
-@load policy/frameworks/intel/seen
-@load policy/frameworks/intel/do_notice
-redef Intel::read_files += {
-...
-#       "/opt/zeek/share/zeek/site/Zeek-Intelligence-Feeds/cps_cobaltstrike_domain.intel",
-    "/opt/zeek/share/zeek/site/Zeek-Intelligence-Feeds/log4j_ip.intel",
-#       "/opt/zeek/share/zeek/site/Zeek-Intelligence-Feeds/predict_intel.intel",
-...
-};
-```
-
-d) Add the script to crontab for execution every hour at minute 0: 
-```
-$crontab -e
-```
-
-Paste the following
-```
-0 * * * * sh /home/zeek/zeek_update_intel-feeds.sh >/dev/null 2>&1
-```
-
-e) Re-Propagate Zeek permissions to the Zeek folder and Capture packet functionality (as Root)
-
-```
-#chown -R zeek:zeek /opt/zeek
-#setcap cap_net_raw=eip /opt/zeek/bin/zeek && setcap cap_net_raw=eip /opt/zeek/bin/capstats
-```
-
-f) Deploy the plugin 
-
-```
-$zeekctl deploy
-```
-
-
 
 ### Write logs to TSV & JSON
 
@@ -1778,63 +1636,30 @@ zeek/hosom/file-extraction (installed: 2.0.3) - Extract files from network traff
 
 > Use Zeek to process captured packet traces. 
 
-#### 1. Capture a packet trace
+Generate a PCAP file
 
-##### 1. Microsoft Windows: `Wireshark`
-
-1. [Download](https://www.wireshark.org/download.html) and install `Wireshark`.
-
-2. Start `Wireshark` and select interface.
-
-3. Accumulate data.
-
-4. Save the data.
-
-
-
-##### 2. Linux (CentOS_Stream): tcpdump
+Linux: tcpdump
 
 1. Install `tcpdump`:
 
-`#yum -y install tcpdump`
+`#apt install tcpdump`
 
 2. Capture packet options:
 
 
 ```
-sudo tcpdump -i eno1 -c 100 -s 65535 -w 100-packets.trace
-sudo tcpdump -i eno1 -s 0 -w packet.trace
+sudo tcpdump -i ens2f1 -c 100 -s 65535 -w 100-packets.trace
+sudo tcpdump -i ens2f1 -s 0 -w packet.trace
 ```
 
-- `eno1` should be replaced by the correct interface for your system, for example as shown by the `$ifconfig` command. 
+- `ens2f1` should be replaced by the correct interface for your system, for example as shown by the `$ifconfig` command. 
 - `-c 100` designates how many packets to capture.  If not defined you must `ctrl+c` to interrupt `tcpdump` and hault data accumulation.
 - `-s 0` capture whole packets. 
   - If not supported use `-s 65535`.
 
-#### 2. Upload the packet trace to your Zeek server
 
-##### 1. Microsoft Windows
 
-- Many software options
-
-1. Download and Install `Filezilla`
-2. Connect to Zeek server
-3. Place packet trace file into `/home/zeek/investigation`
-
-##### 3. Linux
-
-- Use `sftp` to transfer between Linux operating systems.
-
-```
-$ sftp zeek@192.168.0.1
-...
-Connected to zeek@192.168.0.1.
-sftp> put /source_dir/packet.trace /home/zeek/investigation/
-...
-sftp> quit
-```
-
-#### 3. Use Zeek to examine packet trace
+3. Use Zeek to examine packet trace
 
 - Zeek will output log files into the working directory.
 - Zeek default analysis:
