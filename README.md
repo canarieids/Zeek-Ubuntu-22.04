@@ -518,7 +518,7 @@ su - zeek
 Execute the command 'which zeek' to query for the path.  You should receive the results: ''/opt/zeek/bin/zeek' .
 
  If the command returns `/opt/zeek/bin/zeek`, your path has been updated successfully.
- 
+
  
 
 
@@ -530,7 +530,7 @@ which zeek
 /opt/zeek/bin/zeek
 ...
 ```
->(Zeek) You should also be able to execute 'zeekctl' for any working directory
+(Zeek) You should also be able to execute 'zeekctl' for any working directory
 ```
 zeekctl
 
