@@ -418,7 +418,7 @@ Save your changes (:wq!)
 systemctl start promisc.service
 ```
 ```
- systemctl enable promisc.service
+systemctl enable promisc.service
 ```
 4. (Root) Enable `network` service and restart it.
 
