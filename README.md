@@ -1216,7 +1216,7 @@ chown -R zeek:zeek /opt/zeek
 setcap cap_net_raw=eip /opt/zeek/bin/zeek && setcap cap_net_raw=eip /opt/zeek/bin/capstats
 ```
 
-3. Reconfigure`node.cfg` to use AF_PACKET
+3. Determine your desired core allocation design
 
 With AF Packet now installed, we must reconfigure the node.cfg file to use the AF Packet plugin.  The following items will need to be defined in the node.cfg file:
 
@@ -1227,7 +1227,7 @@ With AF Packet now installed, we must reconfigure the node.cfg file to use the A
 - The general rule is 250MiB throughput per thread.
 - Well distributed load makes more efficient work.
 
-4. Fet the `processors` and `core ids`of the server.  Use the distribution of processors to core for similar distribution between workers.
+Fet the `processors` and `core ids`of the server.  Use the distribution of processors to core for similar distribution between workers.
 
 ```awksed
 $awk '/core id/ || /processor/' /proc/cpuinfo | sed 'N;s/\n/\t/'
@@ -1238,9 +1238,10 @@ processor       : 1     core id         : 4
 processor       : 39    core id         : 26
 ```
 
-
-
  Workers: The fastest memory and CPU core speed you can afford is recommended since all of the protocol parsing and most analysis will take place here.
+
+Now you're ready to reconfigure`node.cfg` to use AF_PACKET
+
 
 5. (Zeek) Edit node.cfg
 
@@ -1282,7 +1283,7 @@ af_packet_fanout_id=1
 [worker-2]
 type=worker
 host=localhost
-interface=af_packet::enp59s0f0np0
+interface=af_packet::ens2f1
 lb_method=custom
 lb_procs=8
 pin_cpus=8,9,10,11,12,13,14,15
@@ -1291,7 +1292,7 @@ af_packet_fanout_id=2
 [worker-3]
 type=worker
 host=localhost
-interface=af_packet::enp59s0f1np1
+interface=af_packet::ens2f2
 lb_method=custom
 lb_procs=8
 pin_cpus=16,17,18,19,20,21,22,23
@@ -1300,7 +1301,7 @@ af_packet_fanout_id=3
 [worker-4]
 type=worker
 host=localhost
-interface=af_packet::enp94s0f0np0
+interface=af_packet::ens2f3
 lb_method=custom
 lb_procs=8
 pin_cpus=24,25,26,27,28,29,30,31
@@ -1309,7 +1310,7 @@ af_packet_fanout_id=4
 [worker-5]
 type=worker
 host=localhost
-interface=af_packet::enp94s0f1np1
+interface=af_packet::ens2f4
 lb_method=custom
 lb_procs=8
 pin_cpus=32,33,34,35,36,37,38,39
