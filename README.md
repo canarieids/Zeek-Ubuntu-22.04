@@ -405,11 +405,19 @@ WantedBy=default.target
 
 ```
 
+Save your changes (:wq!)
+
+
 3. (Root) Make the changes permanent and start on boot.
 
-```promisc
+```
  chmod u+x /etc/systemd/system/promisc.service
- systemctl start promisc.service
+```
+
+```
+systemctl start promisc.service
+```
+```
  systemctl enable promisc.service
 ```
 4. (Root) Enable `network` service and restart it.
@@ -467,6 +475,12 @@ sudo apt-get -y install cron
 
 
 2. (Root) Add Zeek binary files to path for Zeek.  
+
+Enter Root bash:
+```
+sudo bash
+```
+Execute the following command
 
 ```add zeek to path
 echo "export PATH=/opt/zeek/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin" >> /etc/profile.d/zeek.sh
