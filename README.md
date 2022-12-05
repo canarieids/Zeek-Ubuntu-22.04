@@ -117,7 +117,7 @@ Participants can contact Dell directly for warranty & customer support for hardw
 > If physical access to the server is not possible, you can virtually mount an image.  It is recommended to install the operating system with a USB key that is connected to one of the server’s USB ports [Click here for more information.](https://www.dell.com/support/article/ca/en/cabsdt1/sln296648/using-the-virtual-media-function-on-idrac-6-7-8-and-9?lang=en)
 
 1. Click `Configuration`.
-2. Select `Virtual Media`.
+2. Select `Connect Virtual Media`.
 3. Navigate for and select the ISO file.
 4. Click `Open`.
 
@@ -372,8 +372,16 @@ Zeek requires the interfaces on which it will sniff traffic be configured into P
 
 
 1. (Root) Create a file called `/etc/systemd/system/promisc.service` 
-Populate the file using the below examles. Where each sniffing interface is defined under `[Service]`.  This will require one line per interface.
- In the below example, we have `ens2f1` & `ens2f2` configured to be promiscuous.  Zeek will be able to use these as sniffing interfaces.  Substitute these interface names from your environment.
+
+```
+vi /etc/systemd/system/promisc.service
+```
+
+
+2. Populate the file using the below examles. Where each sniffing interface is defined under `[Service]`.  This will require one line per interface.
+   In the below example, we have four interfaces: `ens2f1` , `ens2f2`, `ens2f3` and `ens2f4` configured to be in promiscuous mode. 
+   
+   Zeek will be able to use these as sniffing interfaces.  Substitute these interface names from your environment.
 
 ```multiple
 [Service]
@@ -384,10 +392,10 @@ After=network.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/sbin/ip link set dev enp94s0f0np0 promisc on
-ExecStart=/usr/sbin/ip link set dev enp94s0f1np1 promisc on
-ExecStart=/usr/sbin/ip link set dev enp59s0f0np0 promisc on
-ExecStart=/usr/sbin/ip link set dev enp59s0f1np1 promisc on
+ExecStart=/usr/sbin/ip link set dev ens2f1 promisc on
+ExecStart=/usr/sbin/ip link set dev ens2f2 promisc on
+ExecStart=/usr/sbin/ip link set dev ens2f3 promisc on
+ExecStart=/usr/sbin/ip link set dev ens2f4 promisc on
 
 TimeoutStartSec=0
 RemainAfterExit=yes
@@ -397,30 +405,32 @@ WantedBy=default.target
 
 ```
 
-2. (Root) Make the changes permanent and start on boot.
+3. (Root) Make the changes permanent and start on boot.
 
 ```promisc
  chmod u+x /etc/systemd/system/promisc.service
  systemctl start promisc.service
  systemctl enable promisc.service
 ```
-3. (Root) Enable `network` service and restart it.
+4. (Root) Enable `network` service and restart it.
 
 ```enable network service
-systemctl enable network && systemctl restart network
+sudo systemctl restart systemd-networkd
 ```
 
-4. Confirm Pre-Reboot
+5. Confirm Pre-Reboot
 
 > You should see that `PROMISC` exists in the options for the sniffing interface(s).
 
 ```ip a show | grep permisc
 ip a | grep PROMISC
-ens2f1: <BROADCAST,MULTICAST,PROMISC,UP,LOWER_UP> mtu 1500 qdisc mq state UP group default qlen 1000
-ens2f2: <BROADCAST,MULTICAST,PROMISC,UP,LOWER_UP> mtu 1500 qdisc mq state UP 
+...
+ens2f1: <BROADCAST,MULTICAST,###PROMISC###,UP,LOWER_UP> mtu 1500 qdisc mq state UP group default qlen 1000
+ens2f2: <BROADCAST,MULTICAST,###PROMISC,UP###,LOWER_UP> mtu 1500 qdisc mq state UP 
+...
 ```
 
-5. Reboot your server and re-confirm Step 4 to ensure interfaces come up with the 'PROMISC' flag
+6. Reboot your server and re-confirm Step 4 to ensure interfaces come up with the 'PROMISC' flag
 
 
 ## 3.11. Optimize Sniffing Interfaces
@@ -582,7 +592,9 @@ starting workers ...
 To start Zeek when the operating system starts, create a file and place it into `/etc/systemd/system` .
 
 1. (Root) Create a file called `/etc/systemd/system/zeek.service`
-
+```
+vi /etc/systemd/system/zeek.service
+```
 
 ```
 vi /etc/systemd/system/zeek.service
