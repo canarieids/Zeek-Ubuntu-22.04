@@ -1375,7 +1375,7 @@ zeekctl deploy
 
 ## 9.0 Aggregrate Portal File Transfer - CANIDS
 
-- Participants should be prepared to provide the public address that will access the remote (concordia) server.
+- Participants should be prepared to provide the public address that will access the remote (Concordia) server.
 
 1. (Zeek) From the server run `$curl ifconfig.me`.
 
@@ -1418,19 +1418,22 @@ cat ~/.ssh/id_rsa.pub`.
 ```
 
 4. Contact Anis via email `anis.lounis@mail.concordia.ca` or via the JSP Slack channel (#jsp-tech) for registration and access to remote server. 
-   - Include the public IP of your server (Step 1)
-   - Include your ssh public key of your zeek server (Step 3)
-   - Include the public IP address(s) of workstations that will be accessing the portal (GUI).
+
+Please include the following information:
+
+   a) Include the public (egress) IP of your IDS server (Step 1)
+   b) Include your SSH Public Key of your IDS server (Step 3)
+   c) Include the public (egress) IP address(s) of workstations that will be accessing the CANIDS portal.
 
 
-Concordia will reply with the participant's username for access to the server and credentials for accessing the web interface "https://jointsecurity.ca/".  Once you receive these credentials, proceed to the next step to test the connection.
+Concordia will reply with the participant's username for access to the server and credentials for accessing the web interface "https://portal.canids.ca/".  Once you receive these credentials, proceed to the next step to test the connection.
 
 
-5. Test connectivity `$ssh -p 56320 username@push.jointsecurity.ca`.
+5. Test connectivity `$ssh -p 56320 <username>@push.jointsecurity.ca`.
    - Connectivity to the remote server should be established:
 
 ```
-$ ssh -p 56320 username@push.jointsecurity.ca
+$ ssh -p 56320 <username>@push.jointsecurity.ca
 Welcome
 ...
 username@feedserver:~$
