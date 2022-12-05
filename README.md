@@ -1111,7 +1111,7 @@ input (
 
 ### 7.2. SYSLOG-NG
 
-Syslog-NG can be used instead of RSYSLOG. 
+As an alternative option, Syslog-NG can be used instead of RSYSLOG.  
 
 
 
