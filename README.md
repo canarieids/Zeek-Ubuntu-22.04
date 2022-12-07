@@ -959,7 +959,7 @@ ruleset(name="sendZEEKLogs") {
         action (
         type="omfwd"
         protocol="udp"
-        target="10.189.34.211"
+        target="10.20.30.40"
         port="514"
 #       template="ZEEK_Logs"
       )
