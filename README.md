@@ -1241,7 +1241,7 @@ With AF Packet now installed, we must reconfigure the node.cfg file to use the A
 - The general rule is 250MiB throughput per thread.
 - Well distributed load makes more efficient work.
 
-Fet the `processors` and `core ids`of the server.  Use the distribution of processors to core for similar distribution between workers.
+Fetch the `processors` and `core ids`of the server.  Use the distribution of processors to core for similar distribution between workers.
 
 ```awksed
 $awk '/core id/ || /processor/' /proc/cpuinfo | sed 'N;s/\n/\t/'
