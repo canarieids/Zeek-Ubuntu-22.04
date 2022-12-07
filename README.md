@@ -553,7 +553,7 @@ interface=eno1
 ```
 You will need to modify the ***interface=*** and provide at least one valid interface for Zeek to bind.  You can get a list of your interfaces by running 'ip a' at the CLI.
 
-If you wish to configure Zeek to listen to multiple interfaces simultaneously (highly recommended), you must configure Zeek to run in cluster mode.  For now, you can specify one interface, or jump to step 4.3.3 to configure node.cfg for cluster mode with multiple interfaces.  
+If you wish to configure Zeek to listen to multiple interfaces simultaneously (highly recommended), you must configure Zeek to run in cluster mode.  For now, you can specify one interface, or jump to step 4.3.6 to configure node.cfg for cluster mode with multiple interfaces.  
 
 Once you have completed configuration of Standalone or Cluster mode, proceed to the next step.
 
