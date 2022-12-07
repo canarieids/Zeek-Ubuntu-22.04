@@ -1346,12 +1346,12 @@ zeekctl deploy
 zkg install zeek/zeek-af_packet-plugin
 ```
 
-3. (Zeek) Edit config file and modify two lines 
+2.(Zeek) Edit config file and modify two lines 
 ```
 vi /opt/zeek/share/zeek/site/packages/add-interfaces/add-interfaces.zeek
 ```
 
-4.  
+3.  
 
 a)  Change the `...enable_all_logs = F...` to `...enable_all_logs = T...
 
@@ -1372,7 +1372,7 @@ export {
 		}
 ```
 
-5. (Root) Re-Apply permissions for the Zeek user and group
+4. (Root) Re-Apply permissions for the Zeek user and group
 ```
 chown -R zeek:zeek /opt/zeek
 ```
@@ -1380,7 +1380,7 @@ chown -R zeek:zeek /opt/zeek
 ```
 setcap cap_net_raw=eip /opt/zeek/bin/zeek && setcap cap_net_raw=eip /opt/zeek/bin/capstats
 ```
-6. (Zeek) Re-Deploy Zeek
+5. (Zeek) Re-Deploy Zeek
 
 ```
 zeekctl deploy
