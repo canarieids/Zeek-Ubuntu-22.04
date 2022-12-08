@@ -1537,26 +1537,34 @@ $zeekctl deploy
 2. Make sure the `zeek` user and group have correct permissions.
 
 > New applications and system modifications can result in a change of permissions.  The `zeek` user and group should maintain control of `/opt/zeek`.
+>
+> Run the following as ROOT
 
 ```
-#chown -R zeek:zeek /opt/zeek
+chown -R zeek:zeek /opt/zeek
 ```
 
 3. Give the Zeek application permission to capture packets.
 
+   Run the following as ROOT
+
 ```
-#setcap cap_net_raw=eip /opt/zeek/bin/zeek && setcap cap_net_raw=eip /opt/zeek/bin/capstats
+setcap cap_net_raw=eip /opt/zeek/bin/zeek && setcap cap_net_raw=eip /opt/zeek/bin/capstats
 ```
 
-4. Add Zeek binaries to path.
+4. Add Zeek binaries to path
+
+   Run the following as ROOT
 
 ```add zeek to path
-#echo "export PATH=/opt/zeek/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin" >> /etc/profile.d/zeek.sh
+echo "export PATH=/opt/zeek/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin" >> /etc/profile.d/zeek.sh
 ```
 
 >Logout and login again as Zeek
 
 5. Confirm path update with `which` command.
+
+   Run the following as ZEEK
 
 > If the command returns `/opt/zeek/bin/zeek`, your path has been updated.
 
@@ -1582,7 +1590,7 @@ Uncomment this to source zkg's package state
 
 b) Refresh zeek package manager repository
 ```
-$ zkg refresh`
+$ zkg refresh
 ```
 
 c) Keep packages updated 
