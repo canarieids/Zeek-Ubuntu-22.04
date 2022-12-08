@@ -1487,6 +1487,8 @@ vi /home/zeek/rsync.sh
 ```
 The `rsync` command in this script can be tuned to the institution's preference in terms of what files are uploaded.  This script does not upload files that may contain  personally identifiable information (PII).
 
+Please make sure to update <username> with the username provided by Concordia.
+
 ```
 rootDir="/opt/zeek/logs/"
 for day in 0 1 2 3 4 5 6 7
@@ -1507,7 +1509,7 @@ chmod +x rsync.sh
 
 c) (Zeek) Automate transfer of files with crontab: 
 ```
-`$ crontab -e`
+$ crontab -e
 ```
 
 Example script:
