@@ -1397,7 +1397,7 @@ zeekctl deploy
 curl ifconfig.me
 
 ```
-Example output
+Example output 
 ```
 205.XXX.XXX.XXX
 ```
@@ -1707,3 +1707,4 @@ zeek -r mypackets.trace frameworks/files/extract-all-files
 ```
 
 - Verify log files and start digging!
+- 
