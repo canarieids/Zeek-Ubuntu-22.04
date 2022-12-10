@@ -711,8 +711,25 @@ vi /opt/zeek/share/zeek/site/local.zeek
 ...
 ```
 
+### 4.3.3 Load packages `local.zeek`
 
-### 4.3.3. Local and Public networks`networks.cfg`
+To load packages added manually or by the ZKG package manager, located in your site folder, you must uncomment out the @load packages line.
+
+1. Edit the local.zeek configuraiton file in the site folder (Manager)
+```
+vi /opt/zeek/share/zeek/site/local.zeek
+```
+
+2. Locate the section to load packages. Remove the comment that is placed their by default.  Please note this will load all packages contained in your /opt/zeek/share/zeek/site/ folder.
+```
+...
+# Uncomment this to source zkg's package state
+@load packages
+...
+```
+
+
+### 4.3.4. Local and Public networks`networks.cfg`
 
 Defining your networks to Zeek allows for you to differentiate between local and remote traffic.  Add all your netwoks and public networks referencing the example below.
 
@@ -735,7 +752,7 @@ Defining your networks to Zeek allows for you to differentiate between local and
 
 
 
-### 4.3.4 Email `zeekctl.cfg`
+### 4.3.5 Email `zeekctl.cfg`
 
 
 1. Edit Zeekctl.cfg (Default location: /opt/zeek/etc/zeekctl.cfg)
@@ -760,7 +777,7 @@ This option enables Zeek to send email.
 > MailTo = security@your-org.ca
 
 
-### 4.3.5 Log Retention and Collection `zeekctl.cfg`
+### 4.3.6 Log Retention and Collection `zeekctl.cfg`
 
 
 Zeek automatically rotates and archives runtime logs from `/opt/zeek/logs/current`into `/opt/zeek/logs/yyyy-mm-dd/` on a configurable interval.
@@ -783,7 +800,7 @@ LogExpireInterval = 30
 ...
 ```
 
-### 4.3.6 Zeek Cluster Mode `node.cfg`
+### 4.3.7 Zeek Cluster Mode `node.cfg`
 
 Zeek by default is configured to run in Standalone mode.  This means that only one interface can be configured to monitor traffic.  To use more than one port and provide a scalable solution, it is **HIGHLY**  recommended to configure Zeek to run in Cluster mode. 
 
@@ -843,7 +860,7 @@ interface=ens2f4
 ```
 Please note that you will need to update ***interface=*** for each worker node to reflect a unique and valid interface.  To get a list of interfaces available, execute ***ip a*** from the CLI.
 
-### 4.3.7. Apply the Configuration Files
+### 4.3.8. Apply the Configuration Files
 
 With the completion of the previous steps, its now time to re-deploy Zeek.  Anytime you make changes similar to the above, you will need to re-deploy. 
 
