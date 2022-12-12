@@ -23,22 +23,22 @@ This document is a step-by-step guide for the configuration of the Zeek platform
 - Blocks that start with `#` are expected to be run as the `root` user.
 - Blocks that start with `$` are expected to be run as the `zeek` user.
 
-### 1.1 Community Resources
+## 1.1 Community Resources
 
 >  The Zeek community is vibrant, friendly, and easily accessible.  Use the following resources for communication and documentation questions that fall outside of this document and/or project.
 
-- [Zeek](https://www.zeek.org/)[ Website](https://www.zeek.org/)
-- [Zeek Manual](https://docs.zeek.org/en/master/)
-- [Zeek](https://zeek.org/connect/)[ Connect](https://zeek.org/connect/)
-- [Zeek](https://zeek.org/blog/)[ Blog](https://zeek.org/blog/)
+  - [Zeek](https://www.zeek.org/)[ Website](https://www.zeek.org/)
+  - [Zeek Manual](https://docs.zeek.org/en/master/)
+  - [Zeek](https://zeek.org/connect/)[ Connect](https://zeek.org/connect/)
+  - [Zeek](https://zeek.org/blog/)[ Blog](https://zeek.org/blog/)
 
-### 1.2 JSP FAQ
+## 1.2 JSP FAQ
 
 > We have composed a frequently asked questions file, which is located in the JSP portal.  Both pilot and phase 2 participants will find this file useful.
 
 - [Zeek / JSP - FAQ](https://idsportal.canarie.ca/wpc_downloader/core/?wpc_action=view&id=215) 
 
-### 1.3 Warranty and Contacts
+## 1.3 Warranty and Contacts
 
 > **Network TAPs:**
 
@@ -56,14 +56,14 @@ Participants can contact Dell directly for warranty & customer support for hardw
 
 # 2. Disk Configuration
 
-### 2.1 RAID Options for JSP Phase 1
+## 2.1 RAID Options for JSP Phase 1
 
 | Level | Min. # Disks | Max Capacity | Advantages | Disadvantages                                                |
 | ----- | ---------- | ------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | 0     |      1       | 4TB          | •High performance.<br />•Easy to implement.<br />•Highly efficient (no parity overhead). | •No redundancy.<br />•Limited business use cases due to no  fault tolerance. |
 | 1     |      2       | 2TB          | •Fault tolerant.  <br />•Easy to recover data in case of drive  failure  •Easy to implement. | •Highly inefficient (100% parity  overhead).<br/> •Not scalable (becomes very costly as  number of disks increase). |
 
-### 2.2 RAID Options for JSP Phase 2
+## 2.2 RAID Options for JSP Phase 2
 
 | Level | Min. # Disks | Max Capacity | Advantages                                                   | Disadvantages                                                |
 | ----- | ------------ | ------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
@@ -72,49 +72,41 @@ Participants can contact Dell directly for warranty & customer support for hardw
 | 6     | 4            | 2TB          | •Fault tolerant – increased redundancy  over RAID 5.<br />•High efficiency. | •Write performance penalty over RAID 5.<br />•More expensive than RAID 5. <br/>•Disk failure has a medium impact on  throughput. |
 | 10    | 4            | 2TB          | •Extremely high fault tolerance.<br />•Very high performance.  <br/>•Faster rebuild performance than 0+1. | •Very Expensive. <br />•High Overhead.<br />•Limited scalability. |
 
-### 2.3 Configure Disk(s)
+## 2.3 Configure Disk(s)
 
 <div style="text-align:center">    
   <a href="https://www.dell.com/support/manuals/ca/en/cabsdt1/poweredge-r440/idrac_3.30.30.30_lc_ug/configuring-raid?guid=guid-a86b35a2-03a6-4838-952f-24992a99998e&lang=en-us">Dell PowerEdge R440 RAID Configuration Guide</a> 
 </div>
 
 > Recommended configuration:
-> -The SSD drive should be configured as a NON-RAID Disk
-> -Prioritize support for high IOPS is a RAID 10.
-> -Priortize support for high capacity (retention) is a RAID 5.
+ - The SSD drive should be configured as a NON-RAID Disk
+ - Prioritize support for high IOPS is a RAID 10.
+ - Priortize support for high capacity (retention) is a RAID 5.
 
-
-### 2.4. Prepare USB Key
+## 2.4. Prepare USB Key
 
 1. Download the ISO for Ubuntu 22.x LTS
 > Download the latest version of Ubuntu 22.x LTS server
 > Click Here: [Ubuntu Server Download page](https://ubuntu.com/download/server).
 
-2.  Download and Install an ISO to USB utility
+2. Download and Install an ISO to USB utility
 > Download, install and run a USB creation tool.  Rufus is tool used in this document.
 > Rufus [Rufus](https://rufus.ie/).
 
-
-3.  Create bootable USB key
-> Follow these steps with Rufus to build a USB key from the Ubuntu ISO
-
-​		1. Open `Rufus`
-
-​		2. Under `Device` dropdown, choose target USB key.
-
-​		3. `Select` downloaded ISO.
-
-​		4. Navigate for and Choose ISO file.
-
-​		5. Select `Open`.
-
-​		6. Click `START` to begin writing the ISO.
+3. Create bootable USB key
+Follow these steps with Rufus to build a USB key from the Ubuntu ISO
+	- Open 'Rufus'
+	- Under 'Device' dropdown, choose target USB key.
+	- 'Select' downloaded ISO.
+	- Navigate for and Choose ISO file.
+	- Select 'Open'.
+	- Click 'START' to begin writing the ISO.
 
 ![image-20200505231623160](/images/image-20200505231623160.png)
 
-### 2.5. Virtual Deployment
+## 2.5. Virtual Deployment
 
-> If physical access to the server is not possible, you can virtually mount an image.  It is recommended to install the operating system with a USB key that is connected to one of the server’s USB ports [Click here for more information.](https://www.dell.com/support/article/ca/en/cabsdt1/sln296648/using-the-virtual-media-function-on-idrac-6-7-8-and-9?lang=en)
+> If physical access to the server is not possible, you can virtually mount an image. It is recommended to install the Operating System with a USB key that is connected to one of the server’s USB ports [Click here for more information.](https://www.dell.com/support/article/ca/en/cabsdt1/sln296648/using-the-virtual-media-function-on-idrac-6-7-8-and-9?lang=en)
 
 1. Click `Configuration`.
 2. Select `Connect Virtual Media`.
@@ -123,11 +115,7 @@ Participants can contact Dell directly for warranty & customer support for hardw
 
 ![image-20200505232027969](/images/image-20200505232027969.png)
 
-
-
-
-
-### 2.6. Disk Configuration - Phase 2
+## 2.6. Disk Configuration - Phase 2
 
 1. To start the Lifecycle Controller, press `F10`.
 
@@ -143,7 +131,7 @@ Participants can contact Dell directly for warranty & customer support for hardw
 
 4.  Click `Next`.
 
-> Do not select the SSD. We mount this drive later under `/opt/zeek/spool`.
+> Do not select the SSD. We mount this drive later under '/opt/zeek/spool'.
 
 ![image-20200506143702013](/images/image-20200506143702013.png)
 
@@ -175,7 +163,7 @@ Participants can contact Dell directly for warranty & customer support for hardw
 
 # 3. Install and Configure Ubuntu Server
 
-## Hardening the Server
+#### Hardening the Server
 
 > Apply security controls relevant to your organization's policy.  The following guidelines are posted on the on JSP Portal in the technical resources section:
 
@@ -221,29 +209,24 @@ Coming Soon
 
 ![image-20200506160026472](/images/image-typeofinstall-minimal.png)
 
+## 3.3. Configure initial Networking
 
-## 3.2. Configure initial Networking
+> Configure your management interface networking. One network card will be dedicated to allow administrators to SSH into the system. This same interface will also allow egress for SYSLOG connections.
 
-> Configure your management interface networking.  One network card will be dedicated to allow administrators to SSH into the system.  This same interface will also allow egress for SYSLOG connections.
->
 ![image-20200506160026472](/images/image-networkwizarsetup.png)
 
 > Configure your proxy (if applicable).  
-> 
+
 ![image-20200506160026472](/images/image-configureproxy.png)
 
 > Configure the Archive Mirror
-> 
+
 ![image-20200506160026472](/images/image-archivemirror.png)
 
+## 3.4. Storage Layout
+> The guided storage layout provides us the option to customize where we install Ubuntu. It is advisable to install Ubuntu on your redundant storage volume (RAID10 or RAID5). The single SSD drive will be used for swap and working folders.
 
-
-
-
-## 3.3. Storage Layout
-> The guided storage layout provides us the option to customize where we install Ubuntu.  It is advisable to install Ubuntu on your redundant storage volume (RAID10 or RAID5).  The single SSD drive will be used for swap and working folders.
-
-1. Choose the option 'Custom Storage Layout'`.
+1. Choose the option `Custom Storage Layout`.
 
 ![image-20200506160918064](/images/image-storagelayout1.png)
 
@@ -264,33 +247,30 @@ Coming Soon
 ![image-20200506160918064](/images/image-storagelayout2.png)
 
 > Confirm the storage
-> 
+
 ![image-20200506160918064](/images/image-storagelayout3.png)
 
-## 3.4. Profile Setup
+## 3.5. Profile Setup
 
 >Complete your administrator profile set up.
->
-
 
 ![image-20200506160918064](/images/image-userprofile.png)
 
-## 3.5 Install OpenSSH
+## 3.6 Install OpenSSH
 
->Install OpenSSH server.  This will allow you to administrate the server via SSH.  
+>Install OpenSSH server. This will allow you to administrate the server via SSH.  
 >Optionally, use certificate based authentication.
->
+
 ![image-20200506160918064](/images/image-installopenssh.png)
 
 ## 3.5 Featured Server Snaps
 
 >Do not select any Featured server Snaps
->
+
 ![image-20200506160918064](/images/image-featuredserversnaps.png)
 
 
-## 3.5. Begin the installation
-
+## 3.7. Begin the installation
 
 1.  Confirm the destructive operation warning to start installation
 
@@ -306,9 +286,9 @@ Coming Soon
 
 ![image-20200506162722251](/images/image-postinstallreboot.png)
 
-## 3.6. Zeek User and Group
+## 3.8. Zeek User and Group
 
-> Participants are encouraged to follow their own account policy.  Later steps will outline the creation of a `zeek` user and group that will have access to `Zeek Application` functions and files.
+> Participants are encouraged to follow their own account policy. Later steps will outline the creation of a `zeek` user and group that will have access to `Zeek Application` functions and files.
 > Complete the following steps steps to create Zeek user and group
 
 1. Login with the account created during the OS deployment, in this example 'csadmin', which will be represented with "(Root)" in this guide. 
@@ -318,7 +298,6 @@ Coming Soon
 sudo adduser zeek
 ```
 > You will be prompted to choose a 'password' and define the account's Full Name, Room, Work Phone, Home Phone, Other.  These fields are optional.
-> 
 
 3. (Root) Create a Zeek Group
 ```
@@ -330,11 +309,11 @@ sudo addgroup zeek
 usermod -a -G zeek zeek
 ```
 
-## 3.8. Repositories
+## 3.9. Repositories
 
 >We need to add the Zeek repositories to your Ubuntu installation in order to receive the latest version and updates.  In the below example, substitute the '22.04' for your version of Ubuntu.
 
-1. (Root) Execute the following commands to add required respositories:
+>(Root) Execute the following commands to add required respositories:
 ```
 echo 'deb http://download.opensuse.org/repositories/security:/zeek/xUbuntu_22.04/ /' | sudo tee /etc/apt/sources.list.d/security:zeek.list
 ```
@@ -348,35 +327,29 @@ curl -fsSL https://download.opensuse.org/repositories/security:zeek/xUbuntu_22.0
 sudo apt update
 ```
 >Confirm you do not receive any errors
->
 
-
-## 3.9 Install Dependancies
+## 3.10 Install Dependancies
 
 >(Root) Install the required dependancies for Zeek
->
 
 ```
 sudo apt-get install cmake make gcc g++ flex bison libpcap-dev libssl-dev python3 python3-dev swig zlib1g-dev
 ```
-
 >(Root) Install optional dependancies for Zeek
->
+
 ```
 sudo apt-get install python3-git python3-semantic-version
 ```
 
-## 3.10 Configure interfaces for Promiscuous mode
+## 3.11 Configure interfaces for Promiscuous mode
 
-Zeek requires the interfaces on which it will sniff traffic be configured into PROMISCUOUS mode.    By configuring your interfaces into this mode, you are allowing the network interface to receive packets that would normally be discarded.  Execute these commands as (Root)
-
+Zeek requires the interfaces on which it will sniff traffic be configured into PROMISCUOUS mode. By configuring your interfaces into this mode, you are allowing the network interface to receive packets that would normally be discarded. Execute these commands as (Root)
 
 1. (Root) Create a file called `/etc/systemd/system/promisc.service` 
 
 ```
 vi /etc/systemd/system/promisc.service
 ```
-
 
 2. Populate the file using the below examles. Where each sniffing interface is defined under `[Service]`.  This will require one line per interface.
    In the below example, we have four interfaces: `ens2f1` , `ens2f2`, `ens2f3` and `ens2f4` configured to be in promiscuous mode. 
@@ -406,7 +379,6 @@ WantedBy=default.target
 ```
 
 Save your changes (:wq!)
-
 
 3. (Root) Make the changes permanent and start on boot.
 
@@ -440,12 +412,11 @@ ens2f2: <BROADCAST,MULTICAST,###PROMISC,UP###,LOWER_UP> mtu 1500 qdisc mq state 
 
 6. Reboot your server and re-confirm Step 4 to ensure interfaces come up with the 'PROMISC' flag
 
-
-## 3.11. Optimize Sniffing Interfaces
+## 3.12 Optimize Sniffing Interfaces
 
 > Coming soon
 
-## 3.12 Install CRONTAB
+## 3.13 Install CRONTAB
 > Ubuntu 22.04 does not come with CRONTAB installed.  We will need this feature to be installed to schedule some recurring tasks with regards to Zeek and its plugins
 
 (Root) Execute the following command to install Crontab
@@ -454,25 +425,19 @@ ens2f2: <BROADCAST,MULTICAST,###PROMISC,UP###,LOWER_UP> mtu 1500 qdisc mq state 
 sudo apt-get -y install cron
 ```
 
+# 4 Install and Configure Zeek 
 
-# 4.0 Install and Configure Zeek 
-
-
-## New Install
+## 4.1  New Install
 
 > Zeek-lts is installed to the prefix `/opt/zeek` When installing from the official repository.
->
 
 1. Use `apt` to install `zeek`.
 
 >(Root) This will install Zeek 5.0X
->
 ```
 #sudo apt install zeek
 ```
->You will be prompted to optionally configure the Mail Server options.  You can choose to do this now or later. 
->
-
+>You will be prompted to optionally configure the Mail Server options. You can choose to do this now or later.
 
 2. (Root) Add Zeek binary files to path for Zeek.  
 
@@ -487,7 +452,6 @@ echo "export PATH=/opt/zeek/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbi
 ```
 
 3.  Grant the Zeek user and group ownership and permissions
-
 
 Execute the following command to recursively assign ownership to the zeek user and group
 
@@ -504,23 +468,15 @@ Execute the following command to give the zeek process permissions to read raw p
 ```
 setcap cap_net_raw=eip /opt/zeek/bin/zeek && setcap cap_net_raw=eip /opt/zeek/bin/capstats
 ```
-
-
 4. Login as `zeek` to confirm the path entry is working.
 
 ```su - zeek
 su - zeek
 ```
-
 5. (Zeek) Confirm the path has been applied with the bash script
 
-
 Execute the command 'which zeek' to query for the path.  You should receive the results: ''/opt/zeek/bin/zeek' .
-
- If the command returns `/opt/zeek/bin/zeek`, your path has been updated successfully.
-
- 
-
+If the command returns `/opt/zeek/bin/zeek`, your path has been updated successfully.
 
 ```
 which zeek
@@ -557,18 +513,16 @@ If you wish to configure Zeek to listen to multiple interfaces simultaneously (h
 
 Once you have completed configuration of Standalone or Cluster mode, proceed to the next step.
 
-
 7. (Zeek) Deploy Zeek
 You are now ready to complete your first deployment of Zeek.  On each deployment, Zeek re-examines its configuration and scripts and deploys them when starting the services.  In the future, as you modify your Zeek configuration, you will need to complete a deployment each time.
-
 
 >(Zeek) Execute the following command to deploy Zeek
 ```
 zeekctl deploy
 ```
->
+
 >Or within the Zeek Control shell
->
+
 ```
 zeekctl
 
@@ -580,7 +534,6 @@ Type "help" for help.
 ```
 
 >If all is working well, you should get this output
->
 ```
 $zeekctl deploy
 checking configurations ...
@@ -608,7 +561,7 @@ starting workers ...
 
 ```
 
-## 4.1 Start Zeek with system
+## 4.2 Start Zeek with system
 
 To start Zeek when the operating system starts, create a file and place it into `/etc/systemd/system` .
 
@@ -652,16 +605,14 @@ systemctl start zeek.service
 systemctl enable zeek.service
 ```
 
-
-
-## 4.2 Node Crash Recovery`zeekctl cron`
+## 4.3 Node Crash Recovery `zeekctl cron`
 
 To ensure reliable and resilient collection of your network traffic, it is recommended to add Zeekctl Cron to Crontab.  This will allow Zeek to recover a node from a crashed state.  Add to `zeekctl cron` to crontab for automatic recovery of crashed nodes.
 
 1. (Zeek) Open the Crontab Editor
 
 ```
-`$crontab -e`
+$crontab -e
 ```
 2. Add the following entry
 
@@ -670,10 +621,10 @@ To ensure reliable and resilient collection of your network traffic, it is recom
 ```
 
 
-## 4.3 Zeek Configuration Options
+## 4.4 Zeek Configuration Options
 
 
-### 4.3.1 MAC address logging `local.zeek`
+### 4.4.1 MAC address logging `local.zeek`
 
 When you enable Link-Layer (MAC) address logging, Zeek will add two fields to the conn.log: 'orig_l2_addr' and 'resp_l2_addr'. This is especially useful when using asset tracking.  
 
@@ -684,7 +635,6 @@ vi /opt/zeek/share/zeek/site/local.zeek
 
 2. Locate the section to enable Mac logging. Uncomment '@load policy/protocols/conn/mac-logging'
 
-
 ```
 ...
 # Uncomment the following line to enable logging of link-layer addresses. Enabling
@@ -693,7 +643,7 @@ vi /opt/zeek/share/zeek/site/local.zeek
 ...
 ```
 
-### 4.3.2 VLAN ID logging `local.zeek`
+### 4.4.2 VLAN ID logging `local.zeek`
 
 When you enable VLAN logging, Zeek will add two additional fields to the conn.log: 'vlan' and 'inner_vlan'.  
 
@@ -711,7 +661,7 @@ vi /opt/zeek/share/zeek/site/local.zeek
 ...
 ```
 
-### 4.3.3 Load packages `local.zeek`
+### 4.4.3 Load packages `local.zeek`
 
 To load packages added manually or by the ZKG package manager, located in your site folder, you must uncomment out the @load packages line.
 
@@ -729,12 +679,13 @@ vi /opt/zeek/share/zeek/site/local.zeek
 ```
 
 
-### 4.3.4. Local and Public networks`networks.cfg`
+### 4.4.4. Local and Public networks`networks.cfg`
 
 Defining your networks to Zeek allows for you to differentiate between local and remote traffic.  Add all your netwoks and public networks referencing the example below.
 
-
-1. `$vi /opt/zeek/etc/networks.cfg`
+```
+$vi /opt/zeek/etc/networks.cfg
+```
 
 ```networks.cfg
 # List of local networks in CIDR notation, optionally followed by a
@@ -742,23 +693,19 @@ Defining your networks to Zeek allows for you to differentiate between local and
 # For example, "10.0.0.0/8" or "fe80::/64" are valid prefixes.
 
 10.0.0.0/8      		User Workstations
-172.16.0.0/12       	Server Farm A
+172.16.0.0/12       	        Server Farm A
 172.16.10.0/24			Management Network
 10.0.100.0/22			Campus A
 10.0.101.0/21			Campus B
 205.198.10.20/24		Public Network
 ```
 
-
-
-
-### 4.3.5 Email `zeekctl.cfg`
-
+### 4.4.5 Email `zeekctl.cfg`
 
 1. Edit Zeekctl.cfg (Default location: /opt/zeek/etc/zeekctl.cfg)
 
 ```
-$vi /opt/zeek/etc/zeekctl.cfg`
+$vi /opt/zeek/etc/zeekctl.cfg
 ```
 
 This option enables Zeek to send email.  
@@ -777,8 +724,7 @@ This option enables Zeek to send email.
 > MailTo = security@your-org.ca
 
 
-### 4.3.6 Log Retention and Collection `zeekctl.cfg`
-
+### 4.4.6 Log Retention and Collection `zeekctl.cfg`
 
 Zeek automatically rotates and archives runtime logs from `/opt/zeek/logs/current`into `/opt/zeek/logs/yyyy-mm-dd/` on a configurable interval.
 
@@ -800,7 +746,7 @@ LogExpireInterval = 30
 ...
 ```
 
-### 4.3.7 Zeek Cluster Mode `node.cfg`
+### 4.4.7 Zeek Cluster Mode `node.cfg`
 
 Zeek by default is configured to run in Standalone mode.  This means that only one interface can be configured to monitor traffic.  To use more than one port and provide a scalable solution, it is **HIGHLY**  recommended to configure Zeek to run in Cluster mode. 
 
@@ -858,12 +804,11 @@ host=localhost
 interface=ens2f4
 
 ```
-Please note that you will need to update ***interface=*** for each worker node to reflect a unique and valid interface.  To get a list of interfaces available, execute ***ip a*** from the CLI.
+Please note that you will need to update ***interface=*** for each worker node to reflect a unique and valid interface. To get a list of interfaces available, execute ***ip a*** from the CLI.
 
-### 4.3.8. Apply the Configuration Files
+### 4.4.8. Apply the Configuration Files
 
 With the completion of the previous steps, its now time to re-deploy Zeek.  Anytime you make changes similar to the above, you will need to re-deploy. 
-
 
 When configuration files are modified, execute:
 
@@ -871,17 +816,14 @@ When configuration files are modified, execute:
 $zeekctl deploy
 ```
 
+# 5 `sendmail`(optional)
 
-## 5.0 `sendmail`(optional)
-
-
-
-2. Install Sendmail
+1. Install Sendmail
 
 ```
 sudo apt-get install sendmail
 ```
-3. Configure Sendmail
+2. Configure Sendmail
 ```
 vi /etc/mail/sendmail.mc
 ```
@@ -891,21 +833,17 @@ If you need to configure a smart host to relay:
 define(`RELAY_MAILER_ARGS',`TCP $h 587')dnl
 define(`SMART_HOST','smtp.smarthost.com')dnl
 ```
-
-4. Make Sendmail configuration
+3. Make Sendmail configuration
 ```
 sudo sendmailconfig
 ```
 
-5. Test Sendmail configure
+4. Test Sendmail configure
 ```
 echo "test message" | sendmail -v your@email.ca
 ```
 
-
-
-
-## 6.0. UFW - Uncomplicated Firewall (Optional)
+# 6 UFW - Uncomplicated Firewall (Optional)
 
 Install UFW
 
@@ -919,7 +857,6 @@ Confirm UFW service running
 sudo ufw status
 ```
 
-
 Allow SSH
 
 ```
@@ -932,12 +869,9 @@ sudo ufw enable
 ```
 If you need to disable the UFW service, use the command 'sudo ufw disable'
 
+# 7 Log Processing
 
-
-## 7.0 Syslog
-
-
-### 7.1 RSYSLOG
+## 7.1 RSYSLOG
 
 **RSYSLOG portion under development**
 
@@ -947,9 +881,8 @@ RSYSLOG, the 'rocket-fast system for log processing' is installed by default and
 
 Below is an example configuration you can use to adapt to your target analytics platform.  Please replace 'XXX.XXX.XXX.XXX' with your platform's IP address.
 
-1. Create/Edit an RSYSLOG  configuration file:
+Create/Edit an RSYSLOG  configuration file:
 >RSYSLOG by default is configured to load any and all .conf files located in /etc/rsyslog.d/
->
 
 ```
 vi /etc/rsyslog.d/rsyslog-zeek00.conf
@@ -1139,13 +1072,9 @@ input (
 )
 ```
 
-
-### 7.2. SYSLOG-NG
+## 7.2. SYSLOG-NG
 
 As an alternative option, Syslog-NG can be used instead of RSYSLOG.  
-
-
-
 
 1. (Root) Install syslog-NG
 
@@ -1160,8 +1089,6 @@ vi /etc/syslog-ng/syslog-ng.conf
 ```
 Example configuration, insert below @include "scl.conf"
 Take note the program-override assigns a tag to each log type.  This will be important when developing a parser for your analystics/SIEM platform.
-
-
 ```
  source s_local {
      system(); internal();
@@ -1194,10 +1121,7 @@ Take note the program-override assigns a tag to each log type.  This will be imp
  };
 ```
 
-
 Take note of the Zeek log files above.  If you want to reduce your EPS sent to your SIEM, you can comment out certain logs.  For example, some institutions only want to receive intel.log and notice.log.
-
-
 
 3. (Root) Restart SyslogNG
 
@@ -1205,7 +1129,7 @@ Take note of the Zeek log files above.  If you want to reduce your EPS sent to y
 service syslog-ng restart
 ```
 
-Due to a bug in Syslog-NG when log files are rotate, we have a script to reload Syslog NG every 30 seconds.  The reload of Syslog-NG needs to be done as the Root user.
+Due to a bug in Syslog-NG when log files are rotate, we have a script to reload Syslog NG every 30 seconds. The reload of Syslog-NG needs to be done as the Root user.
 
 4. (Root) Edit Crontab
 
@@ -1219,24 +1143,19 @@ Paste the following example to schedule Syslog NG to reload every 30 seconds
 */30 * * * * /usr/sbin/syslog-ng-ctl reload
 ```
 
+# 8.0 Zeek Plugins
 
+## 8.1 Install `AF_Packet` plugin
 
-## 8.0 Zeek Plugins
-
-
-### 8.1 Install `AF_Packet` plugin
-
-AF Packet allows you to control how processor cores are assigned to specific interfaces.  This allows you to have granular controller on CPU allocation.  In some environments, certain interfaces could require more CPU resouces.  Optimizing core allocation can allow you to finely tune your Zeek IDS.
+AF Packet allows you to control how processor cores are assigned to specific interfaces. This allows you to have granular controller on CPU allocation. In some environments, certain interfaces could require more CPU resouces. Optimizing core allocation can allow you to finely tune your Zeek IDS.
 
 Ideally, this plugin is installed via the package manager (zkg).  
-
 
 1. (Zeek) Execute the command:
 
 ```
 zkg install zeek/zeek-af_packet-plugin
 ```
-
 
 2. (Root) Re-Apply permissions for the Zeek user and group
 
@@ -1269,7 +1188,7 @@ processor       : 1     core id         : 4
 processor       : 39    core id         : 26
 ```
 
- Workers: The fastest memory and CPU core speed you can afford is recommended since all of the protocol parsing and most analysis will take place here.
+Workers: The fastest memory and CPU core speed you can afford is recommended since all of the protocol parsing and most analysis will take place here.
 
 Now you're ready to reconfigure`node.cfg` to use AF_PACKET
 
@@ -1354,9 +1273,9 @@ Re-Deploy Zeek
 zeekctl deploy
 ```
 
-### 8.2 Install `ADD_INTERFACES` plugin
+## 8.2 Install `ADD_INTERFACES` plugin
 
- Adds cluster node interface to logs. Useful when sniffing multiple interfaces to identify source of log.
+Adds cluster node interface to logs. Useful when sniffing multiple interfaces to identify source of log.
 
 1.(Zeek) Execute the command
 ```
@@ -1403,8 +1322,9 @@ setcap cap_net_raw=eip /opt/zeek/bin/zeek && setcap cap_net_raw=eip /opt/zeek/bi
 zeekctl deploy
 ```
 
+# 9 Aggregrate Portal File Transfer - CANIDS
 
-## 9.0 Aggregrate Portal File Transfer - CANIDS
+## 9.1 Setup
 
 - Participants should be prepared to provide the public address that will access the remote (Concordia) server.
 
@@ -1472,7 +1392,7 @@ username@feedserver:~$
 Now that we have confirmed your account is set up and authentication is working, Proceed to installing RSYNC to set up the secure file transfer.
 
 
-#### 9.1. Install RSYNC 
+## 9.2. Install RSYNC 
 
 > Synchronizes files between two systems and only copies what is different.
 
@@ -1536,11 +1456,9 @@ Example script:
 0 * * * * /usr/bin/sh /home/zeek/rsync.sh
 ```
 
-
 # 10 Deploy and Troubleshoot
 
 > A list of commands that need to be re-applied when modifications to the system have been applied and the system doesn't operate as expected.
->
 > Further information can be found in the CANARIE FAQ file, [located in the JSP portal](https://jspportal.canarie.ca).
 
 1. Deploy Zeek `zeekctl deploy` to apply config modifications and run Zeek.
@@ -1591,9 +1509,7 @@ $which zeek
 /opt/zeek/bin/zeek
 ```
 
-
-
-## Use Cases
+# Extra: Use Cases
 
 a) Ensure that zkg packages are being loaded 
 ```
@@ -1616,7 +1532,7 @@ $ zkg upgrade
 ```
 
 
-### Write logs to TSV & JSON
+## Write logs to TSV & JSON
 
 - Simultaneously write log files in both TSV and JSON formats
 
@@ -1661,9 +1577,9 @@ rsync -av --progress -e "ssh -p 56320" --exclude={"http.*.log.gz","ftp.*.log.gz"
 ```
 
 6. When not in use, unload plugin to save disk space.
-   1. `$zkg unload json-streaming-logs`.
-   2. Deploy zeek:`$zkg deploy`.
-   3. Verify
+   - `$zkg unload json-streaming-logs`.
+   - Deploy zeek:`$zkg deploy`.
+   - Verify
 
 ```
 [zeek@zeek02 ~]$ zkg list unloaded
@@ -1671,9 +1587,7 @@ zeek/corelight/json-streaming-logs (installed: v3.0.0) - JSON streaming logs
 zeek/hosom/file-extraction (installed: 2.0.3) - Extract files from network traffic with Zeek.
 ```
 
-
-
-### 6.4 Examine offline packet traces
+## Examine offline packet traces
 
 > Use Zeek to process captured packet traces. 
 
@@ -1687,17 +1601,15 @@ Linux: tcpdump
 
 2. Capture packet options:
 
-
 ```
 sudo tcpdump -i ens2f1 -c 100 -s 65535 -w 100-packets.trace
 sudo tcpdump -i ens2f1 -s 0 -w packet.trace
 ```
 
 - `ens2f1` should be replaced by the correct interface for your system, for example as shown by the `$ifconfig` command. 
-- `-c 100` designates how many packets to capture.  If not defined you must `ctrl+c` to interrupt `tcpdump` and hault data accumulation.
+- `-c 100` designates how many packets to capture.  If not defined you must `ctrl+c` to interrupt `tcpdump` and halt data accumulation.
 - `-s 0` capture whole packets. 
   - If not supported use `-s 65535`.
-
 
 
 3. Use Zeek to examine packet trace
