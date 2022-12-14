@@ -16,12 +16,15 @@
 
 <div style="page-break-after: always; break-after: page;"></div>
 
+
+
 # 1. Overview
+
 
 This document is a step-by-step guide for the configuration of the Zeek platform on hardware defined, and distributed, by the <u>**CANARIE Joint Security Program**</u>.
 
-- Blocks that start with `#` are expected to be run as the `root` user.
-- Blocks that start with `$` are expected to be run as the `zeek` user.
+- Stepss that start with `(Root)` are expected to be RUN AS the 'root' user.
+- Steps that start with `(Zeek)` are expected to be run as the `zeek` user.
 
 ## 1.1 Community Resources
 
@@ -94,7 +97,7 @@ Participants can contact Dell directly for warranty & customer support for hardw
 > Rufus [Rufus](https://rufus.ie/).
 
 3. Create bootable USB key
-Follow these steps with Rufus to build a USB key from the Ubuntu ISO
+	Follow these steps with Rufus to build a USB key from the Ubuntu ISO
 	- Open 'Rufus'
 	- Under 'Device' dropdown, choose target USB key.
 	- 'Select' downloaded ISO.
@@ -115,7 +118,7 @@ Follow these steps with Rufus to build a USB key from the Ubuntu ISO
 
 ![image-20200505232027969](/images/image-20200505232027969.png)
 
-## 2.6. Disk Configuration - Phase 2
+## 2.6. Disk Configuration
 
 1. To start the Lifecycle Controller, press `F10`.
 
@@ -612,7 +615,7 @@ To ensure reliable and resilient collection of your network traffic, it is recom
 1. (Zeek) Open the Crontab Editor
 
 ```
-$crontab -e
+crontab -e
 ```
 2. Add the following entry
 
@@ -683,8 +686,9 @@ vi /opt/zeek/share/zeek/site/local.zeek
 
 Defining your networks to Zeek allows for you to differentiate between local and remote traffic.  Add all your netwoks and public networks referencing the example below.
 
+(Zeek)
 ```
-$vi /opt/zeek/etc/networks.cfg
+vi /opt/zeek/etc/networks.cfg
 ```
 
 ```networks.cfg
@@ -728,10 +732,10 @@ This option enables Zeek to send email.
 
 Zeek automatically rotates and archives runtime logs from `/opt/zeek/logs/current`into `/opt/zeek/logs/yyyy-mm-dd/` on a configurable interval.
 
-1. Edit Zeekctl.cfg (Default location: /opt/zeek/etc/zeekctl.cfg)
+1. (Zeek) Edit Zeekctl.cfg (Default location: /opt/zeek/etc/zeekctl.cfg)
 
 ```
-$vi /opt/zeek/etc/zeekctl.cfg`
+vi /opt/zeek/etc/zeekctl.cfg`
 ```
 
 2. Locate the LogRotationInterval, LogexpireInterval lines and modify to your requirements.
@@ -811,9 +815,9 @@ Please note that you will need to update ***interface=*** for each worker node t
 With the completion of the previous steps, its now time to re-deploy Zeek.  Anytime you make changes similar to the above, you will need to re-deploy. 
 
 When configuration files are modified, execute:
-
+(Zeek)
 ```
-$zeekctl deploy
+zeekctl deploy
 ```
 
 # 5 `sendmail`(optional)
@@ -1322,7 +1326,7 @@ setcap cap_net_raw=eip /opt/zeek/bin/zeek && setcap cap_net_raw=eip /opt/zeek/bi
 zeekctl deploy
 ```
 
-# 9 Aggregrate Portal File Transfer - CANIDS
+# 9.0 Aggregrate Portal File Transfer - CANIDS
 
 ## 9.1 Setup
 
@@ -1340,10 +1344,10 @@ Example output
 ```
 2. (Zeek) Generate ssh-keys: `$ssh-keygen -t rsa -b 4096`.
 
-> - Passwordless authentication requires key exchange.  This is necessary for automation.
+Passwordless authentication requires key exchange.  This is necessary for automation.
 
 ```
-$ssh-keygen -t rsa -b 4096
+ssh-keygen -t rsa -b 4096
 ```
 
 Example interaction:
@@ -1365,26 +1369,26 @@ The key's randomart image is:
 3. (Zeek) Copy the contents of  your new public key:  
 
 ```
-cat ~/.ssh/id_rsa.pub`.
+cat ~/.ssh/id_rsa.pub
 ```
 
 4. Contact Anis via email `anis.lounis@mail.concordia.ca` or via the JSP Slack channel (#jsp-tech) for registration and access to remote server. 
 
-Please include the following information:
+Please include the following information:   
 
-   a) Include the public (egress) IP of your IDS server (Step 1)
-   b) Include your SSH Public Key of your IDS server (Step 3)
-   c) Include the public (egress) IP address(s) of workstations that will be accessing the CANIDS portal.
+   a) Include the public (egress) IP of your IDS server (Step 1)  
+   b) Include your SSH Public Key of your IDS server (Step 3)  
+   c) Include the public (egress) IP address(s) of workstations that will be accessing the CANIDS portal.  
 
 
 Concordia will reply with the participant's username for access to the server and credentials for accessing the web interface "https://portal.canids.ca/".  Once you receive these credentials, proceed to the next step to test the connection.
 
 
-5. Test connectivity `$ssh -p 56320 <username>@push.jointsecurity.ca`.
+5. (Zeek) Test connectivity `$ssh -p 56320 <username>@push.jointsecurity.ca`.
    - Connectivity to the remote server should be established:
 
 ```
-$ ssh -p 56320 <username>@push.jointsecurity.ca
+ssh -p 56320 <username>@push.jointsecurity.ca
 Welcome
 ...
 username@feedserver:~$
@@ -1426,6 +1430,8 @@ The `rsync` command in this script can be tuned to the institution's preference 
 
 Please make sure to update <username> with the username provided by Concordia.
 
+The example below contains a list of excluded logs.  Some of these logs contain cleartext traffic. We recommend keeping these logs excluded as they may contain sensitive information (credentials) and/or PII.
+
 ```
 rootDir="/opt/zeek/logs/"
 for day in 0 1 2 3 4 5 6 7
@@ -1446,7 +1452,7 @@ chmod +x rsync.sh
 
 c) (Zeek) Automate transfer of files with crontab: 
 ```
-$ crontab -e
+crontab -e
 ```
 
 Example script:
@@ -1458,22 +1464,24 @@ Example script:
 
 # 10 Deploy and Troubleshoot
 
-> A list of commands that need to be re-applied when modifications to the system have been applied and the system doesn't operate as expected.
+Below are a list of commands that need to be re-applied when modifications to the system have been applied and the system doesn't operate as expected (for example, if Zeek is crashing on startup/deployment)
+
 > Further information can be found in the CANARIE FAQ file, [located in the JSP portal](https://jspportal.canarie.ca).
 
-1. Deploy Zeek `zeekctl deploy` to apply config modifications and run Zeek.
+1. (Zeek) Deploy Zeek `zeekctl deploy` to apply plugin installations and config modifications and run Zeek.
 
-> If you encounter errors, follow step `5.3 Give the Zeek application permission to capture packets`.
+>If you encounter errors, follow step 2 and 3 'Give the Zeek application permission to capture packets`.
 
 ```zeekctl deploy
-$zeekctl deploy
+zeekctl deploy
 ```
 
 2. Make sure the `zeek` user and group have correct permissions.
 
-> New applications and system modifications can result in a change of permissions.  The `zeek` user and group should maintain control of `/opt/zeek`.
->
-> Run the following as ROOT
+New applications and system modifications can result in a change of permissions.  The `zeek` user and group should maintain control of `/opt/zeek`.  
+
+
+(Root)  Run the following as ROOT
 
 ```
 chown -R zeek:zeek /opt/zeek
@@ -1481,7 +1489,7 @@ chown -R zeek:zeek /opt/zeek
 
 3. Give the Zeek application permission to capture packets.
 
-   Run the following as ROOT
+(Root) Run the following as ROOT
 
 ```
 setcap cap_net_raw=eip /opt/zeek/bin/zeek && setcap cap_net_raw=eip /opt/zeek/bin/capstats
@@ -1489,7 +1497,11 @@ setcap cap_net_raw=eip /opt/zeek/bin/zeek && setcap cap_net_raw=eip /opt/zeek/bi
 
 4. Add Zeek binaries to path
 
-   Run the following as ROOT
+Verify that the path to the Zeek binaries is available globally.  You can verify if this is set correctly by executing the command 'which zeek' as the Zeek user.  You should receive the folowing response:  "/opt/zeek/bin/zeek"  If you do not, proceed below.
+
+To resolve this issue, we recommend creating a profile bash script for the Zeek user.  To complete this, complete these steps:
+
+(Root) Run the following as ROOT
 
 ```add zeek to path
 echo "export PATH=/opt/zeek/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin" >> /etc/profile.d/zeek.sh
@@ -1497,7 +1509,7 @@ echo "export PATH=/opt/zeek/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbi
 
 >Logout and login again as Zeek
 
-5. Confirm path update with `which` command.
+5. (Zeek) Confirm path update with `which` command.
 
    Run the following as ZEEK
 
@@ -1505,15 +1517,15 @@ echo "export PATH=/opt/zeek/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbi
 
 
 ```
-$which zeek
+which zeek
 /opt/zeek/bin/zeek
 ```
 
 # Extra: Use Cases
 
-a) Ensure that zkg packages are being loaded 
+a) (Zeek) Ensure that zkg packages are being loaded 
 ```
-$vi /opt/zeek/share/zeek/site/local.zeek
+vi /opt/zeek/share/zeek/site/local.zeek
 ```
 
 Uncomment this to source zkg's package state
@@ -1521,18 +1533,18 @@ Uncomment this to source zkg's package state
 '@load packages'
 
 
-b) Refresh zeek package manager repository
+b) (Zeek) Refresh zeek package manager repository
 ```
-$ zkg refresh
-```
-
-c) Keep packages updated 
-```
-$ zkg upgrade
+zkg refresh
 ```
 
+c) (Zeek) Keep packages updated 
+```
+zkg upgrade
+```
 
-## Write logs to TSV & JSON
+
+## (Optional) Write logs to TSV & JSON
 
 - Simultaneously write log files in both TSV and JSON formats
 
@@ -1547,7 +1559,7 @@ $ zkg upgrade
 - Rotates logs within `/opt/zeek/logs/current` directory so the log shipper has time to catch up.
 
   ```
-  $ls json_streaming_ftp*
+  ls json_streaming_ftp*
   json_streaming_ftp.1.log
   json_streaming_ftp.2.log
   json_streaming_ftp.3.log
@@ -1557,47 +1569,71 @@ $ zkg upgrade
 
 - Compressed and archived per the value of `LogRotationInterval` in  `/opt/zeek/etc/zeekctl.cfg`
 
-1. Install the plugin
-   - `$zkg install zeek/corelight/json-streaming-logs`
+1. (Zeek) Install the plugin
 
-2. Ensure `@load packages` is not commented out in `/opt/zeek/share/zeek/site/local.zeek`
-3. Deploy Zeek `#zeekctl deploy`.
-   1. Verify: `$ls /opt/zeek/logs/current | grep json_streaming_ `
-4. Duplicate data:
+```
+zkg install zeek/corelight/json-streaming-logs
+```
+
+2.  (!) Ensure `@load packages` is NOT commented out in `/opt/zeek/share/zeek/site/local.zeek`
+
+3. (Zeek)  Re-Deploy Zeek 
+
+```
+zeekctl deploy
+```
+4. Verify: 
+```
+ls /opt/zeek/logs/current | grep json_streaming
+```
+
+5. Duplicate data:
    - Both `TSV` & `JSON` saved and rotated resulting in duplicate data
    - Consider managing disk space
    - Routinely delete redundant data
-5. Exclude `JSON` from upload to analytics platform `$vi /home/zeek/rsync.sh`.
+6. (Zeek) Exclude `JSON` from upload to analytics platform 
+
+```
+vi /home/zeek/rsync.sh
+```
    - add `json_streaming_*` to exclusion list
 
+(Zeek) When not in use, unload plugin to save disk space.
+
+   ```
+   zkg unload json-streaming-logs
+   ```
+(Zeek) Re-Deploy Zeek
 ```
-...
-rsync -av --progress -e "ssh -p 56320" --exclude={"http.*.log.gz","ftp.*.log.gz","ntlm.*.log.gz","irc.*.log.gz","sip.*.log.gz","radius.*.log.gz","smtp.*.log.gz","rdp.*.log.gz","files.*.log.gz","syslog.*.log.gz","snmp.*.log.gz","json_streaming_*",stats,current} $dirName username@push.canids.ca:
-...
+zkg deploy
 ```
 
-6. When not in use, unload plugin to save disk space.
-   - `$zkg unload json-streaming-logs`.
-   - Deploy zeek:`$zkg deploy`.
-   - Verify
+Verify:
 
 ```
-[zeek@zeek02 ~]$ zkg list unloaded
-zeek/corelight/json-streaming-logs (installed: v3.0.0) - JSON streaming logs
-zeek/hosom/file-extraction (installed: 2.0.3) - Extract files from network traffic with Zeek.
+zkg list unloaded
 ```
+
+>Expected output:
+
+>zeek/corelight/json-streaming-logs (installed: v3.0.0) - JSON streaming logs
+>zeek/hosom/file-extraction (installed: 2.0.3) - Extract files from network traffic with Zeek.
+
+
 
 ## Examine offline packet traces
 
 > Use Zeek to process captured packet traces. 
 
-Generate a PCAP file
+(Optional) Generate a PCAP file
 
-Linux: tcpdump
 
-1. Install `tcpdump`:
 
-`#apt install tcpdump`
+1. (Root) Install `tcpdump`:
+
+```
+sudo apt install tcpdump
+```
 
 2. Capture packet options:
 
@@ -1606,7 +1642,7 @@ sudo tcpdump -i ens2f1 -c 100 -s 65535 -w 100-packets.trace
 sudo tcpdump -i ens2f1 -s 0 -w packet.trace
 ```
 
-- `ens2f1` should be replaced by the correct interface for your system, for example as shown by the `$ifconfig` command. 
+- `ens2f1` should be replaced by the correct interface for your system, for example as shown by the `ip a` command. 
 - `-c 100` designates how many packets to capture.  If not defined you must `ctrl+c` to interrupt `tcpdump` and halt data accumulation.
 - `-s 0` capture whole packets. 
   - If not supported use `-s 65535`.
@@ -1635,5 +1671,8 @@ Running with specific plugins:
 zeek -r mypackets.trace frameworks/files/extract-all-files
 ```
 
-- Verify log files and start digging!
-- 
+
+  
+  
+##Verify log files and start digging!
+
