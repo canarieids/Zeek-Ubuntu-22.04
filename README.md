@@ -448,7 +448,7 @@ Enter Root bash:
 ```
 sudo bash
 ```
-Execute the following command
+(Root) Execute the following command
 
 ```add zeek to path
 echo "export PATH=/opt/zeek/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin" >> /etc/profile.d/zeek.sh
