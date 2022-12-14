@@ -650,7 +650,7 @@ vi /opt/zeek/share/zeek/site/local.zeek
 
 When you enable VLAN logging, Zeek will add two additional fields to the conn.log: 'vlan' and 'inner_vlan'.  
 
-1. Edit the local.zeek configuraiton file in the site folder (Manager)
+1. (Zeek) Edit the local.zeek configuraiton file in the site folder (Manager)
 ```
 vi /opt/zeek/share/zeek/site/local.zeek
 ```
@@ -668,7 +668,7 @@ vi /opt/zeek/share/zeek/site/local.zeek
 
 To load packages added manually or by the ZKG package manager, located in your site folder, you must uncomment out the @load packages line.
 
-1. Edit the local.zeek configuraiton file in the site folder (Manager)
+1. (Zeek) Edit the local.zeek configuraiton file in the site folder (Manager)
 ```
 vi /opt/zeek/share/zeek/site/local.zeek
 ```
@@ -686,7 +686,8 @@ vi /opt/zeek/share/zeek/site/local.zeek
 
 Defining your networks to Zeek allows for you to differentiate between local and remote traffic.  Add all your netwoks and public networks referencing the example below.
 
-(Zeek)
+1. (Zeek) Edit the networks.cfg file:
+
 ```
 vi /opt/zeek/etc/networks.cfg
 ```
@@ -706,7 +707,7 @@ vi /opt/zeek/etc/networks.cfg
 
 ### 4.4.5 Email `zeekctl.cfg`
 
-1. Edit Zeekctl.cfg (Default location: /opt/zeek/etc/zeekctl.cfg)
+1. (Zeek) Edit Zeekctl.cfg (Default location: /opt/zeek/etc/zeekctl.cfg)
 
 ```
 vi /opt/zeek/etc/zeekctl.cfg
@@ -735,7 +736,7 @@ Zeek automatically rotates and archives runtime logs from `/opt/zeek/logs/curren
 1. (Zeek) Edit Zeekctl.cfg (Default location: /opt/zeek/etc/zeekctl.cfg)
 
 ```
-vi /opt/zeek/etc/zeekctl.cfg`
+vi /opt/zeek/etc/zeekctl.cfg
 ```
 
 2. Locate the LogRotationInterval, LogexpireInterval lines and modify to your requirements.
