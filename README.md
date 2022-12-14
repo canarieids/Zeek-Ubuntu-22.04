@@ -438,7 +438,7 @@ sudo apt-get -y install cron
 
 >(Root) This will install Zeek 5.0X
 ```
-#sudo apt install zeek
+sudo apt install zeek
 ```
 >You will be prompted to optionally configure the Mail Server options. You can choose to do this now or later.
 
@@ -1673,6 +1673,8 @@ zeek -r mypackets.trace frameworks/files/extract-all-files
 
 
 
+**For questions/feedback, please contact our team at idstech@canarie.ca**
 
-##Verify log files and start digging!
 
+
+### 
