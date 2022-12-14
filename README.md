@@ -23,7 +23,7 @@
 
 This document is a step-by-step guide for the configuration of the Zeek platform on hardware defined, and distributed, by the <u>**CANARIE Joint Security Program**</u>.
 
-- Stepss that start with `(Root)` are expected to be RUN AS the 'root' user.
+- Steps that start with `(Root)` are expected to be RUN AS the 'root' user.
 - Steps that start with `(Zeek)` are expected to be run as the `zeek` user.
 
 ## 1.1 Community Resources
@@ -538,7 +538,7 @@ Type "help" for help.
 
 >If all is working well, you should get this output
 ```
-$zeekctl deploy
+zeekctl deploy
 checking configurations ...
 installing ...
 removing old policies in /opt/zeek/spool/installed-scripts-do-not-touch/site ...
@@ -709,7 +709,7 @@ vi /opt/zeek/etc/networks.cfg
 1. Edit Zeekctl.cfg (Default location: /opt/zeek/etc/zeekctl.cfg)
 
 ```
-$vi /opt/zeek/etc/zeekctl.cfg
+vi /opt/zeek/etc/zeekctl.cfg
 ```
 
 This option enables Zeek to send email.  
@@ -1184,7 +1184,7 @@ With AF Packet now installed, we must reconfigure the node.cfg file to use the A
 Fetch the `processors` and `core ids`of the server.  Use the distribution of processors to core for similar distribution between workers.
 
 ```awksed
-$awk '/core id/ || /processor/' /proc/cpuinfo | sed 'N;s/\n/\t/'
+awk '/core id/ || /processor/' /proc/cpuinfo | sed 'N;s/\n/\t/'
 ...
 processor       : 0     core id         : 0
 processor       : 1     core id         : 4
@@ -1332,7 +1332,7 @@ zeekctl deploy
 
 - Participants should be prepared to provide the public address that will access the remote (Concordia) server.
 
-1. (Zeek) From the server run `$curl ifconfig.me`.
+1. (Zeek) From the server run
 
 ```
 curl ifconfig.me
@@ -1342,9 +1342,9 @@ Example output
 ```
 205.XXX.XXX.XXX
 ```
-2. (Zeek) Generate ssh-keys: `$ssh-keygen -t rsa -b 4096`.
+2. (Zeek) Generate ssh-keys: 
 
-Passwordless authentication requires key exchange.  This is necessary for automation.
+   > Passwordless authentication requires key exchange.  This is necessary for automation.
 
 ```
 ssh-keygen -t rsa -b 4096
@@ -1672,7 +1672,7 @@ zeek -r mypackets.trace frameworks/files/extract-all-files
 ```
 
 
-  
-  
+
+
 ##Verify log files and start digging!
 
