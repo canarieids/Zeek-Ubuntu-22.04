@@ -26,7 +26,7 @@ This document is a step-by-step guide for the configuration of the Zeek platform
 - Steps that start with `(Root)` are expected to be RUN AS the 'root' user.
 - Steps that start with `(Zeek)` are expected to be run as the `zeek` user.
 
-## 1.1 Community Resources
+## 1.1. Community Resources
 
 >  The Zeek community is vibrant, friendly, and easily accessible.  Use the following resources for communication and documentation questions that fall outside of this document and/or project.
 
@@ -35,13 +35,13 @@ This document is a step-by-step guide for the configuration of the Zeek platform
   - [Zeek](https://zeek.org/connect/)[ Connect](https://zeek.org/connect/)
   - [Zeek](https://zeek.org/blog/)[ Blog](https://zeek.org/blog/)
 
-## 1.2 JSP FAQ
+## 1.2. JSP FAQ
 
 > We have composed a frequently asked questions file, which is located in the JSP portal.  Both pilot and phase 2 participants will find this file useful.
 
 - [Zeek / JSP - FAQ](https://idsportal.canarie.ca/wpc_downloader/core/?wpc_action=view&id=215) 
 
-## 1.3 Warranty and Contacts
+## 1.3. Warranty and Contacts
 
 > **Network TAPs:**
 
@@ -59,14 +59,14 @@ Participants can contact Dell directly for warranty & customer support for hardw
 
 # 2. Disk Configuration
 
-## 2.1 RAID Options for JSP Phase 1
+## 2.1. RAID Options for JSP Phase 1
 
 | Level | Min. # Disks | Max Capacity | Advantages | Disadvantages                                                |
 | ----- | ---------- | ------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | 0     |      1       | 4TB          | •High performance.<br />•Easy to implement.<br />•Highly efficient (no parity overhead). | •No redundancy.<br />•Limited business use cases due to no  fault tolerance. |
 | 1     |      2       | 2TB          | •Fault tolerant.  <br />•Easy to recover data in case of drive  failure  •Easy to implement. | •Highly inefficient (100% parity  overhead).<br/> •Not scalable (becomes very costly as  number of disks increase). |
 
-## 2.2 RAID Options for JSP Phase 2
+## 2.2. RAID Options for JSP Phase 2
 
 | Level | Min. # Disks | Max Capacity | Advantages                                                   | Disadvantages                                                |
 | ----- | ------------ | ------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
@@ -75,7 +75,7 @@ Participants can contact Dell directly for warranty & customer support for hardw
 | 6     | 4            | 2TB          | •Fault tolerant – increased redundancy  over RAID 5.<br />•High efficiency. | •Write performance penalty over RAID 5.<br />•More expensive than RAID 5. <br/>•Disk failure has a medium impact on  throughput. |
 | 10    | 4            | 2TB          | •Extremely high fault tolerance.<br />•Very high performance.  <br/>•Faster rebuild performance than 0+1. | •Very Expensive. <br />•High Overhead.<br />•Limited scalability. |
 
-## 2.3 Configure Disk(s)
+## 2.3. Configure Disk(s)
 
 <div style="text-align:center">    
   <a href="https://www.dell.com/support/manuals/ca/en/cabsdt1/poweredge-r440/idrac_3.30.30.30_lc_ug/configuring-raid?guid=guid-a86b35a2-03a6-4838-952f-24992a99998e&lang=en-us">Dell PowerEdge R440 RAID Configuration Guide</a> 
@@ -259,21 +259,21 @@ Coming Soon
 
 ![image-20200506160918064](/images/image-userprofile.png)
 
-## 3.6 Install OpenSSH
+## 3.6. Install OpenSSH
 
 >Install OpenSSH server. This will allow you to administrate the server via SSH.  
 >Optionally, use certificate based authentication.
 
 ![image-20200506160918064](/images/image-installopenssh.png)
 
-## 3.5 Featured Server Snaps
+## 3.7. Featured Server Snaps
 
 >Do not select any Featured server Snaps
 
 ![image-20200506160918064](/images/image-featuredserversnaps.png)
 
 
-## 3.7. Begin the installation
+## 3.8. Begin the installation
 
 1.  Confirm the destructive operation warning to start installation
 
@@ -289,7 +289,7 @@ Coming Soon
 
 ![image-20200506162722251](/images/image-postinstallreboot.png)
 
-## 3.8. Zeek User and Group
+## 3.9. Zeek User and Group
 
 > Participants are encouraged to follow their own account policy. Later steps will outline the creation of a `zeek` user and group that will have access to `Zeek Application` functions and files.
 > Complete the following steps steps to create Zeek user and group
@@ -312,7 +312,7 @@ sudo addgroup zeek
 usermod -a -G zeek zeek
 ```
 
-## 3.9. Repositories
+## 3.10. Repositories
 
 >We need to add the Zeek repositories to your Ubuntu installation in order to receive the latest version and updates.  In the below example, substitute the '22.04' for your version of Ubuntu.
 
@@ -331,7 +331,7 @@ sudo apt update
 ```
 >Confirm you do not receive any errors
 
-## 3.10 Install Dependancies
+## 3.11. Install Dependancies
 
 >(Root) Install the required dependancies for Zeek
 
@@ -344,7 +344,7 @@ sudo apt-get install cmake make gcc g++ flex bison libpcap-dev libssl-dev python
 sudo apt-get install python3-git python3-semantic-version
 ```
 
-## 3.11 Configure interfaces for Promiscuous mode
+## 3.12. Configure interfaces for Promiscuous mode
 
 Zeek requires the interfaces on which it will sniff traffic be configured into PROMISCUOUS mode. By configuring your interfaces into this mode, you are allowing the network interface to receive packets that would normally be discarded. Execute these commands as (Root)
 
@@ -415,11 +415,11 @@ ens2f2: <BROADCAST,MULTICAST,###PROMISC,UP###,LOWER_UP> mtu 1500 qdisc mq state 
 
 6. Reboot your server and re-confirm Step 4 to ensure interfaces come up with the 'PROMISC' flag
 
-## 3.12 Optimize Sniffing Interfaces
+## 3.13. Optimize Sniffing Interfaces
 
 > Coming soon
 
-## 3.13 Install CRONTAB
+## 3.14. Install CRONTAB
 > Ubuntu 22.04 does not come with CRONTAB installed.  We will need this feature to be installed to schedule some recurring tasks with regards to Zeek and its plugins
 
 (Root) Execute the following command to install Crontab
@@ -428,9 +428,9 @@ ens2f2: <BROADCAST,MULTICAST,###PROMISC,UP###,LOWER_UP> mtu 1500 qdisc mq state 
 sudo apt-get -y install cron
 ```
 
-# 4 Install and Configure Zeek 
+# 4. Install and Configure Zeek 
 
-## 4.1  New Install
+## 4.1.  New Install
 
 > Zeek-lts is installed to the prefix `/opt/zeek` When installing from the official repository.
 
@@ -564,7 +564,7 @@ starting workers ...
 
 ```
 
-## 4.2 Start Zeek with system
+## 4.2. Start Zeek with system
 
 To start Zeek when the operating system starts, create a file and place it into `/etc/systemd/system` .
 
@@ -608,7 +608,7 @@ systemctl start zeek.service
 systemctl enable zeek.service
 ```
 
-## 4.3 Node Crash Recovery `zeekctl cron`
+## 4.3. Node Crash Recovery `zeekctl cron`
 
 To ensure reliable and resilient collection of your network traffic, it is recommended to add Zeekctl Cron to Crontab.  This will allow Zeek to recover a node from a crashed state.  Add to `zeekctl cron` to crontab for automatic recovery of crashed nodes.
 
@@ -624,10 +624,10 @@ crontab -e
 ```
 
 
-## 4.4 Zeek Configuration Options
+## 4.4. Zeek Configuration Options
 
 
-### 4.4.1 MAC address logging `local.zeek`
+### 4.4.1. MAC address logging `local.zeek`
 
 When you enable Link-Layer (MAC) address logging, Zeek will add two fields to the conn.log: 'orig_l2_addr' and 'resp_l2_addr'. This is especially useful when using asset tracking.  
 
@@ -646,7 +646,7 @@ vi /opt/zeek/share/zeek/site/local.zeek
 ...
 ```
 
-### 4.4.2 VLAN ID logging `local.zeek`
+### 4.4.2. VLAN ID logging `local.zeek`
 
 When you enable VLAN logging, Zeek will add two additional fields to the conn.log: 'vlan' and 'inner_vlan'.  
 
@@ -664,7 +664,7 @@ vi /opt/zeek/share/zeek/site/local.zeek
 ...
 ```
 
-### 4.4.3 Load packages `local.zeek`
+### 4.4.3. Load packages `local.zeek`
 
 To load packages added manually or by the ZKG package manager, located in your site folder, you must uncomment out the @load packages line.
 
@@ -705,7 +705,7 @@ vi /opt/zeek/etc/networks.cfg
 205.198.10.20/24		Public Network
 ```
 
-### 4.4.5 Email `zeekctl.cfg`
+### 4.4.5. Email `zeekctl.cfg`
 
 1. (Zeek) Edit Zeekctl.cfg (Default location: /opt/zeek/etc/zeekctl.cfg)
 
@@ -729,7 +729,7 @@ This option enables Zeek to send email.
 > MailTo = security@your-org.ca
 
 
-### 4.4.6 Log Retention and Collection `zeekctl.cfg`
+### 4.4.6. Log Retention and Collection `zeekctl.cfg`
 
 Zeek automatically rotates and archives runtime logs from `/opt/zeek/logs/current`into `/opt/zeek/logs/yyyy-mm-dd/` on a configurable interval.
 
@@ -751,7 +751,7 @@ LogExpireInterval = 30
 ...
 ```
 
-### 4.4.7 Zeek Cluster Mode `node.cfg`
+### 4.4.7. Zeek Cluster Mode `node.cfg`
 
 Zeek by default is configured to run in Standalone mode.  This means that only one interface can be configured to monitor traffic.  To use more than one port and provide a scalable solution, it is **HIGHLY**  recommended to configure Zeek to run in Cluster mode. 
 
@@ -821,7 +821,7 @@ When configuration files are modified, execute:
 zeekctl deploy
 ```
 
-# 5 `sendmail`(optional)
+# 5. `Sendmail`(optional)
 
 1. Install Sendmail
 
@@ -848,7 +848,7 @@ sudo sendmailconfig
 echo "test message" | sendmail -v your@email.ca
 ```
 
-# 6 UFW - Uncomplicated Firewall (Optional)
+# 6. UFW - Uncomplicated Firewall (Optional)
 
 Install UFW
 
@@ -874,9 +874,9 @@ sudo ufw enable
 ```
 If you need to disable the UFW service, use the command 'sudo ufw disable'
 
-# 7 Log Processing
+# 7. Log Processing
 
-## 7.1 RSYSLOG
+## 7.1. RSYSLOG
 
 **RSYSLOG portion under development**
 
@@ -1148,9 +1148,9 @@ Paste the following example to schedule Syslog NG to reload every 30 seconds
 */30 * * * * /usr/sbin/syslog-ng-ctl reload
 ```
 
-# 8.0 Zeek Plugins
+# 8. Zeek Plugins
 
-## 8.1 Install `AF_Packet` plugin
+## 8.1. Install `AF_Packet` plugin
 
 AF Packet allows you to control how processor cores are assigned to specific interfaces. This allows you to have granular controller on CPU allocation. In some environments, certain interfaces could require more CPU resouces. Optimizing core allocation can allow you to finely tune your Zeek IDS.
 
@@ -1278,7 +1278,7 @@ Re-Deploy Zeek
 zeekctl deploy
 ```
 
-## 8.2 Install `ADD_INTERFACES` plugin
+## 8.2. Install `ADD_INTERFACES` plugin
 
 Adds cluster node interface to logs. Useful when sniffing multiple interfaces to identify source of log.
 
@@ -1327,9 +1327,9 @@ setcap cap_net_raw=eip /opt/zeek/bin/zeek && setcap cap_net_raw=eip /opt/zeek/bi
 zeekctl deploy
 ```
 
-# 9.0 Aggregrate Portal File Transfer - CANIDS
+# 9. Aggregrate Portal File Transfer - CANIDS
 
-## 9.1 Setup
+## 9.1. Setup
 
 - Participants should be prepared to provide the public address that will access the remote (Concordia) server.
 
