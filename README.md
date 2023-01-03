@@ -1154,6 +1154,8 @@ Paste the following example to schedule Syslog NG to reload every 30 seconds
 
 AF Packet allows you to control how processor cores are assigned to specific interfaces. This allows you to have granular controller on CPU allocation. In some environments, certain interfaces could require more CPU resouces. Optimizing core allocation can allow you to finely tune your Zeek IDS.
 
+After this plugin is installed, you will need to make changes to your /opt/zeek/etc/node.cfg file once again.  These instructions also assume you completed Step 4.4.7. Zeek Cluster Mode and your Zeek is not running in standard mode.
+
 Ideally, this plugin is installed via the package manager (zkg).  
 
 1. (Zeek) Execute the command:
@@ -1206,7 +1208,13 @@ vi /opt/zeek/etc/node.cfg
 
 The below sample is an example only.  If you are only using 2 interfaces, you can allocate more processors to these interfaces.  You do not have to specify every interface in node.cfg.  If you are not using a physical interface, you can omit it altogether here.
 
- Example for **JSP3 Hardware**: Five workers, each with their own interface:
+Note there modifications to the "interface=", where each interface is now pre-fixed with "af_packet".  Also, the additional fields "lb_method", "lb_procs", "pin_cpus" and "af_packet_fanout_id" are also required to be added.  Please note you must assign a unique "pin_cpus" and "af_packet_fanout_id" for each worker.
+
+The below example assumes you also configured Zeek to run in Cluster mode (4.4.7 Zeek Cluster Mode).
+
+
+
+Example for **JSP3 Hardware**: Five workers, each with their own interface:
 
 - 8  threads per worker
 - Theoretical throughput: (Megabit) = (#Threads)(250) 
@@ -1301,7 +1309,7 @@ b)  Remove text inside the curly brackets in
 `...include_logs: set[Log::ID] = { }...` .
 
 
-Example when updated:
+Example when updated as per above instructions:
 ```
 export {
         ## Enables interfaces for all active streams
@@ -1327,7 +1335,7 @@ setcap cap_net_raw=eip /opt/zeek/bin/zeek && setcap cap_net_raw=eip /opt/zeek/bi
 zeekctl deploy
 ```
 
-# 9. Aggregrate Portal File Transfer - CANIDS
+# 9. Aggregrate Portal File Transfer - CANIDS (Optional)
 
 ## 9.1. Setup
 
