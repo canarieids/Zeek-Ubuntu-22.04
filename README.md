@@ -164,7 +164,7 @@ Participants can contact Dell directly for warranty & customer support for hardw
 
 <div style="page-break-after: always; break-after: page;"></div>
 
-# 3. Install and Configure Ubuntu Server
+# 3. Install Ubuntu Server
 
 #### Hardening the Server
 
@@ -291,7 +291,8 @@ The guided storage layout provides us the option to customize where we install U
 
 ![image-20200506162722251](/images/image-postinstallreboot.png)
 
-## 3.9. Zeek User and Group
+# 4. OS Configuration 
+## 4.1. Zeek User and Group
 
 > Participants are encouraged to follow their own account policy. Later steps will outline the creation of a `zeek` user and group that will have access to `Zeek Application` functions and files.
 > Complete the following steps steps to create Zeek user and group
@@ -314,7 +315,7 @@ sudo addgroup zeek
 usermod -a -G zeek zeek
 ```
 
-## 3.10. Repositories
+## 4.2. Repositories
 
 >We need to add the Zeek repositories to your Ubuntu installation in order to receive the latest version and updates.  In the below example, substitute the '22.04' for your version of Ubuntu.
 
@@ -333,7 +334,7 @@ sudo apt update
 ```
 >Confirm you do not receive any errors
 
-## 3.11. Install Dependancies
+## 4.3. Install Dependancies
 
 >(Root) Install the required dependancies for Zeek
 
@@ -346,7 +347,7 @@ sudo apt-get install cmake make gcc g++ flex bison libpcap-dev libssl-dev python
 sudo apt-get install python3-git python3-semantic-version
 ```
 
-## 3.12. Configure interfaces for Promiscuous mode
+## 4.4. Configure interfaces for Promiscuous mode
 
 Zeek requires the interfaces on which it will sniff traffic be configured into PROMISCUOUS mode. By configuring your interfaces into this mode, you are allowing the network interface to receive packets that would normally be discarded. Execute these commands as (Root)
 
@@ -417,11 +418,11 @@ ens2f2: <BROADCAST,MULTICAST,###PROMISC,UP###,LOWER_UP> mtu 1500 qdisc mq state 
 
 6. Reboot your server and re-confirm Step 4 to ensure interfaces come up with the 'PROMISC' flag
 
-## 3.13. Optimize Sniffing Interfaces
+## 4.5. Optimize Sniffing Interfaces
 
 > Coming soon
 
-## 3.14. Install CRONTAB
+## 4.6. Install CRONTAB
 > Ubuntu 22.04 does not come with CRONTAB installed.  We will need this feature to be installed to schedule some recurring tasks with regards to Zeek and its plugins
 
 (Root) Execute the following command to install Crontab
@@ -430,9 +431,9 @@ ens2f2: <BROADCAST,MULTICAST,###PROMISC,UP###,LOWER_UP> mtu 1500 qdisc mq state 
 sudo apt-get -y install cron
 ```
 
-# 4. Install and Configure Zeek 
+# 5. Install and Configure Zeek 
 
-## 4.1.  New Install
+## 5.1.  New Install
 
 > Zeek-lts is installed to the prefix `/opt/zeek` When installing from the official repository.
 
@@ -456,7 +457,7 @@ sudo bash
 echo "export PATH=/opt/zeek/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin" >> /etc/profile.d/zeek.sh
 ```
 
-3.  Grant the Zeek user and group ownership and permissions
+3. Grant the Zeek user and group ownership and permissions
 
 Execute the following command to recursively assign ownership to the zeek user and group
 
@@ -501,7 +502,7 @@ Type "help" for help.
 ```
 
 6. Configure node.cfg
-
+   a. Standalone Mode
 Zeek is initially configure to run in Standalone mode, which means it will only listen on **one interface**.  That single interface is defined in /opt/zeek/etc/node.cfg in the top section.
 
 ```
@@ -514,9 +515,68 @@ interface=eno1
 ```
 You will need to modify the ***interface=*** and provide at least one valid interface for Zeek to bind.  You can get a list of your interfaces by running 'ip a' at the CLI.
 
-If you wish to configure Zeek to listen to multiple interfaces simultaneously (highly recommended), you must configure Zeek to run in cluster mode.  For now, you can specify one interface, or jump to step 4.3.6 to configure node.cfg for cluster mode with multiple interfaces.  
+If you wish to configure Zeek to listen to multiple interfaces simultaneously (highly recommended), you must configure Zeek to run in cluster mode.  For now, you can specify one interface, or jump to the next step to configure node.cfg for cluster mode with multiple interfaces.  
 
-Once you have completed configuration of Standalone or Cluster mode, proceed to the next step.
+Once you have completed configuration of Standalone or Cluster mode, proceed to the next step.  
+   
+   b. Cluster Mode
+To use more than one port and provide a scalable solution, it is **HIGHLY**  recommended to configure Zeek to run in Cluster mode. 
+
+1. (Zeek) Edit node.cfg
+```
+vi /opt/zeek/etc/node.cfg
+```
+
+2. **Comment out** the standalone configuration portion at the top.
+```
+#[zeek]
+#type=standalone
+#host=localhost
+#interface=eno1
+```
+
+3. Define your work node configuration. 
+
+A worker node is a type of thread that can be assigned to one or more interfaces.  For ease of administration, we recommend creating a worker node for each interface you will be using for traffic monitoring and analsys on your IDS. For example you will have 4 interfaces you would create 4 workers (see example below).
+
+Please note, you do not have to create a worker for each interface.  If you only intend to use two interfaces, you only would need to create two workers (one for each interface).
+
+Example:
+```
+[logger]
+type=logger
+host=localhost
+
+[manager]
+type=manager
+host=localhost
+
+[proxy-1]
+type=proxy
+host=localhost
+
+[worker-1]
+type=worker
+host=localhost
+interface=ens2f1
+
+[worker-2]
+type=worker
+host=localhost
+interface=ens2f2
+
+[worker-3]
+type=worker
+host=localhost
+interface=ens2f3
+
+[worker-4]
+type=worker
+host=localhost
+interface=ens2f4
+
+```
+Please note that you will need to update ***interface=*** for each worker node to reflect a unique and valid interface. To get a list of interfaces available, execute ***ip a*** from the CLI.
 
 7. (Zeek) Deploy Zeek
 You are now ready to complete your first deployment of Zeek.  On each deployment, Zeek re-examines its configuration and scripts and deploys them when starting the services.  In the future, as you modify your Zeek configuration, you will need to complete a deployment each time.
@@ -566,7 +626,7 @@ starting workers ...
 
 ```
 
-## 4.2. Start Zeek with system
+## 5.2. Start Zeek with system
 
 To start Zeek when the operating system starts, create a file and place it into `/etc/systemd/system` .
 
@@ -610,7 +670,7 @@ systemctl start zeek.service
 systemctl enable zeek.service
 ```
 
-## 4.3. Node Crash Recovery `zeekctl cron`
+## 5.3. Node Crash Recovery `zeekctl cron`
 
 To ensure reliable and resilient collection of your network traffic, it is recommended to add Zeekctl Cron to Crontab.  This will allow Zeek to recover a node from a crashed state.  Add to `zeekctl cron` to crontab for automatic recovery of crashed nodes.
 
@@ -626,10 +686,10 @@ crontab -e
 ```
 
 
-## 4.4. Zeek Configuration Options
+## 5.4. Zeek Configuration Options
 
 
-### 4.4.1. MAC address logging `local.zeek`
+### 5.4.1. MAC address logging `local.zeek`
 
 When you enable Link-Layer (MAC) address logging, Zeek will add two fields to the conn.log: 'orig_l2_addr' and 'resp_l2_addr'. This is especially useful when using asset tracking.  
 
@@ -648,7 +708,7 @@ vi /opt/zeek/share/zeek/site/local.zeek
 ...
 ```
 
-### 4.4.2. VLAN ID logging `local.zeek`
+### 5.4.2. VLAN ID logging `local.zeek`
 
 When you enable VLAN logging, Zeek will add two additional fields to the conn.log: 'vlan' and 'inner_vlan'.  
 
@@ -666,7 +726,7 @@ vi /opt/zeek/share/zeek/site/local.zeek
 ...
 ```
 
-### 4.4.3. Load packages `local.zeek`
+### 5.4.3. Load packages `local.zeek`
 
 To load packages added manually or by the ZKG package manager, located in your site folder, you must uncomment out the @load packages line.
 
@@ -683,8 +743,7 @@ vi /opt/zeek/share/zeek/site/local.zeek
 ...
 ```
 
-
-### 4.4.4. Local and Public networks`networks.cfg`
+### 5.4.4. Local and Public networks`networks.cfg`
 
 Defining your networks to Zeek allows for you to differentiate between local and remote traffic.  Add all your netwoks and public networks referencing the example below.
 
@@ -707,7 +766,7 @@ vi /opt/zeek/etc/networks.cfg
 205.198.10.20/24		Public Network
 ```
 
-### 4.4.5. Email `zeekctl.cfg`
+### 5.4.5. Email `zeekctl.cfg`
 
 1. (Zeek) Edit Zeekctl.cfg (Default location: /opt/zeek/etc/zeekctl.cfg)
 
@@ -731,7 +790,7 @@ This option enables Zeek to send email.
 > MailTo = security@your-org.ca
 
 
-### 4.4.6. Log Retention and Collection `zeekctl.cfg`
+### 5.4.6. Log Retention and Collection `zeekctl.cfg`
 
 Zeek automatically rotates and archives runtime logs from `/opt/zeek/logs/current`into `/opt/zeek/logs/yyyy-mm-dd/` on a configurable interval.
 
@@ -753,77 +812,7 @@ LogExpireInterval = 30
 ...
 ```
 
-### 4.4.7. Zeek Cluster Mode `node.cfg`
-
-Zeek by default is configured to run in Standalone mode.  This means that only one interface can be configured to monitor traffic.  To use more than one port and provide a scalable solution, it is **HIGHLY**  recommended to configure Zeek to run in Cluster mode. 
-
-1. (Zeek) Edit node.cfg
-```
-vi /opt/zeek/etc/node.cfg
-```
-
-2. **Comment out** the standalone configuration portion at the top.
-```
-#[zeek]
-#type=standalone
-#host=localhost
-#interface=eno1
-```
-
-3. Define your work node configuration. 
-
-A worker node is a type of thread that can be assigned to one or more interfaces.  For ease of administration, we recommend creating a worker node for each interface you will be using for traffic monitoring and analsys on your IDS.  For example you will have 4 interfaces you would create 4 workers (Example below).
-
-Please note, you do not have to create a worker for each interface.  If you only intend to use two interfaces, you only would need to create two workers (one for each interface).
-
-Example:
-```
-[logger]
-type=logger
-host=localhost
-
-[manager]
-type=manager
-host=localhost
-
-[proxy-1]
-type=proxy
-host=localhost
-
-[worker-1]
-type=worker
-host=localhost
-interface=ens2f1
-
-[worker-2]
-type=worker
-host=localhost
-interface=ens2f2
-
-[worker-3]
-type=worker
-host=localhost
-interface=ens2f3
-
-[worker-4]
-type=worker
-host=localhost
-interface=ens2f4
-
-```
-Please note that you will need to update ***interface=*** for each worker node to reflect a unique and valid interface. To get a list of interfaces available, execute ***ip a*** from the CLI.
-
-### 4.4.8. Apply the Configuration Files
-
-With the completion of the previous steps, its now time to re-deploy Zeek.  Anytime you make changes similar to the above, you will need to re-deploy. 
-
-When configuration files are modified, execute:
-(Zeek)
-```
-zeekctl deploy
-```
-
-# 5. `Sendmail`(optional)
+# 6. `Sendmail`(optional)
 
 1. Install Sendmail
 
@@ -850,7 +839,7 @@ sudo sendmailconfig
 echo "test message" | sendmail -v your@email.ca
 ```
 
-# 6. UFW - Uncomplicated Firewall (Optional)
+# 7. UFW - Uncomplicated Firewall (Optional)
 
 Install UFW
 
@@ -876,9 +865,9 @@ sudo ufw enable
 ```
 If you need to disable the UFW service, use the command 'sudo ufw disable'
 
-# 7. Log Processing
+# 8. Log Processing
 
-## 7.1. RSYSLOG
+## 8.1. RSYSLOG
 
 **RSYSLOG portion under development**
 
@@ -1079,7 +1068,7 @@ input (
 )
 ```
 
-## 7.2. SYSLOG-NG
+## 8.2. SYSLOG-NG
 
 As an alternative option, Syslog-NG can be used instead of RSYSLOG.  
 
@@ -1150,13 +1139,13 @@ Paste the following example to schedule Syslog NG to reload every 30 seconds
 */30 * * * * /usr/sbin/syslog-ng-ctl reload
 ```
 
-# 8. Zeek Plugins
+# 9. Zeek Plugins
 
-## 8.1. Install `AF_Packet` plugin
+## 9.1. Install `AF_Packet` plugin
 
 AF Packet allows you to control how processor cores are assigned to specific interfaces. This allows you to have granular controller on CPU allocation. In some environments, certain interfaces could require more CPU resouces. Optimizing core allocation can allow you to finely tune your Zeek IDS.
 
-After this plugin is installed, you will need to make changes to your /opt/zeek/etc/node.cfg file once again.  These instructions also assume you completed Step 4.4.7. Zeek Cluster Mode and your Zeek is not running in standard mode.
+After this plugin is installed, you will need to make changes to your /opt/zeek/etc/node.cfg file once again.  These instructions also assume you completed Step 6b Cluster Mode in [Section 5.1.] (https://github.com/canarieids/Zeek-Ubuntu-22.04#51--new-install) and your Zeek is not running in standard mode.
 
 Ideally, this plugin is installed via the package manager (zkg).  
 
@@ -1212,8 +1201,7 @@ The below sample is an example only.  If you are only using 2 interfaces, you ca
 
 Note there modifications to the "interface=", where each interface is now pre-fixed with "af_packet".  Also, the additional fields "lb_method", "lb_procs", "pin_cpus" and "af_packet_fanout_id" are also required to be added.  Please note you must assign a unique "pin_cpus" and "af_packet_fanout_id" for each worker.
 
-The below example assumes you also configured Zeek to run in Cluster mode (4.4.7 Zeek Cluster Mode).
-
+The below example assumes you also configured Zeek to run in Cluster mode (see Step 6b in [Section 5.1.] (https://github.com/canarieids/Zeek-Ubuntu-22.04#51--new-install)).
 
 
 Example for **JSP3 Hardware**: Five workers, each with their own interface:
@@ -1288,7 +1276,7 @@ Re-Deploy Zeek
 zeekctl deploy
 ```
 
-## 8.2. Install `ADD_INTERFACES` plugin
+## 9.2. Install `ADD_INTERFACES` plugin
 
 Adds cluster node interface to logs. Useful when sniffing multiple interfaces to identify source of log.
 
@@ -1302,11 +1290,9 @@ zkg install zeek/j-gras/add-interfaces
 vi /opt/zeek/share/zeek/site/packages/add-interfaces/add-interfaces.zeek
 ```
 
-3.  
-
-a)  Change the `...enable_all_logs = F...` to `...enable_all_logs = T...
-
-b)  Remove text inside the curly brackets in 
+3.  Do the following
+    a. Change the `...enable_all_logs = F...` to `...enable_all_logs = T...
+    b. Remove text inside the curly brackets in 
 
 `...include_logs: set[Log::ID] = { }...` .
 
@@ -1337,9 +1323,9 @@ setcap cap_net_raw=eip /opt/zeek/bin/zeek && setcap cap_net_raw=eip /opt/zeek/bi
 zeekctl deploy
 ```
 
-# 9. Aggregrate Portal File Transfer - CANIDS (Optional)
+# 10. Aggregrate Portal File Transfer - CANIDS (Optional)
 
-## 9.1. Setup
+## 10.1. Setup
 
 - Participants should be prepared to provide the public address that will access the remote (Concordia) server.
 
@@ -1407,7 +1393,7 @@ username@feedserver:~$
 Now that we have confirmed your account is set up and authentication is working, Proceed to installing RSYNC to set up the secure file transfer.
 
 
-## 9.2. Install RSYNC 
+## 10.2. Install RSYNC 
 
 RSYNC is a utility for efficiently transferring and synchronizing files between a computer and another storage location.  In other words, its a program that synchronizes files between two systems and only copies what is different.
 
@@ -1478,8 +1464,6 @@ Example script:
 ```
 
 # 10 Deploy and Troubleshoot
-
-
 
 Below are a list of commands that need to be re-applied when modifications to the system have been applied and the system doesn't operate as expected (for example, if Zeek is crashing on startup/deployment)
 
@@ -1688,10 +1672,6 @@ Running with specific plugins:
 zeek -r mypackets.trace frameworks/files/extract-all-files
 ```
 
-
-
 **For questions/feedback, please contact our team at idstech@canarie.ca**
-
-
 
 ### 
