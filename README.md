@@ -502,8 +502,9 @@ Type "help" for help.
 ```
 
 6. Configure node.cfg
-   a. Standalone Mode
-Zeek is initially configure to run in Standalone mode, which means it will only listen on **one interface**.  That single interface is defined in /opt/zeek/etc/node.cfg in the top section.
+
+a. **Standalone Mode:**
+	Zeek is initially configure to run in Standalone mode, which means it will only listen on **one interface**.  That single interface is defined in /opt/zeek/etc/node.cfg in the top section.
 
 ```
 ...
@@ -519,8 +520,8 @@ If you wish to configure Zeek to listen to multiple interfaces simultaneously (h
 
 Once you have completed configuration of Standalone or Cluster mode, proceed to the next step.  
    
-   b. Cluster Mode
-To use more than one port and provide a scalable solution, it is **HIGHLY**  recommended to configure Zeek to run in Cluster mode. 
+   b. **Cluster Mode:**
+	To use more than one port and provide a scalable solution, it is **HIGHLY**  recommended to configure Zeek to run in Cluster mode. 
 
 1. (Zeek) Edit node.cfg
 ```
@@ -1291,8 +1292,10 @@ vi /opt/zeek/share/zeek/site/packages/add-interfaces/add-interfaces.zeek
 ```
 
 3.  Do the following
-    a. Change the `...enable_all_logs = F...` to `...enable_all_logs = T...
-    b. Remove text inside the curly brackets in 
+    
+a. Change the `...enable_all_logs = F...` to `...enable_all_logs = T...
+    
+b. Remove text inside the curly brackets in 
 
 `...include_logs: set[Log::ID] = { }...` .
 
