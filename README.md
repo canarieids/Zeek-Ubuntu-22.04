@@ -214,7 +214,9 @@ Coming Soon
 
 ## 3.3. Configure initial Networking
 
-> Configure your management interface networking. One network card will be dedicated to allow administrators to SSH into the system. This same interface will also allow egress for SYSLOG connections.
+Configure your management interface networking. One network card will be dedicated to allow administrators to SSH into the system. This same interface will also allow egress for SYSLOG connections.  This interface should not be used for any other purpose (such as traffic analysis). 
+
+
 
 ![image-20200506160026472](/images/image-networkwizarsetup.png)
 
@@ -227,7 +229,7 @@ Coming Soon
 ![image-20200506160026472](/images/image-archivemirror.png)
 
 ## 3.4. Storage Layout
-> The guided storage layout provides us the option to customize where we install Ubuntu. It is advisable to install Ubuntu on your redundant storage volume (RAID10 or RAID5). The single SSD drive will be used for swap and working folders.
+The guided storage layout provides us the option to customize where we install Ubuntu. It is advisable to install Ubuntu on your redundant storage volume (RAID10 or RAID5). The single SSD drive will be used for swap and working folders.
 
 1. Choose the option `Custom Storage Layout`.
 
@@ -1407,7 +1409,11 @@ Now that we have confirmed your account is set up and authentication is working,
 
 ## 9.2. Install RSYNC 
 
-> Synchronizes files between two systems and only copies what is different.
+RSYNC is a utility for efficiently transferring and synchronizing files between a computer and another storage location.  In other words, its a program that synchronizes files between two systems and only copies what is different.
+
+To transfer your logs to the CANIDS aggregate platform we use RSYNC to establish a secure SSH session, authenticate (using your private/public key) and efficiently transfer designated logfiles from your Zeek IDS to the platform for analysis.
+
+Summary of RSYNC benefits:
 
 - Faster and more efficient when compared to SCP.
 - Only copies what is different.
@@ -1472,6 +1478,8 @@ Example script:
 ```
 
 # 10 Deploy and Troubleshoot
+
+
 
 Below are a list of commands that need to be re-applied when modifications to the system have been applied and the system doesn't operate as expected (for example, if Zeek is crashing on startup/deployment)
 
