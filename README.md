@@ -296,7 +296,7 @@ The guided storage layout provides us the option to customize where we install U
 # 4. OS Configuration 
 
 
-For the remaining sections in this guide, it is recommended to switch to an SSH client.  This will allow you to copy and paste the commands provided below more easily.  
+For the remaining sections in this guide, it is recommended to switch to an **SSH client**.  This will allow you to copy and paste the commands provided below more easily.  
 
 
 
