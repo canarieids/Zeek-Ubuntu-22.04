@@ -880,11 +880,24 @@ If you need to disable the UFW service, use the command 'sudo ufw disable'
 
 It is recommended to have your Zeek logs sent to a more sophisticated analytics platform, such as a SIEM, Elastic Search, Splunk or simliar platforms.  
 
-RSYSLOG, the 'rocket-fast system for log processing' is installed by default and can send syslog messages to remote systems.
-
 Below is an example configuration you can use to adapt to your target analytics platform.  Please replace 'XXX.XXX.XXX.XXX' with your platform's IP address.
 
-Create/Edit an RSYSLOG  configuration file:
+
+
+1. Install RSYSLOG
+
+```
+sudo apt install rsyslog
+```
+
+2. Add the syslog user to the Zeek group
+
+>This step is required so that RSYNC can access the Zeek logs folder at /opt/zeek/logs/currenet/
+```
+sudo usermod -a -G zeek syslog
+```
+
+3. Create/Edit an RSYSLOG  configuration file:
 >RSYSLOG by default is configured to load any and all .conf files located in /etc/rsyslog.d/
 
 ```
