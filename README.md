@@ -168,15 +168,11 @@ Participants can contact Dell directly for warranty & customer support for hardw
 
 #### Hardening the Server
 
-> Apply security controls relevant to your organization's policy.  The following guidelines are posted on the on JSP Portal in the technical resources section:
+Apply security controls relevant to your organization's policy.  The following guidelines are posted on the on JSP Portal in the technical resources section:
 
-
-
-- [CIS Benchmark - Ubuntu Server - EN](https://idsportal.canarie.ca/wpc_downloader/core/?wpc_action=download&amp;id=289)
+- [CIS Benchmark - Ubuntu Linux 22.04 LTS Benchmark - EN](https://idsportal.canarie.ca/wpc_downloader/core/?wpc_action=download&amp;id=289)
 
   
-
-
 
 ## 3.1. OS Deployment
 
