@@ -503,7 +503,7 @@ Type "help" for help.
 
 ## 5.2. Configure node.cfg (Standalone VS Cluster mode)
 
-Option 1:  Standalone Mode (Default)
+**Option 1:  Standalone Mode (Default)**
 
 Zeek is initially configure to run in Standalone mode, which means it will only listen on **one interface**.  That single interface is defined in /opt/zeek/etc/node.cfg in the top section. An example configuration sample is shown below:
 
@@ -521,7 +521,7 @@ If you wish to configure Zeek to listen to multiple interfaces simultaneously (h
 
 Once you have completed configuration of Standalone or Cluster mode, proceed to the next step.  
 
-Option 2: Cluster Mode (RECOMMENDED)
+**Option 2: Cluster Mode (RECOMMENDED)**
 
 Follow the below steps to modify the node.cfg file to configure your IDS instance in Cluster mode.  Cluster mode allows you to use more than one network interface.
 
@@ -584,7 +584,7 @@ interface=ens2f4
 ```
 Please note that you will need to update ***interface=*** for each worker node to reflect a unique and valid interface. To get a list of interfaces available, execute ***ip a*** from the CLI.
 
-7. (Zeek) Deploy Zeek
+## 5.3. (Zeek) Deploy Zeek
 
 You are now ready to complete your first deployment of Zeek.  
 
@@ -625,7 +625,7 @@ starting workers ...
 
 ```
 
-## 5.3. Start Zeek with system
+## 5.4. Start Zeek with system
 
 To start Zeek when the operating system starts, create a file and place it into `/etc/systemd/system` .
 
@@ -669,7 +669,7 @@ systemctl start zeek.service
 systemctl enable zeek.service
 ```
 
-## 5.4. Node Crash Recovery `zeekctl cron`
+## 5.5. Node Crash Recovery `zeekctl cron`
 
 To ensure reliable and resilient collection of your network traffic, it is recommended to add Zeekctl Cron to Crontab.  This will allow Zeek to recover a node from a crashed state.  Add to `zeekctl cron` to crontab for automatic recovery of crashed nodes.
 
@@ -685,10 +685,10 @@ crontab -e
 ```
 
 
-## 5.5. Zeek Configuration Options
+## 5.6. Zeek Configuration Options
 
 
-### 5.5.1. MAC address logging `local.zeek`
+### 5.6.1. MAC address logging `local.zeek`
 
 When you enable Link-Layer (MAC) address logging, Zeek will add two fields to the conn.log: 'orig_l2_addr' and 'resp_l2_addr'. This is especially useful when using asset tracking.  
 
@@ -707,7 +707,7 @@ vi /opt/zeek/share/zeek/site/local.zeek
 ...
 ```
 
-### 5.5.2. VLAN ID logging `local.zeek`
+### 5.6.2. VLAN ID logging `local.zeek`
 
 When you enable VLAN logging, Zeek will add two additional fields to the conn.log: 'vlan' and 'inner_vlan'.  
 
@@ -725,7 +725,7 @@ vi /opt/zeek/share/zeek/site/local.zeek
 ...
 ```
 
-### 5.5.3. Load packages `local.zeek`
+### 5.6.3. Load packages `local.zeek`
 
 To load packages added manually or by the ZKG package manager, located in your site folder, you must uncomment out the @load packages line.
 
@@ -742,7 +742,7 @@ vi /opt/zeek/share/zeek/site/local.zeek
 ...
 ```
 
-### 5.5.4. Local and Public networks`networks.cfg`
+### 5.6.4. Local and Public networks`networks.cfg`
 
 Defining your networks to Zeek allows for you to differentiate between local and remote traffic.  Add all your netwoks and public networks referencing the example below.
 
@@ -765,7 +765,7 @@ vi /opt/zeek/etc/networks.cfg
 205.198.10.20/24		Public Network
 ```
 
-### 5.5.5. Email `zeekctl.cfg`
+### 5.6.5. Email `zeekctl.cfg`
 
 1. (Zeek) Edit Zeekctl.cfg (Default location: /opt/zeek/etc/zeekctl.cfg)
 
@@ -789,7 +789,7 @@ This option enables Zeek to send email.
 > MailTo = security@your-org.ca
 
 
-### 5.5.6. Log Retention and Collection `zeekctl.cfg`
+### 5.6.6. Log Retention and Collection `zeekctl.cfg`
 
 Zeek automatically rotates and archives runtime logs from `/opt/zeek/logs/current`into `/opt/zeek/logs/yyyy-mm-dd/` on a configurable interval.
 
@@ -1144,7 +1144,7 @@ Paste the following example to schedule Syslog NG to reload every 30 seconds
 
 AF Packet allows you to control how processor cores are assigned to specific interfaces. This allows you to have granular controller on CPU allocation. In some environments, certain interfaces could require more CPU resouces. Optimizing core allocation can allow you to finely tune your Zeek IDS.
 
-After this plugin is installed, you will need to make changes to your /opt/zeek/etc/node.cfg file once again.  These instructions also assume you completed Step 6b Cluster Mode in [Section 5.1.](https://github.com/canarieids/Zeek-Ubuntu-22.04#51--new-install) and your Zeek is not running in standard mode.
+After this plugin is installed, you will need to make changes to your /opt/zeek/etc/node.cfg file once again.  These instructions also assume you completed Option 2 Cluster Mode in [Section 5.2.](https://github.com/canarieids/Zeek-Ubuntu-22.04#52--new-install) and your Zeek is not running in standard mode.
 
 Ideally, this plugin is installed via the package manager (zkg).  
 
@@ -1200,7 +1200,7 @@ The below sample is an example only.  If you are only using 2 interfaces, you ca
 
 Note there modifications to the "interface=", where each interface is now pre-fixed with "af_packet".  Also, the additional fields "lb_method", "lb_procs", "pin_cpus" and "af_packet_fanout_id" are also required to be added.  Please note you must assign a unique "pin_cpus" and "af_packet_fanout_id" for each worker.
 
-The below example assumes you also configured Zeek to run in Cluster mode (see Step 6b in [Section 5.1.](https://github.com/canarieids/Zeek-Ubuntu-22.04#51--new-install)).
+The below example assumes you also configured Zeek to run in Cluster mode (see Option 2 in [Section 5.2.](https://github.com/canarieids/Zeek-Ubuntu-22.04#52--new-install)).
 
 
 Example for **JSP3 Hardware**: Five workers, each with their own interface:
