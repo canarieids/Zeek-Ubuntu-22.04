@@ -501,10 +501,11 @@ Type "help" for help.
 [ZeekControl] >
 ```
 
-6. Configure node.cfg
+## 5.2. Configure node.cfg (Standalone VS Cluster mode)
 
-a. **Standalone Mode:**
-	Zeek is initially configure to run in Standalone mode, which means it will only listen on **one interface**.  That single interface is defined in /opt/zeek/etc/node.cfg in the top section.
+Option 1:  Standalone Mode (Default)
+
+Zeek is initially configure to run in Standalone mode, which means it will only listen on **one interface**.  That single interface is defined in /opt/zeek/etc/node.cfg in the top section. An example configuration sample is shown below:
 
 ```
 ...
@@ -519,16 +520,18 @@ You will need to modify the ***interface=*** and provide at least one valid inte
 If you wish to configure Zeek to listen to multiple interfaces simultaneously (highly recommended), you must configure Zeek to run in cluster mode.  For now, you can specify one interface, or jump to the next step to configure node.cfg for cluster mode with multiple interfaces.  
 
 Once you have completed configuration of Standalone or Cluster mode, proceed to the next step.  
-   
-   b. **Cluster Mode:**
-	To use more than one port and provide a scalable solution, it is **HIGHLY**  recommended to configure Zeek to run in Cluster mode. 
+
+Option 2: Cluster Mode (RECOMMENDED)
+
+Follow the below steps to modify the node.cfg file to configure your IDS instance in Cluster mode.  Cluster mode allows you to use more than one network interface.
+
 
 1. (Zeek) Edit node.cfg
 ```
 vi /opt/zeek/etc/node.cfg
 ```
 
-2. **Comment out** the standalone configuration portion at the top.
+2. **Comment out** the standalone configuration portion at the top as shown below.  Ensure to also comment out the [zeek] line.
 ```
 #[zeek]
 #type=standalone
@@ -537,6 +540,8 @@ vi /opt/zeek/etc/node.cfg
 ```
 
 3. Define your work node configuration. 
+
+In Cluster mode, the roles of Zeek are divided into four types: logger, manager, proxy and worker.   Separating these roles allows for scalability.  This guide will configure all of these roles to run on the same server - effectively creating a cluster-in-a-box.  If operationally necessary, these roles could be moved out to additional servers in the future for higher capacity.  Cluster mode provides us with scalability options in the future.
 
 A worker node is a type of thread that can be assigned to one or more interfaces.  For ease of administration, we recommend creating a worker node for each interface you will be using for traffic monitoring and analsys on your IDS. For example you will have 4 interfaces you would create 4 workers (see example below).
 
@@ -580,23 +585,16 @@ interface=ens2f4
 Please note that you will need to update ***interface=*** for each worker node to reflect a unique and valid interface. To get a list of interfaces available, execute ***ip a*** from the CLI.
 
 7. (Zeek) Deploy Zeek
-You are now ready to complete your first deployment of Zeek.  On each deployment, Zeek re-examines its configuration and scripts and deploys them when starting the services.  In the future, as you modify your Zeek configuration, you will need to complete a deployment each time.
+
+You are now ready to complete your first deployment of Zeek.  
+
+When you (Re) Deploy Zeek, Zeek re-examines all scripts and reloads them into operation.  If any errors detected in the scripts, the re-deploy will fail.  Additionally, in some cases, if a Zeek process has not properly stopped from a previous instance, a worker node may fail to start.  In these cases, a system restart is recommended.
+
+In the future, as you modify your Zeek configuration, you will need to complete a deployment each time.
 
 >(Zeek) Execute the following command to deploy Zeek
 ```
 zeekctl deploy
-```
-
->Or within the Zeek Control shell
-
-```
-zeekctl
-
-
-Welcome to ZeekControl 2.3.0
-Type "help" for help.
-[ZeekControl] > deploy
-
 ```
 
 >If all is working well, you should get this output
@@ -627,7 +625,7 @@ starting workers ...
 
 ```
 
-## 5.2. Start Zeek with system
+## 5.3. Start Zeek with system
 
 To start Zeek when the operating system starts, create a file and place it into `/etc/systemd/system` .
 
@@ -671,7 +669,7 @@ systemctl start zeek.service
 systemctl enable zeek.service
 ```
 
-## 5.3. Node Crash Recovery `zeekctl cron`
+## 5.4. Node Crash Recovery `zeekctl cron`
 
 To ensure reliable and resilient collection of your network traffic, it is recommended to add Zeekctl Cron to Crontab.  This will allow Zeek to recover a node from a crashed state.  Add to `zeekctl cron` to crontab for automatic recovery of crashed nodes.
 
@@ -687,10 +685,10 @@ crontab -e
 ```
 
 
-## 5.4. Zeek Configuration Options
+## 5.5. Zeek Configuration Options
 
 
-### 5.4.1. MAC address logging `local.zeek`
+### 5.5.1. MAC address logging `local.zeek`
 
 When you enable Link-Layer (MAC) address logging, Zeek will add two fields to the conn.log: 'orig_l2_addr' and 'resp_l2_addr'. This is especially useful when using asset tracking.  
 
@@ -709,7 +707,7 @@ vi /opt/zeek/share/zeek/site/local.zeek
 ...
 ```
 
-### 5.4.2. VLAN ID logging `local.zeek`
+### 5.5.2. VLAN ID logging `local.zeek`
 
 When you enable VLAN logging, Zeek will add two additional fields to the conn.log: 'vlan' and 'inner_vlan'.  
 
@@ -727,7 +725,7 @@ vi /opt/zeek/share/zeek/site/local.zeek
 ...
 ```
 
-### 5.4.3. Load packages `local.zeek`
+### 5.5.3. Load packages `local.zeek`
 
 To load packages added manually or by the ZKG package manager, located in your site folder, you must uncomment out the @load packages line.
 
@@ -744,7 +742,7 @@ vi /opt/zeek/share/zeek/site/local.zeek
 ...
 ```
 
-### 5.4.4. Local and Public networks`networks.cfg`
+### 5.5.4. Local and Public networks`networks.cfg`
 
 Defining your networks to Zeek allows for you to differentiate between local and remote traffic.  Add all your netwoks and public networks referencing the example below.
 
@@ -767,7 +765,7 @@ vi /opt/zeek/etc/networks.cfg
 205.198.10.20/24		Public Network
 ```
 
-### 5.4.5. Email `zeekctl.cfg`
+### 5.5.5. Email `zeekctl.cfg`
 
 1. (Zeek) Edit Zeekctl.cfg (Default location: /opt/zeek/etc/zeekctl.cfg)
 
@@ -791,7 +789,7 @@ This option enables Zeek to send email.
 > MailTo = security@your-org.ca
 
 
-### 5.4.6. Log Retention and Collection `zeekctl.cfg`
+### 5.5.6. Log Retention and Collection `zeekctl.cfg`
 
 Zeek automatically rotates and archives runtime logs from `/opt/zeek/logs/current`into `/opt/zeek/logs/yyyy-mm-dd/` on a configurable interval.
 
@@ -1293,6 +1291,7 @@ vi /opt/zeek/share/zeek/site/packages/add-interfaces/add-interfaces.zeek
 
 3.  Do the following
     
+
 a. Change the `...enable_all_logs = F...` to `...enable_all_logs = T...
     
 b. Remove text inside the curly brackets in 
