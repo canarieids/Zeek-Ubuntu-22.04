@@ -294,6 +294,12 @@ The guided storage layout provides us the option to customize where we install U
 ![image-20200506162722251](/images/image-postinstallreboot.png)
 
 # 4. OS Configuration 
+
+
+For the remaining sections in this guide, it is recommended to switch to an SSH client.  This will allow you to copy and paste the commands provided below more easily.  
+
+
+
 ## 4.1. Zeek User and Group
 
 > Participants are encouraged to follow their own account policy. Later steps will outline the creation of a `zeek` user and group that will have access to `Zeek Application` functions and files.
