@@ -186,7 +186,7 @@ Apply security controls relevant to your organization's policy.  The following g
 
 <img src="/images/image-20200506154052269.png" alt="image-20200506154052269" style="zoom:90%;" />
 
-4. Select the USB key where the downloaded ISO has been written from the drop-down and click `Next`.
+4. Select the ISO where the downloaded ISO has been written from the drop-down and click `Next`.  Please ensure to choose "Ubuntu-Server" and not "ESP Virtual CD"
 
 ![image-20200506154128697](/images/image-20200506154128697.png)
 
