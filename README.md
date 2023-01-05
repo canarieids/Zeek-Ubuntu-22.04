@@ -170,7 +170,13 @@ Participants can contact Dell directly for warranty & customer support for hardw
 
 > Apply security controls relevant to your organization's policy.  The following guidelines are posted on the on JSP Portal in the technical resources section:
 
-Coming Soon
+
+
+[]: https://idsportal.canarie.ca/wpc_downloader/core/?wpc_action=download&amp;id=289	"CIS Benchmark - Ubuntu - EN"
+
+
+
+
 
 ## 3.1. OS Deployment
 
