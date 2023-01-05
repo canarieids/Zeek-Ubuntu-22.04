@@ -172,9 +172,9 @@ Participants can contact Dell directly for warranty & customer support for hardw
 
 
 
-[CIS Benchmark - Ubuntu - EN]: https://idsportal.canarie.ca/wpc_downloader/core/?wpc_action=download&amp;id=289	"CIS Benchmark - Ubuntu - EN"
+- [CIS Benchmark - Ubuntu Server - EN](https://idsportal.canarie.ca/wpc_downloader/core/?wpc_action=download&amp;id=289)
 
-
+  
 
 
 
