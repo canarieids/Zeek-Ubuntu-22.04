@@ -1211,7 +1211,7 @@ Note there modifications to the "interface=", where each interface is now pre-fi
 The below example assumes you also configured Zeek to run in Cluster mode (see Step 6b in [Section 5.1.](https://github.com/canarieids/Zeek-Ubuntu-22.04#51--new-install)).
 
 
-Example for **JSP3 Hardware**: Five workers, each with their own interface:
+Example for **Cohort 1/2 Hardware**: Five workers, each with their own interface:
 
 - 8  threads per worker
 - Theoretical throughput: (Megabit) = (#Threads)(250) 
