@@ -505,7 +505,7 @@ Type "help" for help.
 
 ## 5.2. Configure node.cfg (Standalone VS Cluster mode)
 
-Option 1:  Standalone Mode (Default)
+**Option 1:  Standalone Mode (Default)**
 
 Zeek is initially configure to run in Standalone mode, which means it will only listen on **one interface**.  That single interface is defined in /opt/zeek/etc/node.cfg in the top section. An example configuration sample is shown below:
 
@@ -517,13 +517,13 @@ host=localhost
 interface=eno1
 ...
 ```
-You will need to modify the ***interface=*** and provide at least one valid interface for Zeek to bind.  You can get a list of your interfaces by running 'ip a' at the CLI.
+You will need to modify the ***interface=*** and provide at least one valid interface for Zeek to bind.  You can get a list of your interfaces by running 'ip a' at the CLI.  Please note you should not use your management interface.
 
 If you wish to configure Zeek to listen to multiple interfaces simultaneously (highly recommended), you must configure Zeek to run in cluster mode.  For now, you can specify one interface, or jump to the next step to configure node.cfg for cluster mode with multiple interfaces.  
 
 Once you have completed configuration of Standalone or Cluster mode, proceed to the next step.  
 
-Option 2: Cluster Mode (RECOMMENDED)
+**Option 2: Cluster Mode (RECOMMENDED)**
 
 Follow the below steps to modify the node.cfg file to configure your IDS instance in Cluster mode.  Cluster mode allows you to use more than one network interface.
 
