@@ -497,11 +497,11 @@ Zeek-lts is installed to the prefix `/opt/zeek` When installing from the officia
 
 1. Use `apt` to install `zeek`.
 
->(Root) This will install Zeek 5.0X
+(Root) This will install Zeek 5.0X  
 ```
 sudo apt install zeek
 ```
->You will be prompted to optionally configure the Mail Server options. You can choose to do this now or later.
+You will be prompted to optionally configure the Mail Server options. You can choose to do this now or later.  
 
 2. (Root) Add Zeek binary files to path for Zeek.  
 
