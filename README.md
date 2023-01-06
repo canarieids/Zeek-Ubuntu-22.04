@@ -100,27 +100,28 @@ After you have logged into your DRAC, you can open the virtual console and mount
 >[Click here for more information.](https://www.dell.com/support/article/ca/en/cabsdt1/sln296648/using-the-virtual-media-function-on-idrac-6-7-8-and-9?lang=en)  
 
 1. Launch the Virtual Console  
-(A) Select `Configuration`   
-(B) Select `Virtual Console`   
-(C) Select `Start the Virtual Console`  
+
+	(A) Select `Configuration`   
+	(B) Select `Virtual Console`   
+	(C) Select `Start the Virtual Console`  
 
 ![image-20200505232027969](/images/image-drac01.png)
 
 
 2. Connect your ISO to the Virtual Console session  
 
-(A) Select `Virtual Media`  
-(B) Select `Connect Virtual Media`  
+	(A) Select `Virtual Media`  
+	(B) Select `Connect Virtual Media`  
 
 ![image-20200505232027969](/images/image-drac02.png)
 
 
 3. Navigate to and select the ISO file.  
 
-(A) Select `Choose File`  
-(B) Select your ISO image file  
-(C) Select `Map Device`  
-(D) Select `Close`   
+	(A) Select `Choose File`  
+	(B) Select your ISO image file  
+	(C) Select `Map Device`  
+	(D) Select `Close`   
 
 ![image-20200505232027969](/images/image-drac03.png)
 
