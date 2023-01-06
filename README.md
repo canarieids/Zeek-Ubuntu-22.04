@@ -30,7 +30,7 @@ This document is a step-by-step guide for the configuration of the Zeek platform
 
 ## 1.1. Community Resources
 
->  The Zeek community is vibrant, friendly, and easily accessible.  Use the following resources for communication and documentation questions that fall outside of this document and/or project.
+The Zeek community is vibrant, friendly, and easily accessible.  Use the following resources for communication and documentation questions that fall outside of this document and/or project.
 
   - [Zeek](https://www.zeek.org/)[ Website](https://www.zeek.org/)
   - [Zeek Manual](https://docs.zeek.org/en/master/)
@@ -39,17 +39,17 @@ This document is a step-by-step guide for the configuration of the Zeek platform
 
 ## 1.2. JSP FAQ
 
-> We have composed a frequently asked questions file, which is located in the JSP portal.  Both pilot and phase 2 participants will find this file useful.
+We have composed a frequently asked questions file, which is located in the JSP portal.  Both pilot and phase 2 participants will find this file useful.
 
 - [Zeek / JSP - FAQ](https://idsportal.canarie.ca/wpc_downloader/core/?wpc_action=view&id=215) 
 
 ## 1.3. Warranty and Contacts
 
-> **Network TAPs:**
+**Network TAPs:**
 
 Warranties are with the equipment vendor (Gigamon/IXIA) and participants can pursue requests.  Ensure you have the `serial number` prior to initiating a service request.
 
-> **Server:**
+**Server:**
 
 Participants can contact Dell directly for warranty & customer support for hardware issues and troubleshooting.  Ensure you have the `service tag` prior to initiating a service request.
 
