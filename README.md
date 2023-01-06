@@ -650,7 +650,7 @@ When you (Re) Deploy Zeek, Zeek re-examines all scripts and reloads them into op
 
 In the future, as you modify your Zeek configuration, you will need to complete a deployment each time.
 
->(Zeek) Execute the following command to deploy Zeek
+(Zeek) Execute the following command to deploy Zeek  
 ```
 zeekctl deploy
 ```
