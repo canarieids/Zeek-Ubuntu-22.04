@@ -472,8 +472,8 @@ ens2f2: <BROADCAST,MULTICAST,###PROMISC,UP###,LOWER_UP> mtu 1500 qdisc mq state 
 
 
 
-## 4.5. Install CRONTAB
-> Ubuntu 22.04 does not come with CRONTAB installed.  We will need this feature to be installed to schedule some recurring tasks with regards to Zeek and its plugins
+## 4.5. Install CRONTAB  
+Ubuntu 22.04 does not come with CRONTAB installed.  We will need this feature to be installed to schedule some recurring tasks with regards to Zeek and its plugins
 
 (Root) Execute the following command to install Crontab  
 
@@ -493,7 +493,7 @@ sudo apt-get -y install vi
 
 ## 5.1.  New Install
 
-> Zeek-lts is installed to the prefix `/opt/zeek` When installing from the official repository.
+Zeek-lts is installed to the prefix `/opt/zeek` When installing from the official repository.  
 
 1. Use `apt` to install `zeek`.
 
