@@ -136,16 +136,17 @@ After you have logged into your DRAC, you can open the virtual console and mount
 > Download, install and run a USB creation tool.  Rufus is tool used in this document.
 > Rufus [Rufus](https://rufus.ie/).
 
-3. Create bootable USB key
-	Follow these steps with Rufus to build a USB key from the Ubuntu ISO
-	- Open 'Rufus'
-	- Under 'Device' dropdown, choose target USB key.
-	- 'Select' downloaded ISO.
-	- Navigate for and Choose ISO file.
-	- Select 'Open'.
-	- Click 'START' to begin writing the ISO.
+3. Create bootable USB key  
 
-![image-20200505231623160](/images/image-20200505231623160.png)
+	Follow these steps with Rufus to build a USB key from the Ubuntu ISO
+	
+	(A) Under 'Device' dropdown, choose target USB key.  
+	(B) Select downloaded ISO.  
+	(C) Navigate for and Choose ISO file.  
+	(D) Select 'Open'.  
+	(E) Click 'START' to begin writing the ISO to the USB drive  
+
+![image-20200505231623160](/images/image-rufus.png)
 
 
 To initiate the installation using either method, it is recommended to boot into the Dell Lifecycle controller.
