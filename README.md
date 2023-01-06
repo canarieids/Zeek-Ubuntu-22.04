@@ -916,13 +916,9 @@ If you need to disable the UFW service, use the command 'sudo ufw disable'
 
 ## 8.1. RSYSLOG
 
-**RSYSLOG portion under development**
-
 It is recommended to have your Zeek logs sent to a more sophisticated analytics platform, such as a SIEM, Elastic Search, Splunk or simliar platforms.  
 
 Below is an example configuration you can use to adapt to your target analytics platform.  Please replace 'XXX.XXX.XXX.XXX' with your platform's IP address.
-
-
 
 1. Install RSYSLOG
 
@@ -932,7 +928,7 @@ sudo apt install rsyslog
 
 2. Add the syslog user to the Zeek group
 
->This step is required so that RSYNC can access the Zeek logs folder at /opt/zeek/logs/currenet/
+RSYSLOG runs under a user 'syslog'.  As a result, we need to add this user to the zeek group. This step is required so that RSYNC can access the Zeek logs folder at /opt/zeek/logs/currenet/
 ```
 sudo usermod -a -G zeek syslog
 ```
@@ -1130,7 +1126,7 @@ input (
 
 ## 8.2. SYSLOG-NG
 
-As an alternative option, Syslog-NG can be used instead of RSYSLOG.  
+As an **alternative option**, Syslog-NG can be used instead of RSYSLOG.  
 
 1. (Root) Install syslog-NG
 
