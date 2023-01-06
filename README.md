@@ -345,8 +345,9 @@ For the remaining sections in this guide, it is recommended to switch to an **SS
 
 ## 4.1. Zeek User and Group
 
-> Participants are encouraged to follow their own account policy. Later steps will outline the creation of a `zeek` user and group that will have access to `Zeek Application` functions and files.
-> Complete the following steps steps to create Zeek user and group
+Participants are encouraged to follow their own account policy. Later steps will outline the creation of a `zeek` user and group that will have access to `Zeek Application` functions and files.  
+
+Complete the following steps steps to create Zeek user and group
 
 1. Login with the account created during the OS deployment, in this example 'csadmin', which will be represented with "(Root)" in this guide. 
 2. (Root)  Use the following example to create the Zeek User
@@ -354,7 +355,7 @@ For the remaining sections in this guide, it is recommended to switch to an **SS
 ```
 sudo adduser zeek
 ```
-> You will be prompted to choose a 'password' and define the account's Full Name, Room, Work Phone, Home Phone, Other.  These fields are optional.
+You will be prompted to choose a 'password' and define the account's Full Name, Room, Work Phone, Home Phone, Other.  These fields are optional.
 
 3. (Root) Create a Zeek Group
 ```
@@ -368,9 +369,9 @@ usermod -a -G zeek zeek
 
 ## 4.2. Repositories
 
->We need to add the Zeek repositories to your Ubuntu installation in order to receive the latest version and updates.  In the below example, substitute the '22.04' for your version of Ubuntu.
+We need to add the Zeek repositories to your Ubuntu installation in order to receive the latest version and updates.  In the below example, substitute the '22.04' for your version of Ubuntu.  
 
->(Root) Execute the following commands to add required respositories:
+(Root) Execute the following commands to add required respositories:  
 ```
 echo 'deb http://download.opensuse.org/repositories/security:/zeek/xUbuntu_22.04/ /' | sudo tee /etc/apt/sources.list.d/security:zeek.list
 ```
@@ -379,20 +380,20 @@ echo 'deb http://download.opensuse.org/repositories/security:/zeek/xUbuntu_22.04
 curl -fsSL https://download.opensuse.org/repositories/security:zeek/xUbuntu_22.04/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/security_zeek.gpg > /dev/null
 ```
 
->(Root)  Confirm the repositories have been added
+(Root)  Confirm the repositories have been added  
 ```
 sudo apt update
 ```
->Confirm you do not receive any errors
+Confirm you do not receive any errors
 
 ## 4.3. Install Dependancies
 
->(Root) Install the required dependancies for Zeek
+(Root) Install the required dependancies for Zeek  
 
 ```
 sudo apt-get install cmake make gcc g++ flex bison libpcap-dev libssl-dev python3 python3-dev swig zlib1g-dev
 ```
->(Root) Install optional dependancies for Zeek
+(Root) Install optional dependancies for Zeek  
 
 ```
 sudo apt-get install python3-git python3-semantic-version
@@ -457,7 +458,7 @@ sudo systemctl restart systemd-networkd
 
 5. Confirm Pre-Reboot
 
-> You should see that `PROMISC` exists in the options for the sniffing interface(s).
+You should see that `PROMISC` exists in the options for the sniffing interface(s).
 
 ```ip a show | grep permisc
 ip a | grep PROMISC
@@ -469,17 +470,23 @@ ens2f2: <BROADCAST,MULTICAST,###PROMISC,UP###,LOWER_UP> mtu 1500 qdisc mq state 
 
 6. Reboot your server and re-confirm Step 4 to ensure interfaces come up with the 'PROMISC' flag
 
-## 4.5. Optimize Sniffing Interfaces
 
-> Coming soon
 
-## 4.6. Install CRONTAB
+## 4.5. Install CRONTAB
 > Ubuntu 22.04 does not come with CRONTAB installed.  We will need this feature to be installed to schedule some recurring tasks with regards to Zeek and its plugins
 
-(Root) Execute the following command to install Crontab
+(Root) Execute the following command to install Crontab  
 
 ```
 sudo apt-get -y install cron
+```
+## 4.6. Install VI or another editor
+
+The instructions in this document are written using VI as the preferred editor.  You can substitute with your own preferred editor if desired. 
+
+To install VI, execute the following:  
+```
+sudo apt-get -y install vi
 ```
 
 # 5. Install and Configure Zeek 
