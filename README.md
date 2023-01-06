@@ -642,9 +642,6 @@ To start Zeek when the operating system starts, create a file and place it into 
 vi /etc/systemd/system/zeek.service
 ```
 
-```
-vi /etc/systemd/system/zeek.service
-```
 2. Populate the file as follows:
 
 ```zeek.service
