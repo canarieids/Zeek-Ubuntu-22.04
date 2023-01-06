@@ -86,47 +86,7 @@ Participants can contact Dell directly for warranty & customer support for hardw
  - Prioritize support for high IOPS is a RAID 10.
  - Priortize support for high capacity (retention) is a RAID 5.
 
-## 2.4. Prepare installation media
-
-
-
-
-**Option 1: Mount ISO using DRAC**
-
-If physical access to the server is not possible, you can virtually mount an image. Using your server's Dell Remote Access Card (DRAC).
-
-After you have logged into your DRAC, you can open the virtual console and mount your Ubuntu ISO file using the "Virtual Media" function.  
-
->[Click here for more information.](https://www.dell.com/support/article/ca/en/cabsdt1/sln296648/using-the-virtual-media-function-on-idrac-6-7-8-and-9?lang=en)  
-
-1. Launch the Virtual Console  
-
-	(A) Select `Configuration`   
-	(B) Select `Virtual Console`   
-	(C) Select `Start the Virtual Console`  
-
-![image-20200505232027969](/images/image-drac01.png)
-
-
-2. Connect your ISO to the Virtual Console session  
-
-	(A) Select `Virtual Media`  
-	(B) Select `Connect Virtual Media`  
-
-![image-20200505232027969](/images/image-drac02.png)
-
-
-3. Navigate to and select the ISO file.  
-
-	(A) Select `Choose File`  
-	(B) Select your ISO image file  
-	(C) Select `Map Device`  
-	(D) Select `Close`   
-
-![image-20200505232027969](/images/image-drac03.png)
-
-
-**Option 2: Create a bootable USB**
+## 2.4. Prepare USB Key
 
 1. Download the ISO for Ubuntu 22.x LTS
 > Download the latest version of Ubuntu 22.x LTS server
@@ -147,20 +107,20 @@ After you have logged into your DRAC, you can open the virtual console and mount
 
 ![image-20200505231623160](/images/image-20200505231623160.png)
 
+## 2.5. Virtual Deployment
 
-To initiate the installation using either method, it is recommended to boot into the Dell Lifecycle controller.
+> If physical access to the server is not possible, you can virtually mount an image. It is recommended to install the Operating System with a USB key that is connected to one of the server’s USB ports [Click here for more information.](https://www.dell.com/support/article/ca/en/cabsdt1/sln296648/using-the-virtual-media-function-on-idrac-6-7-8-and-9?lang=en)
 
-## 2.5. Disk Configuration
+1. Click `Configuration`.
+2. Select `Connect Virtual Media`.
+3. Navigate for and select the ISO file.
+4. Click `Open`.
 
+![image-20200505232027969](/images/image-20200505232027969.png)
 
-1. To power on the system,   
-  
-(A) Select `Power`   
-(B) Select `Power On System`  
+## 2.6. Disk Configuration
 
-![image-20200505231623160](/images/image-dracpoweron.png)
-
-2. To start the Lifecycle Controller, press `F10`.
+1. To start the Lifecycle Controller, press `F10`.
 
 ![image-20200506143343112](/images/image-20200506143343112.png)
 
@@ -466,18 +426,31 @@ ens2f2: <BROADCAST,MULTICAST,###PROMISC,UP###,LOWER_UP> mtu 1500 qdisc mq state 
 
 6. Reboot your server and re-confirm Step 4 to ensure interfaces come up with the 'PROMISC' flag
 
-## 4.5. Optimize Sniffing Interfaces
 
-> Coming soon
 
-## 4.6. Install CRONTAB
-> Ubuntu 22.04 does not come with CRONTAB installed.  We will need this feature to be installed to schedule some recurring tasks with regards to Zeek and its plugins
+## 4.5. Install CRONTAB
+
+Ubuntu 22.04 does not come with CRONTAB installed.  We will need this feature to be installed to schedule some recurring tasks with regards to Zeek and its plugins
 
 (Root) Execute the following command to install Crontab
 
 ```
 sudo apt-get -y install cron
 ```
+## 4.6. Install VI (optional)
+
+Particpants can choose their own preferred editor.  The examples in this guide use "VI"
+
+Use the following command to install VI:
+
+```
+sudo apt-get -y install vi
+```
+
+
+
+
+
 
 # 5. Install and Configure Zeek 
 
@@ -682,6 +655,9 @@ To start Zeek when the operating system starts, create a file and place it into 
 vi /etc/systemd/system/zeek.service
 ```
 
+```
+vi /etc/systemd/system/zeek.service
+```
 2. Populate the file as follows:
 
 ```zeek.service
