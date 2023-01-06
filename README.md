@@ -26,7 +26,7 @@ This document is a step-by-step guide for the configuration of the Zeek platform
 - Steps that start with `(Root)` are expected to be RUN AS the 'root' user.
 - Steps that start with `(Zeek)` are expected to be run as the `zeek` user.
 
-**TIP:** There are many commands provided in this document that can be copied and pasted.  Starting at Section 4 - you can use an SSH Client.  Furthermore, you may want to start by enter bash under Root with the command: **sudo bash** This will allow you to execute the commands without needing to prefix 'sudo' in front.  When it comes to executing steps as the 'zeek' user, you can switch into that with the command **su - zeek**.  To go back to the sudo bash, just type 'exit'.
+**TIP:** There are many commands provided in this document that can be copied and pasted.  Starting at Section 4 - you can use an SSH Client.  Furthermore, you may want to start by enter bash under Root with the command: '**sudo bash**' This will allow you to execute the commands without needing to prefix 'sudo' in front.  When it comes to executing steps as the 'zeek' user, you can switch into that with the command '**su - zeek**'.  To go back to the sudo bash, just type '**exit**'.
 
 ## 1.1. Community Resources
 
