@@ -95,32 +95,32 @@ Participants can contact Dell directly for warranty & customer support for hardw
 
 If physical access to the server is not possible, you can virtually mount an image. Using your server's Dell Remote Access Card (DRAC).
 
-After you have logged into your DRAC, you can open the virtual console and mount your Ubuntu ISO file using the "Virtual Media" function.
+After you have logged into your DRAC, you can open the virtual console and mount your Ubuntu ISO file using the "Virtual Media" function.  
 
->  [Click here for more information.](https://www.dell.com/support/article/ca/en/cabsdt1/sln296648/using-the-virtual-media-function-on-idrac-6-7-8-and-9?lang=en)
+>[Click here for more information.](https://www.dell.com/support/article/ca/en/cabsdt1/sln296648/using-the-virtual-media-function-on-idrac-6-7-8-and-9?lang=en)  
 
-1. Launch the Virtual Console
-(A) Select`Configuration` 
-(B) Select `Virtual Console` 
-(C) Select `Start the Virtual Console`
+1. Launch the Virtual Console  
+(A) Select`Configuration`   
+(B) Select `Virtual Console`   
+(C) Select `Start the Virtual Console`  
 
 ![image-20200505232027969](/images/image-drac01.png)
 
 
-2. Connect your ISO to the Virtual Console session
+2. Connect your ISO to the Virtual Console session  
 
-(A) Select`Virtual Media`
-(B) Select`Connect Virtual Media`
+(A) Select`Virtual Media`  
+(B) Select`Connect Virtual Media`  
 
 ![image-20200505232027969](/images/image-drac02.png)
 
 
-3. Navigate to and select the ISO file.
+3. Navigate to and select the ISO file.  
 
-(A) Select `Choose File`
-(B) Select your ISO image file
-(C) Select `Map Device`
-(D) Select `Close` 
+(A) Select `Choose File`  
+(B) Select your ISO image file  
+(C) Select `Map Device`  
+(D) Select `Close`   
 
 ![image-20200505232027969](/images/image-drac03.png)
 
@@ -152,10 +152,10 @@ To initiate the installation using either method, it is recommended to boot into
 ## 2.5. Disk Configuration
 
 
-1. To power on the system, 
-
-(A) Select `Power` 
-(B) Select `Power On System`
+1. To power on the system,   
+  
+(A) Select `Power`   
+(B) Select `Power On System`  
 
 ![image-20200505231623160](/images/image-dracpoweron.png)
 
