@@ -130,13 +130,13 @@ After you have logged into your DRAC, you can open the virtual console and mount
 
 **Option 2: Create a bootable USB**
 
-1. Download the ISO for Ubuntu 22.x LTS
-> Download the latest version of Ubuntu 22.x LTS server
-> Click Here: [Ubuntu Server Download page](https://ubuntu.com/download/server).
+1. Download the ISO for Ubuntu 22.x LTS  
+Download the latest version of Ubuntu 22.x LTS server  
+Click Here: [Ubuntu Server Download page](https://ubuntu.com/download/server).  
 
-2. Download and Install an ISO to USB utility
-> Download, install and run a USB creation tool.  Rufus is tool used in this document.
-> Rufus [Rufus](https://rufus.ie/).
+2. Download and Install an ISO to USB utility  
+Download, install and run a USB creation tool.  Rufus is tool used in this document.  
+Rufus [Rufus](https://rufus.ie/).  
 
 3. Create bootable USB key  
 
@@ -158,8 +158,8 @@ To initiate the installation using either method, it is recommended to boot into
 
 1. To power on the system,   
   
-(A) Select `Power`   
-(B) Select `Power On System`  
+	(A) Select `Power`   
+	(B) Select `Power On System`  
 
 ![image-20200505231623160](/images/image-dracpoweron.png)
 
