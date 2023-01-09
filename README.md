@@ -387,7 +387,6 @@ sudo apt update
 Confirm you do not receive any errors
 
 ## 4.3. Install Dependancies
-Test
 
 (Root) Install the required dependancies for Zeek  
 
